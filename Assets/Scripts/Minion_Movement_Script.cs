@@ -21,6 +21,9 @@ public class Minion_Movement_Script : MonoBehaviour {
     public Vector2 oneSpaceUpDirection = new Vector2(1.2f,2);
     public Vector2 oneSpaceRightDirection = new Vector2(3.9f, 0);
 
+
+    public Component debugComponet;
+
 	// Use this for initialization
 	void Start () {
         isMoving = false;
@@ -34,7 +37,7 @@ public class Minion_Movement_Script : MonoBehaviour {
 
         selectionLogic();
         movementLogic();
-        
+        //setPositionInSortingLayer();
     }
 
     void OnMouseDown()
@@ -79,12 +82,14 @@ public class Minion_Movement_Script : MonoBehaviour {
                     nextSpaceLocation = this.gameObject.transform.position + (Vector3)oneSpaceUpDirection;
                     currentDirection = oneSpaceUpDirection;
                     isMoving = true;
+                    swapToWalkAnimation();
                 }
                 else if (this.gameObject.transform.position.y > targetSpace.y)
                 {
                     nextSpaceLocation = this.gameObject.transform.position - (Vector3)oneSpaceUpDirection;
                     currentDirection = (-oneSpaceUpDirection);
                     isMoving = true;
+                    swapToWalkAnimation();
                 }
             }
             else if (Mathf.Abs(this.gameObject.transform.position.x - targetSpace.x) > snapToDistance)
@@ -94,12 +99,14 @@ public class Minion_Movement_Script : MonoBehaviour {
                     nextSpaceLocation = this.gameObject.transform.position - (Vector3)oneSpaceRightDirection;
                     currentDirection = (-oneSpaceRightDirection);
                     isMoving = true;
+                    swapToWalkAnimation();
                 }
                 else if (this.gameObject.transform.position.x < targetSpace.x)
                 {
                     nextSpaceLocation = this.gameObject.transform.position + (Vector3)oneSpaceRightDirection;
                     currentDirection = oneSpaceRightDirection;
                     isMoving = true;
+                    swapToWalkAnimation();
                 }
             }
         }
@@ -113,18 +120,21 @@ public class Minion_Movement_Script : MonoBehaviour {
     {
         Vector3 direction3D = direction.normalized;
         distanceRemainingToMove = Vector2.Distance(this.gameObject.transform.position, nextSpaceLocation);
+        
         if (isMoving)
         {
             if (distanceRemainingToMove <= snapToDistance)
             {
                 this.gameObject.transform.position = nextSpaceLocation;
                 isMoving = false;
+                swapToIdleAnimation();
             }
             else
             {
                 this.gameObject.transform.position += (direction3D * speed * Time.deltaTime);
             }
         }
+        setPositionInSortingLayer();
     }
 
     private bool isWithin(float vector1, float vector2, float distance)
@@ -137,5 +147,23 @@ public class Minion_Movement_Script : MonoBehaviour {
         {
             return false;
         }
+    }
+
+    private void setPositionInSortingLayer()
+    {
+        debugComponet = this.gameObject.GetComponentInChildren<SpriteRenderer>();
+        this.gameObject.GetComponentInChildren<SpriteRenderer>().sortingOrder = -Mathf.RoundToInt(this.gameObject.transform.position.y);
+    }
+
+    private void swapToWalkAnimation()
+    {
+        Animator animator = this.gameObject.GetComponentInChildren<Animator>();
+        animator.SetBool("Walk", true);
+    }
+
+    private void swapToIdleAnimation()
+    {
+        Animator animator = this.gameObject.GetComponentInChildren<Animator>();
+        animator.SetBool("Walk", false);
     }
 }
