@@ -37,7 +37,6 @@ public class Minion_Movement_Script : MonoBehaviour {
 
         selectionLogic();
         movementLogic();
-        //setPositionInSortingLayer();
     }
 
     void OnMouseDown()
