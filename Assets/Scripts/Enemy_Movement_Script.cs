@@ -8,6 +8,7 @@ public class Enemy_Movement_Script : MonoBehaviour {
     private float distanceRemainingToMove;
     private Vector2 currentDirection;
     private Vector2 nextSpaceLocation;
+    private Vector2 forwardDirection;
     public float speed = 0.5f;
     public float snapToDistance = 0.1f;
 
@@ -17,7 +18,6 @@ public class Enemy_Movement_Script : MonoBehaviour {
     //Selection Variables
     public bool isSelected = false;
     public BoxCollider2D selectionHitBox;
-
 
     public Vector2 oneSpaceUpDirection = new Vector2(1.2f, 2);
     public Vector2 oneSpaceRightDirection = new Vector2(3.9f, 0);
@@ -129,29 +129,33 @@ public class Enemy_Movement_Script : MonoBehaviour {
 
     private void movementLogic()
     {
-        if ((this.gameObject.transform.position.y != targetObject.transform.position.y) && !isMovingUpDown)
-        { 
-            if (targetDetectedAbove(targetObject))
+        forwardDirection = targetIsLeftOrRight(targetObject);
+        if (!targetDetectedInfront(targetObject))
+        {
+            if ((this.gameObject.transform.position.y != targetObject.transform.position.y) && !isMovingUpDown)
             {
-                nextSpaceLocation = this.gameObject.transform.position + (Vector3)oneSpaceUpDirection;
-                currentDirection = oneSpaceUpDirection;
-                isMovingUpDown = true;
+                if (targetDetectedAbove(targetObject))
+                {
+                    nextSpaceLocation = this.gameObject.transform.position + (Vector3)oneSpaceUpDirection;
+                    currentDirection = oneSpaceUpDirection;
+                    isMovingUpDown = true;
+                }
+                else if (targetDetectedBelow(targetObject))
+                {
+                    nextSpaceLocation = this.gameObject.transform.position - (Vector3)oneSpaceUpDirection;
+                    currentDirection = (-oneSpaceUpDirection);
+                    isMovingUpDown = true;
+                }
             }
-            else if (targetDetectedBelow(targetObject))
-            {
-                nextSpaceLocation = this.gameObject.transform.position - (Vector3)oneSpaceUpDirection;
-                currentDirection = (-oneSpaceUpDirection);
-                isMovingUpDown = true;
-            }
-        }
 
-        if(isMovingUpDown)
-        {
-            moveUpDown(currentDirection);
-        }
-        else
-        {
-            moveRightLeft(new Vector3(-1, 0));
+            if (isMovingUpDown)
+            {
+                moveUpDown(currentDirection);
+            }
+            else
+            {
+                moveRightLeft(forwardDirection);
+            }
         }
     }
 
@@ -185,9 +189,9 @@ public class Enemy_Movement_Script : MonoBehaviour {
 
     private bool targetDetectedAbove(GameObject targetObject)
     {
-        Vector2 startOfRay = (new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y) - new Vector2(2, 0));
+        Vector2 startOfRay = (new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y) + (forwardDirection * 2));
         Ray2D upRay = new Ray2D(startOfRay, oneSpaceUpDirection);
-        RaycastHit2D[] rayHit = Physics2D.RaycastAll(startOfRay, oneSpaceUpDirection, 20);
+        RaycastHit2D[] rayHit = Physics2D.RaycastAll(startOfRay, oneSpaceUpDirection);
         Debug.DrawRay(startOfRay, oneSpaceUpDirection, Color.red);
         foreach (RaycastHit2D aHit in rayHit)
         {
@@ -204,12 +208,12 @@ public class Enemy_Movement_Script : MonoBehaviour {
 
     private bool targetDetectedBelow(GameObject targetObject)
     {
-        Vector2 startOfRay = new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y) + new Vector2(2, 0);
-        Ray2D upRay = new Ray2D(startOfRay, -oneSpaceUpDirection);
-        RaycastHit2D[] rayHit = Physics2D.RaycastAll(startOfRay, oneSpaceUpDirection);
+        Vector2 startOfRay = new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y) + (forwardDirection * 2);
+        RaycastHit2D[] rayHit = Physics2D.RaycastAll(startOfRay, -oneSpaceUpDirection);
+        Debug.DrawRay(startOfRay, -oneSpaceUpDirection, Color.blue);
         foreach (RaycastHit2D aHit in rayHit)
         {
-            if (aHit.transform.gameObject.tag == targetObject.tag)
+            if (aHit.transform.parent.gameObject.tag == targetObject.tag)
             {
                 Debug.Log("detect below");
                 return true;
@@ -217,6 +221,34 @@ public class Enemy_Movement_Script : MonoBehaviour {
         }
         //Debug.Log("not detect below");
         return false;
+    }
+
+    //returns true of the target object is detected infront(the direction the enemy is moving) of the enemy
+    private bool targetDetectedInfront(GameObject targetObject)
+    {
+        RaycastHit2D[] rayHit = Physics2D.RaycastAll(this.gameObject.transform.position, forwardDirection, 1);
+        Debug.DrawLine(this.gameObject.transform.position, this.gameObject.transform.position + (new Vector3(forwardDirection.x, forwardDirection.y) * 1), Color.cyan);
+        foreach (RaycastHit2D aHit in rayHit)
+        {
+            if (aHit.transform.parent.gameObject.tag == targetObject.tag)
+            {
+                Debug.Log("detect infront");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Vector2 targetIsLeftOrRight(GameObject targetObject)
+    {
+        if(targetObject.transform.position.x > this.gameObject.transform.position.x)
+        {
+            return new Vector2(1, 0);
+        }
+        else
+        {
+            return new Vector2(-1, 0);
+        }
     }
 
     private bool isWithin(float vector1, float vector2, float distance)
