@@ -230,10 +230,17 @@ public class Enemy_Movement_Script : MonoBehaviour {
         Debug.DrawLine(this.gameObject.transform.position, this.gameObject.transform.position + (new Vector3(forwardDirection.x, forwardDirection.y) * 1), Color.cyan);
         foreach (RaycastHit2D aHit in rayHit)
         {
-            if (aHit.transform.parent.gameObject.tag == targetObject.tag)
+            try
+            { 
+                if (aHit.transform.parent.gameObject.tag == targetObject.tag)
+                {
+                    Debug.Log("detect infront");
+                    return true;
+                }
+            }
+            catch (System.NullReferenceException e)
             {
-                Debug.Log("detect infront");
-                return true;
+
             }
         }
         return false;

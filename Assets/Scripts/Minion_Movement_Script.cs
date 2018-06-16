@@ -10,6 +10,7 @@ public class Minion_Movement_Script : MonoBehaviour {
     private Vector2 nextSpaceLocation;
     public float speed = 0.5f;
     public float snapToDistance = 0.1f;
+    private Vector2 facing;
 
     public Vector2 targetSpace;
 
@@ -24,12 +25,20 @@ public class Minion_Movement_Script : MonoBehaviour {
 
     public Component debugComponet;
 
+    public float weaponRange = -1;
+    public float weaponCooldown = 1;
+    private float timeSinceWeaponFired;
+    public GameObject weaponProjectile;
+    public Vector3 projectileDisplacement;
+
 	// Use this for initialization
 	void Start () {
         isMoving = false;
         distanceRemainingToMove = 0.0f;
         selectionHitBox = this.gameObject.GetComponentInChildren<BoxCollider2D>();
         targetSpace = this.gameObject.transform.position;
+        facing = new Vector2(1, 0);
+        timeSinceWeaponFired = 0;
 	}
 	
 	// Update is called once per frame
@@ -37,11 +46,7 @@ public class Minion_Movement_Script : MonoBehaviour {
 
         selectionLogic();
         movementLogic();
-    }
-
-    void OnMouseDown()
-    {
-        
+        attackLogic();
     }
 
     private void selectionLogic()
@@ -165,4 +170,59 @@ public class Minion_Movement_Script : MonoBehaviour {
         Animator animator = this.gameObject.GetComponentInChildren<Animator>();
         animator.SetBool("Walk", false);
     }
+
+
+    private void attackLogic()
+    {
+        if ((timeSinceWeaponFired >= weaponCooldown))
+        {
+            if (isEnemyInRange())
+            {
+                GameObject projectile = Instantiate(weaponProjectile);
+                projectile.transform.position = (this.transform.position + projectileDisplacement);
+                projectile.GetComponent<Projectile_Logic>().direction = facing;
+                timeSinceWeaponFired = 0;
+            }
+        }
+        else
+        {
+            timeSinceWeaponFired += Time.deltaTime;
+        }
+    }
+
+    private bool isEnemyInRange()
+    {
+        Vector2 startOfRay = (new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y));
+        Ray2D aimRay = new Ray2D(startOfRay, facing);
+        RaycastHit2D[] rayHit;
+        if (weaponRange < 0)
+        {
+            rayHit = Physics2D.RaycastAll(startOfRay, facing);
+            Debug.DrawRay(startOfRay, facing, Color.red);
+        }
+        else
+        {
+            rayHit = Physics2D.RaycastAll(startOfRay, facing, weaponRange);
+            Debug.DrawRay(startOfRay, facing, Color.red);
+        }
+
+        foreach (RaycastHit2D aHit in rayHit)
+        {
+            try
+            {
+                if (aHit.transform.parent.gameObject.tag == "Enemy")
+                {
+                    //Debug.Log("enemy spotted");
+                    return true;
+                }
+            }
+            catch(System.NullReferenceException e)
+            {
+
+            }
+        }
+        //Debug.Log("not detect above");
+        return false;
+    }
+
 }
