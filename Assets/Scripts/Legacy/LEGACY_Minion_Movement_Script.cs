@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Minion_Movement_Script : MonoBehaviour {
+public class LEGACY_Minion_Movement_Script : MonoBehaviour {
 
     private bool isMoving;
     private float distanceRemainingToMove;

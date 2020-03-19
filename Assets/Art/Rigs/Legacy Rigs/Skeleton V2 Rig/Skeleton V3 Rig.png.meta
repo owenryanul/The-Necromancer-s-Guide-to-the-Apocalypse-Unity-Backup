@@ -1,0 +1,454 @@
+fileFormatVersion: 2
+guid: c1e0496a1347b5c4eb050c3d90a5cf76
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 174152026224965255
+    second: Skeleton V3 Rig_Head
+  - first:
+      213: -2502858574539303419
+    second: Skeleton V3 Rig_1
+  - first:
+      213: 7688614607941921653
+    second: Skeleton V3 Rig_Front_Hand
+  - first:
+      213: 6328855449715768724
+    second: Skeleton V3 Rig_Front_Forearm
+  - first:
+      213: 8930156810264299358
+    second: Skeleton V3 Rig_Front_UpperArm
+  - first:
+      213: 3229132959640845117
+    second: Skeleton V3 Rig_Back_Upper_Arm
+  - first:
+      213: 446137959274061543
+    second: Skeleton V3 Rig_Back_ForeArm
+  - first:
+      213: -2064599930628858090
+    second: Skeleton V3 Rig_Back_Hand
+  - first:
+      213: 2655512817397766129
+    second: Skeleton V3 Rig_Body
+  - first:
+      213: -5682764369711507923
+    second: Skeleton V3 Rig_Front_Leg
+  - first:
+      213: -4827334111800497363
+    second: Skeleton V3 Rig_Back_Leg
+  - first:
+      213: 2670858104069160832
+    second: Skeleton V3 Rig_Front_Foot
+  - first:
+      213: -5603076456326235249
+    second: Skeleton V3 Rig_Back_Foot
+  externalObjects: {}
+  serializedVersion: 10
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 0
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Head
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 352
+        width: 173
+        height: 176
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 786bd0c5856ba6200800000000000000
+      internalID: 174152026224965255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Front_Hand
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 289
+        width: 46
+        height: 45
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 57be149ff3273ba60800000000000000
+      internalID: 7688614607941921653
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Front_Forearm
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 293
+        width: 75
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49d7a13ff7c94d750800000000000000
+      internalID: 6328855449715768724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Front_UpperArm
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 292
+        width: 73
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e57c6501e4a4eeb70800000000000000
+      internalID: 8930156810264299358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Back_Upper_Arm
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 293
+        width: 75
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3bf5ef615f20dc20800000000000000
+      internalID: 3229132959640845117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Back_ForeArm
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 295
+        width: 71
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ee19573c10013600800000000000000
+      internalID: 446137959274061543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Back_Hand
+      rect:
+        serializedVersion: 2
+        x: 482
+        y: 288
+        width: 48
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61f12934d411953e0800000000000000
+      internalID: -2064599930628858090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Body
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 248
+        width: 82
+        height: 95
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones:
+      - name: bone_1
+        position: {x: 38.714447, y: 18.340942, z: 0}
+        rotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+        length: 64.06078
+        parentId: -1
+      - name: bone_2
+        position: {x: 64.06078, y: -0.000006876851, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 1}
+        length: 71.66125
+        parentId: 0
+      - name: bone_3
+        position: {x: 46.688374, y: -30.401735, z: 0}
+        rotation: {x: 0, y: -0, z: -0.71339136, w: 0.70076585}
+        length: 60.813183
+        parentId: 0
+      - name: bone_4
+        position: {x: 60.813187, y: -0.0000049927903, z: 0}
+        rotation: {x: 0, y: 0, z: 0.00017263349, w: 1}
+        length: 61.89876
+        parentId: 2
+      - name: bone_5
+        position: {x: 61.898743, y: -0.000051571056, z: 0}
+        rotation: {x: 0, y: 0, z: 0.008714165, w: 0.9999621}
+        length: 23.887053
+        parentId: 3
+      - name: bone_6
+        position: {x: 47.774166, y: 40.17371, z: 0}
+        rotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+        length: 61.88925
+        parentId: 0
+      - name: bone_7
+        position: {x: 61.889248, y: -0.00000649297, z: 0}
+        rotation: {x: 0, y: 0, z: 0, w: 1}
+        length: 65.14656
+        parentId: 5
+      - name: bone_8
+        position: {x: 65.14655, y: 0.0000695276, z: 0}
+        rotation: {x: 0, y: 0, z: -0.017234854, w: 0.99985147}
+        length: 31.506233
+        parentId: 6
+      - name: bone_9
+        position: {x: -16.286652, y: 18.45819, z: 0}
+        rotation: {x: 0, y: -0, z: -0.9999538, w: 0.009613322}
+        length: 56.470783
+        parentId: 0
+      - name: bone_10
+        position: {x: 56.470776, y: -0.000034236233, z: 0}
+        rotation: {x: 0, y: 0, z: 0.2680307, w: 0.9634104}
+        length: 34.642967
+        parentId: 8
+      - name: bone_11
+        position: {x: -16.286655, y: -17.37243, z: 0}
+        rotation: {x: 0, y: -0, z: 1, w: -0.00000004371139}
+        length: 52.11727
+        parentId: 0
+      - name: bone_12
+        position: {x: 52.11727, y: -0.000024198504, z: 0}
+        rotation: {x: 0, y: 0, z: 0.24343382, w: 0.96991754}
+        length: 34.489418
+        parentId: 10
+      spriteID: 1f79d7186d64ad420800000000000000
+      internalID: 2655512817397766129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Front_Leg
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 163
+        width: 35
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2659111ae3c221b0800000000000000
+      internalID: -5682764369711507923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Back_Leg
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 161
+        width: 33
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2b610e933dd10db0800000000000000
+      internalID: -4827334111800497363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Front_Foot
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 115
+        width: 66
+        height: 42
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08ff38a7b4bc01520800000000000000
+      internalID: 2670858104069160832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skeleton V3 Rig_Back_Foot
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 115
+        width: 64
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8bf15b36afdd32b0800000000000000
+      internalID: -5603076456326235249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
