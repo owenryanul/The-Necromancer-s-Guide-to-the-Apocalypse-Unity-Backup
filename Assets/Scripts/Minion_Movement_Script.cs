@@ -8,41 +8,107 @@ public class Minion_Movement_Script : MonoBehaviour
     public GameObject targetSpace;
     public float speed = 1.0f;
 
+    private Animator rigAnimator;
+
+    private bool isMoving;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        rigAnimator = this.gameObject.GetComponentInChildren<Animator>();
+        isMoving = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        Vector3 myPos = this.transform.position;
         Vector3 mySpacePos = mySpace.transform.position;
-        mySpacePos.z = this.transform.position.z;
-        if(mySpacePos != this.transform.position)
+        mySpacePos.z = this.transform.position.z; //ignore the z dimension
+
+        if(myPos != mySpacePos) //if not at mySpace, move to it
         {
-            Vector3 moveVector = (mySpacePos - this.transform.position).normalized;
-            moveVector.z = 0;
-            this.transform.position += moveVector * (speed * Time.deltaTime);
+            isMoving = true;
+            Vector3 directionVector = (mySpacePos - this.transform.position);
+            directionVector.z = 0;
+            Vector3 moveVector = directionVector.normalized * (speed * Time.deltaTime);
+            if (moveVector.magnitude > directionVector.magnitude)
+            {
+                this.transform.position = mySpacePos;
+            }
+            else
+            {
+                this.transform.position += moveVector;
+            }
         }
-        else if (mySpace != targetSpace)
+        else if (mySpace != targetSpace) //if at mySpace check if its your target space, if not change mySpace
         {
-            //TODO: get closest space
-            mySpace = targetSpace;
+            mySpace = findNextSpace();
+        }
+        else //if at mySpace and it is your target space, stop moving
+        {
+            isMoving = false;
+        }
+
+        rigAnimator.SetBool("IsWalking", isMoving);
+
+        if(isMoving)
+        {
+            //TODO: Set sorting layer order to render based on y position
         }
     }
 
     private void OnMouseDown()
     {
         Debug.Log("Minion Clicked");
-        foreach(GameObject aSpace in GameObject.FindGameObjectsWithTag("Space"))
-        {
-            aSpace.GetComponent<Space_Script>().setCurrentlySelectedMinion(this.gameObject);
-        }        
+        Space_Script.setCurrentlySelectedMinion(this.gameObject);      
     }
 
-    public void setTargetSpace(GameObject spaceIn)
+    private GameObject findNextSpace()
     {
+        Vector2 myGridPos = mySpace.GetComponent<Space_Script>().gridPosition;
+        Vector2 targetGridPos = targetSpace.GetComponent<Space_Script>().gridPosition;
+        Vector2 nextGridPos = myGridPos;
+
+        if (myGridPos.y < targetGridPos.y)
+        {
+            nextGridPos.y++;
+        }
+        else if (myGridPos.y > targetGridPos.y)
+        {
+            nextGridPos.y--;
+        }
+        else if (myGridPos.x < targetGridPos.x)
+        {
+            nextGridPos.x++;
+        }
+        else if (myGridPos.x > targetGridPos.x)
+        {
+            nextGridPos.x--;
+        }
+
+        foreach(GameObject aSpace in GameObject.FindGameObjectsWithTag("Space"))
+        {
+            if(aSpace.GetComponent<Space_Script>().gridPosition == nextGridPos)
+            {
+                return aSpace;
+            }
+        }
+
+        Debug.LogError("WARNING: Space could not be found, check your space's gridPositions as no space could be found with co-ordinates: " + nextGridPos + " on the path to " + targetGridPos);
+        return null;
+    }
+
+    public bool setTargetSpace(GameObject spaceIn)
+    {
+        foreach(GameObject aminion in GameObject.FindGameObjectsWithTag("Minion"))
+        {
+            if((aminion != this.gameObject) && aminion.GetComponent<Minion_Movement_Script>().targetSpace == spaceIn)
+            {
+                return false;
+            }
+        }
         targetSpace = spaceIn;
+        return true;
     }
 }

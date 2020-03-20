@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\Legacy\LEGACY_spaceSelection.cs" />
     <Compile Include="Assets\Scripts\Minion_Movement_Script.cs" />
     <Compile Include="Assets\Scripts\Space_Script.cs" />
+    <Compile Include="Assets\SelectionCircle_Script.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Owen Ryan/Desktop/Projects/Unity Projects/Projects/The-Necromancer-s-Guide-to-the-Apocalypse-Unity/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
