@@ -58,12 +58,16 @@ public class Minion_Movement_Script : MonoBehaviour
         }
     }
 
+    //If minion clicked, set them as the currently selected minion
     private void OnMouseDown()
     {
         Debug.Log("Minion Clicked");
         Space_Script.setCurrentlySelectedMinion(this.gameObject);      
     }
 
+
+    //Find the next space on the path between the currently occupied space and the target space.
+    //Note: Will attempt to match target spaces Y before matching X
     private GameObject findNextSpace()
     {
         Vector2 myGridPos = mySpace.GetComponent<Space_Script>().gridPosition;
@@ -101,6 +105,7 @@ public class Minion_Movement_Script : MonoBehaviour
 
     public bool setTargetSpace(GameObject spaceIn)
     {
+        //Check if spaceIn is already the target space of another minion
         foreach(GameObject aminion in GameObject.FindGameObjectsWithTag("Minion"))
         {
             if((aminion != this.gameObject) && aminion.GetComponent<Minion_Movement_Script>().targetSpace == spaceIn)
@@ -108,6 +113,15 @@ public class Minion_Movement_Script : MonoBehaviour
                 return false;
             }
         }
+
+        //Check if spaceIn is already the target space of the necromancer
+        GameObject aNecromancer = GameObject.FindGameObjectWithTag("Necromancer");
+        if ((aNecromancer != this.gameObject) && aNecromancer.GetComponent<Minion_Movement_Script>().targetSpace == spaceIn)
+        {
+            return false;
+        }
+
+
         targetSpace = spaceIn;
         return true;
     }
