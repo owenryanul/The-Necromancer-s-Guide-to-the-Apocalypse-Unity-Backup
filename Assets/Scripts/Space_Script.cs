@@ -44,4 +44,22 @@ public class Space_Script : MonoBehaviour
         }
         //Debug.Log("set selected minion to: " + currentlySelectedMinion);
     }
+
+    public static GameObject findGridSpace(int x, int y)
+    {
+        return findGridSpace(new Vector2(x, y));
+    }
+
+    public static GameObject findGridSpace(Vector2 position)
+    {    
+        foreach(GameObject aSpace in GameObject.FindGameObjectsWithTag("Space"))
+        {
+            if(aSpace.GetComponent<Space_Script>().gridPosition == position)
+            {
+                return aSpace;
+            }
+        }
+        //throw new MissingReferenceException("Grid Space with grid position " + position.ToString() + " not found");
+        return null;
+    }
 }

@@ -180,7 +180,7 @@ public class LEGACY_Minion_Movement_Script : MonoBehaviour {
             {
                 GameObject projectile = Instantiate(weaponProjectile);
                 projectile.transform.position = (this.transform.position + projectileDisplacement);
-                projectile.GetComponent<Projectile_Logic>().direction = facing;
+                projectile.GetComponent<LEGACY_Projectile_Logic>().direction = facing;
                 timeSinceWeaponFired = 0;
             }
         }

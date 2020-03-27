@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile_Logic : MonoBehaviour {
+public class LEGACY_Projectile_Logic : MonoBehaviour {
 
     public bool isEnemyProjectile = false;
     public Vector3 direction = new Vector3(1,0);

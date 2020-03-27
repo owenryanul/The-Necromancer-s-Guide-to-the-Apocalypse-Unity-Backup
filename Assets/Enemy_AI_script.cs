@@ -18,9 +18,15 @@ public class Enemy_AI_script : MonoBehaviour
     [Header("AI")]
     public GameObject tryingToKill;
 
+    [Header("Defence")]
+    public int maxHP = 1;
+    public int currentHP;
+
     [Header("Animation")]
     private Animator rigAnimator;
     private bool isFacingRight;
+
+    
 
     
 
@@ -30,13 +36,15 @@ public class Enemy_AI_script : MonoBehaviour
         tryingToKill = GameObject.FindGameObjectWithTag("Necromancer");
         rigAnimator = this.gameObject.GetComponentInChildren<Animator>();
         isMoving = false;
+
+        currentHP = maxHP;
     }
 
     // Update is called once per frame
     void Update()
     {
         //Set target to the space currently occupied by the necromancer
-        this.targetSpace =  tryingToKill.GetComponent<Minion_Movement_Script>().targetSpace;
+        this.targetSpace =  tryingToKill.GetComponent<Minion_Movement_Script>().getTargetSpace();
 
         Vector3 myPos = this.transform.position;
         Vector3 nextSpacePos = nextSpace.transform.position;
@@ -181,5 +189,14 @@ public class Enemy_AI_script : MonoBehaviour
     {
         isFacingRight = false;
         this.transform.localScale = new Vector3(Mathf.Abs(this.transform.localScale.x), this.transform.localScale.y, this.transform.localScale.z);
+    }
+
+    public void onHitByProjectile(Projectile_Logic_Script projectile)
+    {
+        this.currentHP -= projectile.projectileDamage;
+        if(this.currentHP <= 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
