@@ -231,6 +231,7 @@ public class Minion_Movement_Script : MonoBehaviour
                     }
                 }
             }
+        rigAnimator.SetBool("IsMeleeAttacking", false);
     }
 
     public bool setTargetSpace(GameObject spaceIn)
