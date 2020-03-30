@@ -25,6 +25,7 @@ public class Enemy_AI_script : MonoBehaviour
     [Header("Animation")]
     private Animator rigAnimator;
     private bool isFacingRight;
+    private bool isDying;
 
     
 
@@ -36,6 +37,7 @@ public class Enemy_AI_script : MonoBehaviour
         tryingToKill = GameObject.FindGameObjectWithTag("Necromancer");
         rigAnimator = this.gameObject.GetComponentInChildren<Animator>();
         isMoving = false;
+        isDying = false;
 
         currentHP = maxHP;
     }
@@ -43,6 +45,10 @@ public class Enemy_AI_script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(isDying)
+        {
+            return; //override update if playing the death animation
+        }
         //Set target to the space currently occupied by the necromancer
         this.targetSpace =  tryingToKill.GetComponent<Minion_Movement_Script>().getTargetSpace();
 
@@ -196,7 +202,19 @@ public class Enemy_AI_script : MonoBehaviour
         this.currentHP -= projectile.projectileDamage;
         if(this.currentHP <= 0)
         {
-            Destroy(this.gameObject);
+            die();
         }
+    }
+
+    public void die()
+    {
+        isDying = true;
+        rigAnimator.SetBool("IsDying", isDying);
+        this.gameObject.GetComponent<Collider2D>().enabled = false;
+    }
+
+    public void onDeathAnimationDone()
+    {
+        Destroy(this.gameObject);
     }
 }
