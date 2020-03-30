@@ -206,6 +206,15 @@ public class Enemy_AI_script : MonoBehaviour
         }
     }
 
+    public void onHitByMelee(int damageIn)
+    {
+        this.currentHP -= damageIn;
+        if (this.currentHP <= 0)
+        {
+            die();
+        }
+    }
+
     public void die()
     {
         isDying = true;

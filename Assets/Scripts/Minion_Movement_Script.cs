@@ -15,7 +15,8 @@ public class Minion_Movement_Script : MonoBehaviour
     private bool isMoving;
 
     [Header("Attack")]
-    public bool isRangedAttack;
+    public bool isMeleeAttack;
+    public int meleeDamage;
     public GameObject projectile;
     public float attackCooldown;
     private float currentAttackCooldown;
@@ -130,35 +131,89 @@ public class Minion_Movement_Script : MonoBehaviour
             currentAttackCooldown = 0;
 
             //Calculate where we're aiming
-            Vector2 range = new Vector2(attackRange.Length, 0);
-            if (!isFacingRight)
-            {
-                range.x *= -1;
-            }
-            Vector2 aimingAtGridPos = this.targetSpace.GetComponent<Space_Script>().gridPosition + range;
-
-
-            GameObject spaceAimedAt = Space_Script.findGridSpace(aimingAtGridPos);
-            //If spaceAimedAt does not exist, aim at the appriorate endSpace instead. (End Spaces are grid spaces placed off screen for targeting purposes)
-            if(spaceAimedAt == null)
-            {
-                foreach(GameObject anEndSpace in GameObject.FindGameObjectsWithTag("End Space"))
-                {
-                    Vector2 mySpacePos = mySpace.GetComponent<Space_Script>().gridPosition;
-                    Vector2 anEndSpacePos = anEndSpace.GetComponent<Space_Script>().gridPosition;
-                    if (anEndSpacePos.y == mySpacePos.y)
-                    {
-                        if((isFacingRight && mySpacePos.x < anEndSpacePos.x) || (!isFacingRight && mySpacePos.x > anEndSpacePos.x))
-                        {
-                            spaceAimedAt = anEndSpace;
-                            break;
-                        }
-                    }
-                }
-            }
+            GameObject spaceAimedAt = calculateAttacksTargetSpace();
 
             //Detect enemies along aim
             Vector3 vectorToTargetSpace = (spaceAimedAt.transform.position - this.transform.position);
+            if(areEnemiesAlongVector(vectorToTargetSpace))
+            {
+                //Make the attack
+                if (this.isMeleeAttack)
+                {
+                    rigAnimator.SetBool("IsMeleeAttacking", true);
+                    //continue the logic from the animation event in onMeleeAnimationFinished();
+                }
+                else
+                {
+                    GameObject proj = Instantiate(projectile, this.transform.position, this.transform.rotation);
+                    proj.GetComponent<Projectile_Logic_Script>().mySpace = this.mySpace;
+                    proj.GetComponent<Projectile_Logic_Script>().setTargetSpace(spaceAimedAt);
+                }
+            }
+        }
+    }
+
+    private GameObject calculateAttacksTargetSpace()
+    {
+        Vector2 range = new Vector2(attackRange.Length, 0);
+        if (!isFacingRight)
+        {
+                range.x *= -1;
+        }
+        Vector2 aimingAtGridPos = this.targetSpace.GetComponent<Space_Script>().gridPosition + range;
+
+
+        GameObject spaceAimedAt = Space_Script.findGridSpace(aimingAtGridPos);
+        //If spaceAimedAt does not exist, aim at the appriorate endSpace instead. (End Spaces are grid spaces placed off screen for targeting purposes)
+        if(spaceAimedAt == null)
+        {
+            foreach(GameObject anEndSpace in GameObject.FindGameObjectsWithTag("End Space"))
+            {
+                Vector2 mySpacePos = mySpace.GetComponent<Space_Script>().gridPosition;
+                Vector2 anEndSpacePos = anEndSpace.GetComponent<Space_Script>().gridPosition;
+                if (anEndSpacePos.y == mySpacePos.y)
+                {
+                    if((isFacingRight && mySpacePos.x < anEndSpacePos.x) || (!isFacingRight && mySpacePos.x > anEndSpacePos.x))
+                    {
+                        spaceAimedAt = anEndSpace;
+                        return spaceAimedAt;
+                    }
+                }
+            }
+        }
+        return spaceAimedAt;
+    }
+
+    private bool areEnemiesAlongVector(Vector3 vectorToTargetSpace)
+    {
+        Debug.DrawRay(this.transform.position, vectorToTargetSpace, Color.red, 1);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, vectorToTargetSpace.magnitude);
+        foreach (RaycastHit2D aHit in hits)
+        {
+            //Detect if object spotted is an Enemy
+            if (aHit.collider.gameObject.CompareTag("Enemy"))
+            {
+                Debug.Log("Enemy hit " + aHit.collider.gameObject.ToString());
+                //Detect if enemy hit is on the right grid-row
+                float hitEnemyGridY = aHit.collider.gameObject.GetComponent<Enemy_AI_script>().nextSpace.GetComponent<Space_Script>().gridPosition.y;
+                if (hitEnemyGridY == this.mySpace.GetComponent<Space_Script>().gridPosition.y)
+                {
+                    Debug.Log("Enemy hit is on right y ");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //Catches the melee attack animation event to apply the melee attack effects.
+    public void onMeleeAttackAnimationFinished()
+    {
+        //Calculate where we're aiming
+        GameObject spaceAimedAt = calculateAttacksTargetSpace();
+
+        //Detect enemies along aim
+        Vector3 vectorToTargetSpace = (spaceAimedAt.transform.position - this.transform.position);
             Debug.DrawRay(this.transform.position, vectorToTargetSpace, Color.red, 1);
             RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, vectorToTargetSpace.magnitude);
             foreach (RaycastHit2D aHit in hits)
@@ -172,15 +227,10 @@ public class Minion_Movement_Script : MonoBehaviour
                     if (hitEnemyGridY == this.mySpace.GetComponent<Space_Script>().gridPosition.y)
                     {
                         Debug.Log("Enemy hit is on right y ");
-                        //Make the attack
-                        GameObject proj = Instantiate(projectile, this.transform.position, this.transform.rotation);
-                        proj.GetComponent<Projectile_Logic_Script>().mySpace = this.mySpace;
-                        proj.GetComponent<Projectile_Logic_Script>().setTargetSpace(spaceAimedAt);
-                        break;
+                        aHit.collider.gameObject.GetComponent<Enemy_AI_script>().onHitByMelee(this.meleeDamage);
                     }
                 }
             }
-        }
     }
 
     public bool setTargetSpace(GameObject spaceIn)
