@@ -14,4 +14,9 @@ public class AnimationRelay_Script : MonoBehaviour
     {
         this.GetComponentInParent<Minion_Movement_Script>().onMeleeAttackAnimationFinished();
     }
+
+    public void onRangedAttackAnimationFinished()
+    {
+        
+    }
 }

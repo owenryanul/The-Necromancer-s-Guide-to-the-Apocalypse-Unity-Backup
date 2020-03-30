@@ -140,11 +140,12 @@ public class Minion_Movement_Script : MonoBehaviour
                 //Make the attack
                 if (this.isMeleeAttack)
                 {
-                    rigAnimator.SetBool("IsMeleeAttacking", true);
+                    rigAnimator.SetTrigger("DoMeleeAttack");
                     //continue the logic from the animation event in onMeleeAnimationFinished();
                 }
                 else
                 {
+                    rigAnimator.SetTrigger("DoRangedAttack");
                     GameObject proj = Instantiate(projectile, this.transform.position, this.transform.rotation);
                     proj.GetComponent<Projectile_Logic_Script>().mySpace = this.mySpace;
                     proj.GetComponent<Projectile_Logic_Script>().setTargetSpace(spaceAimedAt);
@@ -214,24 +215,23 @@ public class Minion_Movement_Script : MonoBehaviour
 
         //Detect enemies along aim
         Vector3 vectorToTargetSpace = (spaceAimedAt.transform.position - this.transform.position);
-            Debug.DrawRay(this.transform.position, vectorToTargetSpace, Color.red, 1);
-            RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, vectorToTargetSpace.magnitude);
-            foreach (RaycastHit2D aHit in hits)
+        Debug.DrawRay(this.transform.position, vectorToTargetSpace, Color.red, 1);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, vectorToTargetSpace.magnitude);
+        foreach (RaycastHit2D aHit in hits)
+        {
+            //Detect if object spotted is an Enemy
+            if (aHit.collider.gameObject.CompareTag("Enemy"))
             {
-                //Detect if object spotted is an Enemy
-                if (aHit.collider.gameObject.CompareTag("Enemy"))
+                Debug.Log("Enemy hit " + aHit.collider.gameObject.ToString());
+                //Detect if enemy hit is on the right grid-row
+                float hitEnemyGridY = aHit.collider.gameObject.GetComponent<Enemy_AI_script>().nextSpace.GetComponent<Space_Script>().gridPosition.y;
+                if (hitEnemyGridY == this.mySpace.GetComponent<Space_Script>().gridPosition.y)
                 {
-                    Debug.Log("Enemy hit " + aHit.collider.gameObject.ToString());
-                    //Detect if enemy hit is on the right grid-row
-                    float hitEnemyGridY = aHit.collider.gameObject.GetComponent<Enemy_AI_script>().nextSpace.GetComponent<Space_Script>().gridPosition.y;
-                    if (hitEnemyGridY == this.mySpace.GetComponent<Space_Script>().gridPosition.y)
-                    {
-                        Debug.Log("Enemy hit is on right y ");
-                        aHit.collider.gameObject.GetComponent<Enemy_AI_script>().onHitByMelee(this.meleeDamage);
-                    }
+                    Debug.Log("Enemy hit is on right y ");
+                    aHit.collider.gameObject.GetComponent<Enemy_AI_script>().onHitByMelee(this.meleeDamage);
                 }
             }
-        rigAnimator.SetBool("IsMeleeAttacking", false);
+        }
     }
 
     public bool setTargetSpace(GameObject spaceIn)
