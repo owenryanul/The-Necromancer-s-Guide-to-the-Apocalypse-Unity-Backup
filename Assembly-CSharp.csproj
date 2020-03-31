@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\AnimationRelay_Script.cs" />
     <Compile Include="Assets\Enemy_AI_script.cs" />
+    <Compile Include="Assets\Enemy_Spawning_Script.cs" />
     <Compile Include="Assets\Projectile_Logic_Script.cs" />
     <Compile Include="Assets\Scripts\Legacy\LEGACY_Enemy_Movement_Script.cs" />
     <Compile Include="Assets\Scripts\Legacy\LEGACY_Gridboard_Script.cs" />

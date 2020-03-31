@@ -62,4 +62,22 @@ public class Space_Script : MonoBehaviour
         //throw new MissingReferenceException("Grid Space with grid position " + position.ToString() + " not found");
         return null;
     }
+
+    public static GameObject findGridEndSpace(int x, int y)
+    {
+        return findGridEndSpace(new Vector2(x, y));
+    }
+
+    public static GameObject findGridEndSpace(Vector2 position)
+    {
+        foreach (GameObject aSpace in GameObject.FindGameObjectsWithTag("End Space"))
+        {
+            if (aSpace.GetComponent<Space_Script>().gridPosition == position)
+            {
+                return aSpace;
+            }
+        }
+        //throw new MissingReferenceException("Grid Space with grid position " + position.ToString() + " not found");
+        return null;
+    }
 }

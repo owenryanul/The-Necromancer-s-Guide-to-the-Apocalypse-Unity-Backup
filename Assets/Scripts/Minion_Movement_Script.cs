@@ -24,57 +24,68 @@ public class Minion_Movement_Script : MonoBehaviour
     public int[] attackRange;
     private const float yDistanceToBeConsideredInTheSameRow = 0.2f;
 
+    [Header("Defence")]
+    public int MaxHp = 1;
+    public int currentHp;
+
+    private bool isDying;
+
 
     // Start is called before the first frame update
     void Start()
     {
         targetSpace = mySpace;
         rigAnimator = this.gameObject.GetComponentInChildren<Animator>();
+        currentHp = MaxHp;
         isMoving = false;
+        isDying = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 myPos = this.transform.position;
-        Vector3 mySpacePos = mySpace.transform.position;
-        mySpacePos.z = this.transform.position.z; //ignore the z dimension
-
-        if (myPos != mySpacePos) //if not at mySpace, move to it
+        if (!isDying)
         {
-            isMoving = true;
-            Vector3 directionVector = (mySpacePos - this.transform.position);
-            directionVector.z = 0;
-            Vector3 moveVector = directionVector.normalized * (speed * Time.deltaTime);
-            if (moveVector.magnitude > directionVector.magnitude)
+            Vector3 myPos = this.transform.position;
+            Vector3 mySpacePos = mySpace.transform.position;
+            mySpacePos.z = this.transform.position.z; //ignore the z dimension
+
+            if (myPos != mySpacePos) //if not at mySpace, move to it
             {
-                this.transform.position = mySpacePos;
+                isMoving = true;
+                Vector3 directionVector = (mySpacePos - this.transform.position);
+                directionVector.z = 0;
+                Vector3 moveVector = directionVector.normalized * (speed * Time.deltaTime);
+                if (moveVector.magnitude > directionVector.magnitude)
+                {
+                    this.transform.position = mySpacePos;
+                }
+                else
+                {
+                    this.transform.position += moveVector;
+                }
             }
-            else
+            else if (mySpace != targetSpace) //if at mySpace check if its your target space, if not change mySpace
             {
-                this.transform.position += moveVector;
+                mySpace = findNextSpace();
             }
-        }
-        else if (mySpace != targetSpace) //if at mySpace check if its your target space, if not change mySpace
-        {
-            mySpace = findNextSpace();
-        }
-        else //if at mySpace and it is your target space, stop moving
-        {
-            isMoving = false;
-        }
+            else //if at mySpace and it is your target space, stop moving
+            {
+                isMoving = false;
+            }
 
-        rigAnimator.SetBool("IsWalking", isMoving);
+            rigAnimator.SetBool("IsWalking", isMoving);
 
-        if (isMoving)
-        {
-            //TODO: Set sorting layer order to render based on y position
-        }
+            if (isMoving)
+            {
+                //TODO: Set sorting layer order to render based on y position
+            }
 
-        //Attack
-        if (!isMoving)
-        {
-            attackLogic();
+            //Attack
+            if (!isMoving)
+            {
+                attackLogic();
+            }
         }
     }
 
@@ -135,7 +146,7 @@ public class Minion_Movement_Script : MonoBehaviour
 
             //Detect enemies along aim
             Vector3 vectorToTargetSpace = (spaceAimedAt.transform.position - this.transform.position);
-            if(areEnemiesAlongVector(vectorToTargetSpace))
+            if(areEnemiesAlongVector(vectorToTargetSpace, spaceAimedAt.tag))
             {
                 //Make the attack
                 if (this.isMeleeAttack)
@@ -185,21 +196,31 @@ public class Minion_Movement_Script : MonoBehaviour
         return spaceAimedAt;
     }
 
-    private bool areEnemiesAlongVector(Vector3 vectorToTargetSpace)
+    private bool areEnemiesAlongVector(Vector3 vectorToTargetSpace, string targetSpaceTag)
     {
         Debug.DrawRay(this.transform.position, vectorToTargetSpace, Color.red, 1);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, vectorToTargetSpace.magnitude);
+        float rayLength;
+        if (string.Equals(targetSpaceTag, "End Space") && this.isMeleeAttack) //if targeting an end space with a melee attack, do not use the distance to the space as the length of the raycast
+        {
+            rayLength = this.attackRange.Length * 3; //TODO: find a more elegant off the board range that just 3 co-ordinate units per gridspace of attackrange.
+        }
+        else //if a ranged attack, or melee attack targeting a normal space, use the distance to the space as the length of the raycast
+        {
+            rayLength = vectorToTargetSpace.magnitude;
+        }
+
+        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, rayLength);
         foreach (RaycastHit2D aHit in hits)
         {
             //Detect if object spotted is an Enemy
             if (aHit.collider.gameObject.CompareTag("Enemy"))
             {
-                Debug.Log("Enemy hit " + aHit.collider.gameObject.ToString());
+                //Debug.Log("Enemy hit " + aHit.collider.gameObject.ToString());
                 //Detect if enemy hit is on the right grid-row
                 float hitEnemyGridY = aHit.collider.gameObject.GetComponent<Enemy_AI_script>().nextSpace.GetComponent<Space_Script>().gridPosition.y;
                 if (hitEnemyGridY == this.mySpace.GetComponent<Space_Script>().gridPosition.y)
                 {
-                    Debug.Log("Enemy hit is on right y ");
+                    //Debug.Log("Enemy hit is on right y ");
                     return true;
                 }
             }
@@ -260,5 +281,26 @@ public class Minion_Movement_Script : MonoBehaviour
     public GameObject getTargetSpace()
     {
         return this.targetSpace;
+    }
+
+    public void onHitByAttack(int inDamage)
+    {
+        this.currentHp -= inDamage;
+        if(this.currentHp <= 0)
+        {
+            die();
+        }
+    }
+
+    private void die()
+    {
+        rigAnimator.SetTrigger("DoDie");
+        this.gameObject.GetComponent<Collider2D>().enabled = false;
+        this.isDying = true;
+    }
+
+    public void onDeathAnimationFinished()
+    {
+        Destroy(this.gameObject);
     }
 }

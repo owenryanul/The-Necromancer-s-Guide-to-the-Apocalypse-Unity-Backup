@@ -10,6 +10,11 @@ public class AnimationRelay_Script : MonoBehaviour
         this.GetComponentInParent<Enemy_AI_script>().onDeathAnimationDone();
     }
 
+    public void onEnemyMeleeAnimationDone()
+    {
+        this.GetComponentInParent<Enemy_AI_script>().onMeleeAnimationDone();
+    }
+
     public void onMeleeAttackAnimationFinished()
     {
         this.GetComponentInParent<Minion_Movement_Script>().onMeleeAttackAnimationFinished();
@@ -18,5 +23,10 @@ public class AnimationRelay_Script : MonoBehaviour
     public void onRangedAttackAnimationFinished()
     {
         
+    }
+
+    public void onMinionDeathAnimationDone()
+    {
+        this.GetComponentInParent<Minion_Movement_Script>().onDeathAnimationFinished();
     }
 }

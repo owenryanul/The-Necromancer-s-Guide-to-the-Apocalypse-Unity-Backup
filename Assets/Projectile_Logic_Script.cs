@@ -17,6 +17,9 @@ public class Projectile_Logic_Script : MonoBehaviour
     [Header("Damage")]
     public int projectileDamage = 1;
 
+    [Header("Effects")]
+    public GameObject deathParticles;
+
     // Use this for initialization
     void Start()
     {
@@ -127,5 +130,10 @@ public class Projectile_Logic_Script : MonoBehaviour
     public void setTargetSpace(GameObject inSpace)
     {
         this.targetSpace = inSpace;
+    }
+
+    private void OnDestroy()
+    {
+        Instantiate(deathParticles, this.transform.position, this.transform.rotation);
     }
 }

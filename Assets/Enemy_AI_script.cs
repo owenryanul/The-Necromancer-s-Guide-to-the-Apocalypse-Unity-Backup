@@ -12,7 +12,8 @@ public class Enemy_AI_script : MonoBehaviour
 
     [Header("Attacks")]
     public float meleeRange = 1.0f;
-    private GameObject minionToAttack;
+    public int meleeDamage = 1;
+    //private GameObject minionToAttack;
     private const float yDistanceToBeConsideredInTheSameRow = 0.1f;
 
     [Header("AI")]
@@ -66,10 +67,11 @@ public class Enemy_AI_script : MonoBehaviour
         }
         nextSpacePos.z = this.transform.position.z; //ignore the z dimension
 
-        attackLogic();
-        if (minionToAttack != null) //if a valid target is in melee range, then attack
+
+
+        if (findMinionToAttack() != null) //if a valid target is in melee range, then attack
         {
-            //TODO: Apply effects of attack
+            this.rigAnimator.SetTrigger("DoAttack");
         }
         else if (myPos != nextSpacePos) //otherwise, if not at nextSpace, move to it
         {
@@ -104,7 +106,7 @@ public class Enemy_AI_script : MonoBehaviour
         }
     }
 
-    private void attackLogic()
+    private GameObject findMinionToAttack()
     {
         Vector3 vectorDirection;
         if(isFacingRight)
@@ -119,7 +121,6 @@ public class Enemy_AI_script : MonoBehaviour
         //Raycast to detect a minion or necromancer in melee range
         //Debug.DrawRay(this.transform.position, (vectorDirection * this.meleeRange), Color.red, 1);
         RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorDirection, this.meleeRange);
-        bool noMinionFound = true;
         foreach(RaycastHit2D aHit in hits) 
         {
             if(aHit.collider.gameObject.CompareTag("Minion") || aHit.collider.gameObject.CompareTag("Necromancer"))
@@ -127,24 +128,12 @@ public class Enemy_AI_script : MonoBehaviour
                 float yDistanceToHitMinion = Mathf.Abs(aHit.collider.gameObject.transform.position.y - this.gameObject.transform.position.y);
                 if (yDistanceToHitMinion <= yDistanceToBeConsideredInTheSameRow)
                 {
-                    noMinionFound = false;
-                    this.minionToAttack = aHit.collider.gameObject;
-                    break;
+                    return aHit.collider.gameObject;
+                    
                 }
             }
         }
-
-        //if no valid target in range, set to not attacking
-        if(noMinionFound)
-        {
-            this.minionToAttack = null;
-            this.rigAnimator.SetBool("IsAttacking", false);
-        }
-        else
-        {
-            //Attack
-            this.rigAnimator.SetBool("IsAttacking", true);
-        }   
+        return null;
     }
 
 
@@ -195,6 +184,15 @@ public class Enemy_AI_script : MonoBehaviour
     {
         isFacingRight = false;
         this.transform.localScale = new Vector3(Mathf.Abs(this.transform.localScale.x), this.transform.localScale.y, this.transform.localScale.z);
+    }
+
+    public void onMeleeAnimationDone()
+    {
+        GameObject targetMinion = findMinionToAttack();
+        if (targetMinion != null)
+        {
+            targetMinion.GetComponent<Minion_Movement_Script>().onHitByAttack(this.meleeDamage);
+        }
     }
 
     public void onHitByProjectile(Projectile_Logic_Script projectile)
