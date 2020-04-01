@@ -93,7 +93,7 @@ public class Minion_Movement_Script : MonoBehaviour
     private void OnMouseDown()
     {
         Debug.Log("Minion Clicked");
-        Space_Script.setCurrentlySelectedMinion(this.gameObject);      
+        User_Input_Script.setCurrentlySelectedMinion(this.gameObject);      
     }
 
 
@@ -273,7 +273,6 @@ public class Minion_Movement_Script : MonoBehaviour
             return false;
         }
 
-
         targetSpace = spaceIn;
         return true;
     }
@@ -285,10 +284,21 @@ public class Minion_Movement_Script : MonoBehaviour
 
     public void onHitByAttack(int inDamage)
     {
-        this.currentHp -= inDamage;
-        if(this.currentHp <= 0)
+        if (this.gameObject.CompareTag("Necromancer"))
         {
-            die();
+            Dark_Energy_Meter_Script.addDarkEnergy(-inDamage);
+            if (Dark_Energy_Meter_Script.getDarkEnergy() <= 0)
+            {
+                die();
+            }
+        }
+        else
+        {
+            this.currentHp -= inDamage;
+            if (this.currentHp <= 0)
+            {
+                die();
+            }
         }
     }
 
@@ -302,5 +312,20 @@ public class Minion_Movement_Script : MonoBehaviour
     public void onDeathAnimationFinished()
     {
         Destroy(this.gameObject);
+    }
+
+    public void flipFacing()
+    {
+        if (this.isFacingRight)
+        {
+            this.isFacingRight = false;
+        }
+        else if (!this.isFacingRight)
+        {
+            this.isFacingRight = true;
+        }
+        Vector3 facing = this.transform.GetChild(0).transform.localScale;
+        facing.x *= -1;
+        this.transform.GetChild(0).transform.localScale = facing;
     }
 }

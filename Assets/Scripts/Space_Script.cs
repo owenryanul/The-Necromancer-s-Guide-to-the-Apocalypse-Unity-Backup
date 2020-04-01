@@ -5,13 +5,12 @@ using UnityEngine;
 public class Space_Script : MonoBehaviour
 {
     public Vector2 gridPosition = new Vector2(0,0);
-    public static GameObject currentlySelectedMinion;
-    private static GameObject selectionCircle;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        selectionCircle = GameObject.FindGameObjectWithTag("Selection Circle");
+
     }
 
     // Update is called once per frame
@@ -23,26 +22,11 @@ public class Space_Script : MonoBehaviour
     private void OnMouseDown()
     {
         Debug.Log("Space Clicked");
-        if (currentlySelectedMinion != null)
+        if (User_Input_Script.currentlySelectedMinion != null)
         {
-            currentlySelectedMinion.GetComponent<Minion_Movement_Script>().setTargetSpace(this.gameObject);
-            setCurrentlySelectedMinion(null);
+            User_Input_Script.currentlySelectedMinion.GetComponent<Minion_Movement_Script>().setTargetSpace(this.gameObject);
+            User_Input_Script.setCurrentlySelectedMinion(null);
         }
-    }
-
-    public static void setCurrentlySelectedMinion(GameObject minionIn)
-    {
-        currentlySelectedMinion = minionIn;
-
-        if(currentlySelectedMinion != null)
-        {
-            selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
-        }
-        else
-        {
-            selectionCircle.GetComponent<SpriteRenderer>().enabled = false;
-        }
-        //Debug.Log("set selected minion to: " + currentlySelectedMinion);
     }
 
     public static GameObject findGridSpace(int x, int y)

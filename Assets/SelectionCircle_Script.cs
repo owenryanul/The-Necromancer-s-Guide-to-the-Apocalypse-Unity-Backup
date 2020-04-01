@@ -14,9 +14,9 @@ public class SelectionCircle_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Space_Script.currentlySelectedMinion != null)
+        if (User_Input_Script.currentlySelectedMinion != null)
         {
-            this.transform.position = Space_Script.currentlySelectedMinion.transform.position;
+            this.transform.position = User_Input_Script.currentlySelectedMinion.transform.position;
         }
     }
 }
