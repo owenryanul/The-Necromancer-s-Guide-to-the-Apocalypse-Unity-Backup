@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Minion_Movement_Script : MonoBehaviour
 {
+    public string name = "Unnamed Minion";
+
     [Header("Movement")]
     public GameObject mySpace;
     private GameObject targetSpace;
@@ -302,18 +304,6 @@ public class Minion_Movement_Script : MonoBehaviour
         }
     }
 
-    private void die()
-    {
-        rigAnimator.SetTrigger("DoDie");
-        this.gameObject.GetComponent<Collider2D>().enabled = false;
-        this.isDying = true;
-    }
-
-    public void onDeathAnimationFinished()
-    {
-        Destroy(this.gameObject);
-    }
-
     public void flipFacing()
     {
         if (this.isFacingRight)
@@ -327,5 +317,22 @@ public class Minion_Movement_Script : MonoBehaviour
         Vector3 facing = this.transform.GetChild(0).transform.localScale;
         facing.x *= -1;
         this.transform.GetChild(0).transform.localScale = facing;
+    }
+
+    public void switchWeapons()
+    {
+        Debug.Log("Placeholder Weapon Switch");
+    }
+
+    private void die()
+    {
+        rigAnimator.SetTrigger("DoDie");
+        this.gameObject.GetComponent<Collider2D>().enabled = false;
+        this.isDying = true;
+    }
+
+    public void onDeathAnimationFinished()
+    {
+        Destroy(this.gameObject);
     }
 }
