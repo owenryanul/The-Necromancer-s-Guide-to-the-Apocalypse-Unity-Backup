@@ -62,12 +62,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Flip_Facing_Button_Script.cs" />
-    <Compile Include="Assets\NamePlate_Script.cs" />
+    <Compile Include="Assets\Scripts\Ability_Database_Script.cs" />
     <Compile Include="Assets\Scripts\AnimationRelay_Script.cs" />
     <Compile Include="Assets\Scripts\Dark_Energy_Meter_Script.cs" />
     <Compile Include="Assets\Scripts\Enemy_AI_script.cs" />
     <Compile Include="Assets\Scripts\Enemy_Spawning_Script.cs" />
+    <Compile Include="Assets\Scripts\Flip_Facing_Button_Script.cs" />
     <Compile Include="Assets\Scripts\Health_Meter_Script.cs" />
     <Compile Include="Assets\Scripts\Legacy\LEGACY_Enemy_Movement_Script.cs" />
     <Compile Include="Assets\Scripts\Legacy\LEGACY_Gridboard_Script.cs" />
@@ -75,11 +75,14 @@
     <Compile Include="Assets\Scripts\Legacy\LEGACY_Projectile_Logic.cs" />
     <Compile Include="Assets\Scripts\Legacy\LEGACY_spaceSelection.cs" />
     <Compile Include="Assets\Scripts\Minion_Movement_Script.cs" />
+    <Compile Include="Assets\Scripts\Molotov_Effect_Script.cs" />
+    <Compile Include="Assets\Scripts\NamePlate_Script.cs" />
     <Compile Include="Assets\Scripts\Projectile_Logic_Script.cs" />
     <Compile Include="Assets\Scripts\SelectionCircle_Script.cs" />
     <Compile Include="Assets\Scripts\Space_Script.cs" />
+    <Compile Include="Assets\Scripts\Switch_Weapon_Button_Script.cs" />
     <Compile Include="Assets\Scripts\User_Input_Script.cs" />
-    <Compile Include="Assets\Switch_Weapon_Button_Script.cs" />
+    <Compile Include="Assets\Scripts\Weapon_Database_Script.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Owen Ryan/Desktop/Projects/Unity Projects/Projects/The-Necromancer-s-Guide-to-the-Apocalypse-Unity/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

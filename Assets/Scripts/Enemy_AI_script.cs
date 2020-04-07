@@ -217,6 +217,16 @@ public class Enemy_AI_script : MonoBehaviour
         }
     }
 
+    public void onHitByDamagingEffect(int damageIn)
+    {
+        this.currentHP -= damageIn;
+        Instantiate(hurtParticleEmitter, this.transform.position + new Vector3(0, 1, 0), this.transform.rotation);
+        if (this.currentHP <= 0)
+        {
+            die();
+        }
+    }
+
     public void die()
     {
         isDying = true;

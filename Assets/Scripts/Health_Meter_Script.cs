@@ -10,7 +10,8 @@ public class Health_Meter_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        healthMeterText = GameObject.FindGameObjectWithTag("Health Meter Text");
+        this.healthMeterText = GameObject.FindGameObjectWithTag("Health Meter Text");
+        Debug.Log(this.healthMeterText.name);
     }
 
     // Update is called once per frame
@@ -20,7 +21,7 @@ public class Health_Meter_Script : MonoBehaviour
         {
             showHealthMeter();
             Minion_Movement_Script minion = User_Input_Script.currentlySelectedMinion.GetComponent<Minion_Movement_Script>();
-            healthMeterText.GetComponent<Text>().text = minion.currentHp + "/" + minion.MaxHp;
+            this.healthMeterText.GetComponent<Text>().text = minion.currentHp + "/" + minion.MaxHp;
             this.gameObject.GetComponentInChildren<SpriteMask>().alphaCutoff = 1.0f - (1.0f * ((float)minion.currentHp / (float)minion.MaxHp));
         }
         else
@@ -33,14 +34,14 @@ public class Health_Meter_Script : MonoBehaviour
     {
         this.gameObject.GetComponent<Image>().enabled = true;
         this.gameObject.GetComponentInChildren<SpriteRenderer>().enabled = true;
-        healthMeterText.GetComponent<Text>().enabled = true;
+        this.healthMeterText.GetComponent<Text>().enabled = true;
     }
 
     private void hideHealthMeter()
     {
         this.gameObject.GetComponent<Image>().enabled = false;
         this.gameObject.GetComponentInChildren<SpriteRenderer>().enabled = false;
-        healthMeterText.GetComponent<Text>().enabled = false;
+        this.healthMeterText.GetComponent<Text>().enabled = false;
     }
 
 }

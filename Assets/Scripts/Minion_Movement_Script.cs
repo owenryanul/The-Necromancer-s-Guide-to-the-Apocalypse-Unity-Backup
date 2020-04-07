@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ability = Ability_Database_Script.Ability;
+using WeaponEnum = Weapon_Database_Script.WeaponEnum;
 
 public class Minion_Movement_Script : MonoBehaviour
 {
@@ -16,7 +18,10 @@ public class Minion_Movement_Script : MonoBehaviour
 
     private bool isMoving;
 
+
     [Header("Attack")]
+    public WeaponEnum weapon1 = WeaponEnum.custom;
+    public WeaponEnum weapon2 = WeaponEnum.custom;
     public bool isMeleeAttack;
     public int meleeDamage;
     public GameObject projectile;
@@ -32,6 +37,13 @@ public class Minion_Movement_Script : MonoBehaviour
 
     private bool isDying;
 
+    private Weapon_Database_Script WeaponDatabase;
+
+    [Header("Abilities")]
+    public Ability Ability1 = Ability.none;
+    public Ability Ability2 = Ability.none;
+    public Ability Ability3 = Ability.none;
+
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +53,8 @@ public class Minion_Movement_Script : MonoBehaviour
         currentHp = MaxHp;
         isMoving = false;
         isDying = false;
+
+        WeaponDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Weapon_Database_Script>();
     }
 
     // Update is called once per frame
@@ -48,6 +62,9 @@ public class Minion_Movement_Script : MonoBehaviour
     {
         if (!isDying)
         {
+            loadStatsForCurrentlySelectedWeapon();
+
+
             Vector3 myPos = this.transform.position;
             Vector3 mySpacePos = mySpace.transform.position;
             mySpacePos.z = this.transform.position.z; //ignore the z dimension
@@ -319,9 +336,35 @@ public class Minion_Movement_Script : MonoBehaviour
         this.transform.GetChild(0).transform.localScale = facing;
     }
 
+    private void loadStatsForCurrentlySelectedWeapon()
+    {
+        WeaponEnum currentWeapon = weapon1;
+        if (currentWeapon != WeaponEnum.custom)
+        {
+            switchAttackStatsToWeapon(WeaponDatabase.findWeapon(weapon1));
+        }
+        /*switch (currentWeapon)
+        {
+            case WeaponEnum.quick_thrown_bone: switchAttackStatsToWeapon(WeaponDatabase.quick_thrown_Bone); break;
+            case WeaponEnum.Unarmed_Melee: switchAttackStatsToWeapon(WeaponDatabase.unarmed_Melee); break;
+            case WeaponEnum.thrown_bone: switchAttackStatsToWeapon(WeaponDatabase.thrown_Bone); break;
+        }*/
+    }
+
+    private void switchAttackStatsToWeapon(Weapon_Database_Script.Weapon weaponIn)
+    {
+        this.isMeleeAttack = weaponIn.isMeleeWeapon;
+        this.meleeDamage = weaponIn.meleeWeaponDamage;
+        this.projectile = weaponIn.weaponProjectile;
+        this.attackCooldown = weaponIn.weaponAttackCooldown;
+        this.attackRange = weaponIn.weaponRange;
+    }
+
     public void switchWeapons()
     {
-        Debug.Log("Placeholder Weapon Switch");
+        WeaponEnum temp = weapon1;
+        weapon1 = weapon2;
+        weapon2 = temp;
     }
 
     private void die()
@@ -335,4 +378,5 @@ public class Minion_Movement_Script : MonoBehaviour
     {
         Destroy(this.gameObject);
     }
+
 }

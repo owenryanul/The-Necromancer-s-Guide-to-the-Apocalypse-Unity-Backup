@@ -5,12 +5,13 @@ using UnityEngine;
 public class Space_Script : MonoBehaviour
 {
     public Vector2 gridPosition = new Vector2(0,0);
+    private Ability_Database_Script abilityDatabase;
     
 
     // Start is called before the first frame update
     void Start()
     {
-
+        abilityDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
     }
 
     // Update is called once per frame
@@ -24,8 +25,18 @@ public class Space_Script : MonoBehaviour
         Debug.Log("Space Clicked");
         if (User_Input_Script.currentlySelectedMinion != null)
         {
-            User_Input_Script.currentlySelectedMinion.GetComponent<Minion_Movement_Script>().setTargetSpace(this.gameObject);
-            User_Input_Script.setCurrentlySelectedMinion(null);
+            //If issuing a move order to a minion, change the minion's targetSpace to this space and deselect them
+            if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.SelectOrMove)
+            {
+                User_Input_Script.currentlySelectedMinion.GetComponent<Minion_Movement_Script>().setTargetSpace(this.gameObject);
+                User_Input_Script.setCurrentlySelectedMinion(null);
+            }
+            //If aiming an ability, cast the ability targeting this space
+            else if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.CastAbility)
+            {
+                abilityDatabase.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentlySelectedMinion, this.gameObject);
+                User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
+            }
         }
     }
 
@@ -44,6 +55,34 @@ public class Space_Script : MonoBehaviour
             }
         }
         //throw new MissingReferenceException("Grid Space with grid position " + position.ToString() + " not found");
+        return null;
+    }
+
+    public static GameObject findNearestGridSpace(Vector3 position)
+    {
+        Vector3 closestVector = new Vector3(-999999999999999999, -999999999999999999, 0);
+        GameObject closestSpace = null;
+        foreach (GameObject aSpace in GameObject.FindGameObjectsWithTag("Space"))
+        {
+            Vector3 spacePosIgnoreZ = new Vector3(aSpace.transform.position.x, aSpace.transform.position.y, position.z);
+            if (Vector3.Distance(position, spacePosIgnoreZ) < Vector3.Distance(position, closestVector))
+            {
+                closestVector = spacePosIgnoreZ;
+                closestSpace = aSpace;
+            }
+        }
+        return closestSpace;
+    }
+
+    //returns the nearest grid space, unless the closest grid space is further away than range, then returns null
+    public static GameObject findNearestGridSpaceWithinRange(Vector3 position, float range)
+    {
+        GameObject closestSpace = findNearestGridSpace(position);
+        Vector3 spacePosIgnoreZ = new Vector3(closestSpace.transform.position.x, closestSpace.transform.position.y, position.z);
+        if (Vector3.Distance(position, spacePosIgnoreZ) < range)
+        {
+            return closestSpace;
+        }
         return null;
     }
 
