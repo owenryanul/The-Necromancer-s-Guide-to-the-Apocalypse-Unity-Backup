@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Space_Script : MonoBehaviour
+public class Space_Script : MonoBehaviour, MouseDownOverrider
 {
     public Vector2 gridPosition = new Vector2(0,0);
     private Ability_Database_Script abilityDatabase;
@@ -20,7 +20,7 @@ public class Space_Script : MonoBehaviour
         
     }
 
-    private void OnMouseDown()
+    public void OnMouseDownOverride()
     {
         Debug.Log("Space Clicked");
         if (User_Input_Script.currentlySelectedMinion != null)

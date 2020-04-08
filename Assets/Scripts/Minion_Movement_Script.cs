@@ -4,7 +4,7 @@ using UnityEngine;
 using Ability = Ability_Database_Script.Ability;
 using WeaponEnum = Weapon_Database_Script.WeaponEnum;
 
-public class Minion_Movement_Script : MonoBehaviour
+public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider 
 {
     public string name = "Unnamed Minion";
 
@@ -109,7 +109,7 @@ public class Minion_Movement_Script : MonoBehaviour
     }
 
     //If minion clicked, set them as the currently selected minion
-    private void OnMouseDown()
+    public void OnMouseDownOverride()
     {
         Debug.Log("Minion Clicked");
         User_Input_Script.setCurrentlySelectedMinion(this.gameObject);      
@@ -228,7 +228,7 @@ public class Minion_Movement_Script : MonoBehaviour
             rayLength = vectorToTargetSpace.magnitude;
         }
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, rayLength);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, rayLength, LayerMask.GetMask("Enemies"));
         foreach (RaycastHit2D aHit in hits)
         {
             //Detect if object spotted is an Enemy
@@ -256,7 +256,7 @@ public class Minion_Movement_Script : MonoBehaviour
         //Detect enemies along aim
         Vector3 vectorToTargetSpace = (spaceAimedAt.transform.position - this.transform.position);
         Debug.DrawRay(this.transform.position, vectorToTargetSpace, Color.red, 1);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, vectorToTargetSpace.magnitude);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, vectorToTargetSpace.magnitude, LayerMask.GetMask("Enemies"));
         foreach (RaycastHit2D aHit in hits)
         {
             //Detect if object spotted is an Enemy

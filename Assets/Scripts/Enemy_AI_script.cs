@@ -122,7 +122,7 @@ public class Enemy_AI_script : MonoBehaviour
 
         //Raycast to detect a minion or necromancer in melee range
         //Debug.DrawRay(this.transform.position, (vectorDirection * this.meleeRange), Color.red, 1);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorDirection, this.meleeRange);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorDirection, this.meleeRange, LayerMask.GetMask("Minions"));
         foreach(RaycastHit2D aHit in hits) 
         {
             if(aHit.collider.gameObject.CompareTag("Minion") || aHit.collider.gameObject.CompareTag("Necromancer"))

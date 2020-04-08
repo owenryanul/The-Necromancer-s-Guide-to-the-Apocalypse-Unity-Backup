@@ -11,6 +11,11 @@ public class User_Input_Script : MonoBehaviour
     private static GameObject selectionCircle;
     public static Ability currentAbilityToCast;
 
+    [Header("Mouse LayerMasks")]
+    public LayerMask selectOrMove_LayersToIgnore;
+    public LayerMask castAbility_LayersToIgnore;
+    public LayerMask none_LayersToIgnore;
+
     public enum MouseCommand
     {
         SelectOrMove,
@@ -27,6 +32,8 @@ public class User_Input_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        mouseRayTraceOverride();
+
         if(Input.GetKeyDown(KeyCode.F))
         {
             flipCurrentlySelectedMinion();
@@ -42,6 +49,35 @@ public class User_Input_Script : MonoBehaviour
             currentlySelectedMinion = null;
             currentMouseCommand = MouseCommand.SelectOrMove;
             selectionCircle.GetComponent<SpriteRenderer>().enabled = false;
+        }
+    }
+
+    private void mouseRayTraceOverride()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            Vector3 source = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            source.z = this.transform.position.z;
+            //Debug.DrawRay(source, Vector3.forward, Color.red, 1);           
+            LayerMask mask;
+            // ~ before a layerMask inverses it, so the mask will ignore everything on that layer.
+            switch(currentMouseCommand)
+            {
+                case MouseCommand.SelectOrMove: mask = ~selectOrMove_LayersToIgnore; break;
+                case MouseCommand.CastAbility: mask = ~castAbility_LayersToIgnore; break;
+                default: mask = new LayerMask(); break;
+            }
+
+            RaycastHit2D hit = Physics2D.Raycast(source, Vector3.forward, Mathf.Infinity, mask);
+
+            try
+            {
+                hit.collider.gameObject.GetComponent<MouseDownOverrider>().OnMouseDownOverride();
+            }
+            catch(System.NullReferenceException e)
+            {
+                Debug.LogError("Encountered Object: " + hit.collider.gameObject.name + " does not have a script that implments MouseDownOverrider)");
+            }
         }
     }
 

@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\Enemy_Spawning_Script.cs" />
     <Compile Include="Assets\Scripts\Flip_Facing_Button_Script.cs" />
     <Compile Include="Assets\Scripts\Health_Meter_Script.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\MouseDownOverrider.cs" />
     <Compile Include="Assets\Scripts\Legacy\LEGACY_Enemy_Movement_Script.cs" />
     <Compile Include="Assets\Scripts\Legacy\LEGACY_Gridboard_Script.cs" />
     <Compile Include="Assets\Scripts\Legacy\LEGACY_Minion_Movement_Script.cs" />
