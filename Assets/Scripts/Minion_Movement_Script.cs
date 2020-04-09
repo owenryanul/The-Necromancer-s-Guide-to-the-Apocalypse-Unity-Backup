@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Ability = Ability_Database_Script.Ability;
+using AbilityID = Ability_Database_Script.AbilityID;
 using WeaponEnum = Weapon_Database_Script.WeaponEnum;
+using Buffs = Buff_Database_Script;
+
 
 public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider 
 {
@@ -40,13 +42,15 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
     private Weapon_Database_Script WeaponDatabase;
 
     [Header("Abilities")]
-    public Ability Ability1 = Ability.none;
+    public AbilityID Ability1 = AbilityID.none;
     private float ability1CurrentCooldown;
-    public Ability Ability2 = Ability.none;
+    public AbilityID Ability2 = AbilityID.none;
     private float ability2CurrentCooldown;
-    public Ability Ability3 = Ability.none;
+    public AbilityID Ability3 = AbilityID.none;
     private float ability3CurrentCooldown;
 
+    [Header("Buffs")]
+    public List<Buffs.Buff> buffs;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +60,7 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         currentHp = MaxHp;
         isMoving = false;
         isDying = false;
+        buffs = new List<Buffs.Buff>();
 
         WeaponDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Weapon_Database_Script>();
     }
@@ -66,7 +71,8 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         if (!isDying)
         {
             loadStatsForCurrentlySelectedWeapon();
-
+            applyBuffEffectsToStats();
+            tickBuffDurations();
 
             Vector3 myPos = this.transform.position;
             Vector3 mySpacePos = mySpace.transform.position;
@@ -401,14 +407,61 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         }
     }
 
-    public Ability getAbility(int i)
+    public AbilityID getAbility(int i)
     {
         switch (i)
         {
             case 1: return Ability1;
             case 2: return Ability2;
             case 3: return Ability3;
-            default: return Ability.none;
+            default: return AbilityID.none;
+        }
+    }
+
+    //Buffs
+    public void applyBuff(Buffs.Buff aBuff)
+    {
+        buffs.Add(aBuff);
+        buffs[buffs.Count - 1].durationLeft = buffs[buffs.Count - 1].duration;
+    }
+
+    private void applyBuffEffectsToStats()
+    {
+        foreach(Buffs.Buff aBuff in buffs)
+        {
+            switch (aBuff.meleeWeaponDamageCalculation)
+            {
+                case Buffs.BuffEffect.set: this.meleeDamage = aBuff.meleeWeaponDamage; break;
+                case Buffs.BuffEffect.add: this.meleeDamage += aBuff.meleeWeaponDamage; break;
+                case Buffs.BuffEffect.subtract: this.meleeDamage -= aBuff.meleeWeaponDamage; break;
+                case Buffs.BuffEffect.multipleBy: this.meleeDamage *= aBuff.meleeWeaponDamage; break;
+                case Buffs.BuffEffect.divideBy: this.meleeDamage /= aBuff.meleeWeaponDamage; break;
+            }
+
+            switch (aBuff.weaponAttackCooldownCalculation)
+            {
+                case Buffs.BuffEffect.set: this.attackCooldown = aBuff.weaponAttackCooldown; break;
+                case Buffs.BuffEffect.add: this.attackCooldown += aBuff.weaponAttackCooldown; break;
+                case Buffs.BuffEffect.subtract: this.attackCooldown -= aBuff.weaponAttackCooldown; break;
+                case Buffs.BuffEffect.multipleBy: this.attackCooldown *= aBuff.weaponAttackCooldown; break;
+                case Buffs.BuffEffect.divideBy: this.attackCooldown /= aBuff.weaponAttackCooldown; break;
+            }
+
+        }
+    }
+
+    private void tickBuffDurations()
+    {
+        foreach(Buffs.Buff aBuff in buffs)
+        {
+            if(aBuff.duration >= 0)
+            {
+                aBuff.durationLeft -= Time.deltaTime;
+                if (aBuff.durationLeft <= 0)
+                {
+                    buffs.Remove(aBuff);
+                }
+            }
         }
     }
 

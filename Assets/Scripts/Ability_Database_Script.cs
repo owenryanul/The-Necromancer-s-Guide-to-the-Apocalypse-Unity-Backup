@@ -7,21 +7,44 @@ public class Ability_Database_Script : MonoBehaviour
     [Header("Molotov Ability")]
     public GameObject molotovEffectPrefab;
     public float molotovCooldown;
+    public AbilityType molotovType;
 
-    public enum Ability
+    [Header("SprayAndPray Ability")]
+    public float sprayAndPrayCooldown;
+    public AbilityType sprayAndPrayType;
+
+    //Abilty Class Blueprint
+    // AbilityID
+    // cooldown
+    // casttype
+    // Map<String, Object> Extras
+    // start()
+    // cast()
+
+    public enum AbilityType
+    {
+        aimCast,
+        instantCast,
+        passive,
+        none
+    }
+
+    public enum AbilityID
     {
         molotov,
+        sprayAndPray,
         teleport,
         buildBarricade,
         fasterAttackPassive,
         none
     }
 
-    public void cast(Ability abilityToCast, int abilityIndex, GameObject caster, GameObject targetGridSpace)
+    public void cast(AbilityID abilityToCast, int abilityIndex, GameObject caster, GameObject targetGridSpace)
     {
         switch(abilityToCast)
         {
-            case Ability.molotov: castMolotov(caster, abilityIndex, targetGridSpace); break;
+            case AbilityID.molotov: castMolotov(caster, abilityIndex, targetGridSpace); break;
+            case AbilityID.sprayAndPray: castSprayAndPray(caster, abilityIndex); break;
         }
     }
 
@@ -33,12 +56,32 @@ public class Ability_Database_Script : MonoBehaviour
         caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex , molotovCooldown);
     }
 
-    public float getCooldown(Ability ability)
+    public void castSprayAndPray(GameObject caster, int abilityIndex)
+    {
+        Debug.Log("Casting Spray and Pray");
+        caster.GetComponent<Minion_Movement_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().sprayAndPrayBuff);
+        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, molotovCooldown);
+    }
+
+    public float getCooldown(AbilityID ability)
     {
         switch(ability)
         {
-            case Ability.molotov: return molotovCooldown;
+            case AbilityID.molotov: return molotovCooldown;
+            case AbilityID.sprayAndPray: return sprayAndPrayCooldown;
         }
+        Debug.LogError(ability + " has undefined abilityCooldown, returning 0.0f.");
         return 0.0f;
+    }
+
+    public AbilityType getAbilityType(AbilityID ability)
+    {
+        switch(ability)
+        {
+            case AbilityID.molotov: return molotovType;
+            case AbilityID.sprayAndPray: return sprayAndPrayType;
+        }
+        Debug.LogError(ability + " has undefined abilityType, returning AbilityType.none.");
+        return AbilityType.none;
     }
 }

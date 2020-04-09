@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.UI;
-using Ability = Ability_Database_Script.Ability;
+using AbilityID = Ability_Database_Script.AbilityID;
 
 public class User_Input_Script : MonoBehaviour
 {
     public static GameObject currentlySelectedMinion;
     public static MouseCommand currentMouseCommand;
     private static GameObject selectionCircle;
-    public static Ability currentAbilityToCast;
+    private static Ability_Database_Script abilityDatabase;
+    public static AbilityID currentAbilityToCast;
     public static int currentAbilityIndex;
 
     [Header("Mouse LayerMasks")]
@@ -28,6 +29,7 @@ public class User_Input_Script : MonoBehaviour
     void Start()
     {
         selectionCircle = GameObject.FindGameObjectWithTag("Selection Circle");
+        abilityDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
     }
 
     // Update is called once per frame
@@ -129,11 +131,19 @@ public class User_Input_Script : MonoBehaviour
 
         if (currentlySelectedMinion.GetComponent<Minion_Movement_Script>().getAbilityCooldown(abilityNumber) <= 0)
         {
-            if (currentAbilityToCast != Ability.none)
+            if (currentAbilityToCast != AbilityID.none)
             {
-                currentMouseCommand = MouseCommand.CastAbility;
+                if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.aimCast)
+                {
+                    currentMouseCommand = MouseCommand.CastAbility;
+                    //Space_Script will handle the OnMouseDown portion of aiming from here
+                }
+                else if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.instantCast)
+                {
+                    abilityDatabase.cast(currentAbilityToCast, currentAbilityIndex, currentlySelectedMinion, null);
+                }
             }
         }
-        //Space_Script will handle the OnMouseDown portion of aiming from here
+        
     }
 }
