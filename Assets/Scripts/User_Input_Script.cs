@@ -10,6 +10,7 @@ public class User_Input_Script : MonoBehaviour
     public static MouseCommand currentMouseCommand;
     private static GameObject selectionCircle;
     public static Ability currentAbilityToCast;
+    public static int currentAbilityIndex;
 
     [Header("Mouse LayerMasks")]
     public LayerMask selectOrMove_LayersToIgnore;
@@ -118,6 +119,7 @@ public class User_Input_Script : MonoBehaviour
     //Called by ability button's OnClick Listener
     public void aimAbility(int abilityNumber)
     {
+        currentAbilityIndex = abilityNumber;
         switch (abilityNumber)
         {
             case 1: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_Movement_Script>().Ability1; break;
@@ -125,9 +127,12 @@ public class User_Input_Script : MonoBehaviour
             case 3: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_Movement_Script>().Ability3; break;
         }
 
-        if (currentAbilityToCast != Ability.none)
+        if (currentlySelectedMinion.GetComponent<Minion_Movement_Script>().getAbilityCooldown(abilityNumber) <= 0)
         {
-            currentMouseCommand = MouseCommand.CastAbility;
+            if (currentAbilityToCast != Ability.none)
+            {
+                currentMouseCommand = MouseCommand.CastAbility;
+            }
         }
         //Space_Script will handle the OnMouseDown portion of aiming from here
     }

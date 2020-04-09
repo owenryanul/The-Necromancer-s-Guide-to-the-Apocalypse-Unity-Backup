@@ -41,8 +41,11 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
 
     [Header("Abilities")]
     public Ability Ability1 = Ability.none;
+    private float ability1CurrentCooldown;
     public Ability Ability2 = Ability.none;
+    private float ability2CurrentCooldown;
     public Ability Ability3 = Ability.none;
+    private float ability3CurrentCooldown;
 
 
     // Start is called before the first frame update
@@ -105,6 +108,21 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
             {
                 attackLogic();
             }
+
+            //Abilty Cooldowns
+            if(ability1CurrentCooldown > 0)
+            {
+                ability1CurrentCooldown -= Time.deltaTime;
+            }
+            if (ability2CurrentCooldown > 0)
+            {
+                ability2CurrentCooldown -= Time.deltaTime;
+            }
+            if (ability3CurrentCooldown > 0)
+            {
+                ability3CurrentCooldown -= Time.deltaTime;
+            }
+
         }
     }
 
@@ -343,12 +361,6 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         {
             switchAttackStatsToWeapon(WeaponDatabase.findWeapon(weapon1));
         }
-        /*switch (currentWeapon)
-        {
-            case WeaponEnum.quick_thrown_bone: switchAttackStatsToWeapon(WeaponDatabase.quick_thrown_Bone); break;
-            case WeaponEnum.Unarmed_Melee: switchAttackStatsToWeapon(WeaponDatabase.unarmed_Melee); break;
-            case WeaponEnum.thrown_bone: switchAttackStatsToWeapon(WeaponDatabase.thrown_Bone); break;
-        }*/
     }
 
     private void switchAttackStatsToWeapon(Weapon_Database_Script.Weapon weaponIn)
@@ -367,6 +379,40 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         weapon2 = temp;
     }
 
+    //Abilities
+    public float getAbilityCooldown(int i)
+    {
+        switch (i)
+        {
+            case 1: return ability1CurrentCooldown;
+            case 2: return ability2CurrentCooldown;
+            case 3: return ability3CurrentCooldown;
+            default: return 0.0f;
+        }
+    }
+
+    public void setAbilityCooldown(int i, float cooldownMax)
+    {
+        switch (i)
+        {
+            case 1: ability1CurrentCooldown = cooldownMax; break;
+            case 2: ability2CurrentCooldown = cooldownMax; break;
+            case 3: ability3CurrentCooldown = cooldownMax; break;
+        }
+    }
+
+    public Ability getAbility(int i)
+    {
+        switch (i)
+        {
+            case 1: return Ability1;
+            case 2: return Ability2;
+            case 3: return Ability3;
+            default: return Ability.none;
+        }
+    }
+
+    //Death
     private void die()
     {
         rigAnimator.SetTrigger("DoDie");

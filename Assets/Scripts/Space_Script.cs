@@ -34,7 +34,7 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
             //If aiming an ability, cast the ability targeting this space
             else if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.CastAbility)
             {
-                abilityDatabase.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentlySelectedMinion, this.gameObject);
+                abilityDatabase.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentAbilityIndex, User_Input_Script.currentlySelectedMinion, this.gameObject);
                 User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
             }
         }

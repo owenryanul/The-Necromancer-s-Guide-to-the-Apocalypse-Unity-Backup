@@ -6,6 +6,7 @@ public class Ability_Database_Script : MonoBehaviour
 {
     [Header("Molotov Ability")]
     public GameObject molotovEffectPrefab;
+    public float molotovCooldown;
 
     public enum Ability
     {
@@ -16,18 +17,28 @@ public class Ability_Database_Script : MonoBehaviour
         none
     }
 
-    public void cast(Ability abilityToCast,GameObject caster, GameObject targetGridSpace)
+    public void cast(Ability abilityToCast, int abilityIndex, GameObject caster, GameObject targetGridSpace)
     {
         switch(abilityToCast)
         {
-            case Ability.molotov: castMolotov(caster, targetGridSpace); break;
+            case Ability.molotov: castMolotov(caster, abilityIndex, targetGridSpace); break;
         }
     }
 
-    public void castMolotov(GameObject caster, GameObject targetGridSpace)
+    public void castMolotov(GameObject caster, int abilityIndex, GameObject targetGridSpace)
     {
         Debug.Log("Throwing Molotov");
         GameObject molotov = Instantiate(molotovEffectPrefab, targetGridSpace.transform.position, targetGridSpace.transform.rotation);
         molotov.GetComponent<Molotov_Effect_Script>().mySpace = targetGridSpace;
+        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex , molotovCooldown);
+    }
+
+    public float getCooldown(Ability ability)
+    {
+        switch(ability)
+        {
+            case Ability.molotov: return molotovCooldown;
+        }
+        return 0.0f;
     }
 }
