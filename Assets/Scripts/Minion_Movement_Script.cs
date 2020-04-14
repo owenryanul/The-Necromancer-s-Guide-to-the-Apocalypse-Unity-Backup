@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using AbilityID = Ability_Database_Script.AbilityID;
-using WeaponEnum = Weapon_Database_Script.WeaponEnum;
+using WeaponID = Weapon_Database_Script.WeaponID;
 using Buffs = Buff_Database_Script;
 
 
@@ -22,16 +23,19 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
 
 
     [Header("Attack")]
-    public WeaponEnum weapon1 = WeaponEnum.custom;
-    public WeaponEnum weapon2 = WeaponEnum.custom;
+    public WeaponID weapon1 = WeaponID.custom;
+    public WeaponID weapon2 = WeaponID.custom;
     public bool isMeleeAttack;
     public int meleeDamage;
     public GameObject projectile;
+    public int projectile_Damage;
+    public float projectile_Speed;
     public float attackCooldown;
     private float currentAttackCooldown;
     [Tooltip("AttackRange indicates weapon spread. AttackRange.Length determines how many gridSpaces horizontally the attack reaches. While each element determines how many gridspaces the attack spread vertically from the corripoding grid space. E.g. (0,1,2) would reach create a cone that reaches 3 spaces across, has no spread from the 1st space, spreads 1 space above AND below from the 2nd space across and spreads to the 2 spaces above AND below the 3rd space across.")]
     public int[] attackRange;
     private const float yDistanceToBeConsideredInTheSameRow = 0.2f;
+
 
     [Header("Defence")]
     public int MaxHp = 1;
@@ -50,7 +54,7 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
     private float ability3CurrentCooldown;
 
     [Header("Buffs")]
-    public List<Buffs.Buff> buffs;
+    public List<Buffs.Buff> activeBuffs;
 
     // Start is called before the first frame update
     void Start()
@@ -60,7 +64,7 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         currentHp = MaxHp;
         isMoving = false;
         isDying = false;
-        buffs = new List<Buffs.Buff>();
+        activeBuffs = new List<Buffs.Buff>();
 
         WeaponDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Weapon_Database_Script>();
     }
@@ -203,6 +207,8 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
                     GameObject proj = Instantiate(projectile, this.transform.position, this.transform.rotation);
                     proj.GetComponent<Projectile_Logic_Script>().mySpace = this.mySpace;
                     proj.GetComponent<Projectile_Logic_Script>().setTargetSpace(spaceAimedAt);
+                    proj.GetComponent<Projectile_Logic_Script>().projectileDamage = this.projectile_Damage;
+                    proj.GetComponent<Projectile_Logic_Script>().speed = this.projectile_Speed;
                 }
             }
         }
@@ -362,8 +368,9 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
 
     private void loadStatsForCurrentlySelectedWeapon()
     {
-        WeaponEnum currentWeapon = weapon1;
-        if (currentWeapon != WeaponEnum.custom)
+        WeaponID currentWeapon = weapon1;
+        Debug.Log("Weapon1 = " + currentWeapon);
+        if (currentWeapon != WeaponID.custom)
         {
             switchAttackStatsToWeapon(WeaponDatabase.findWeapon(weapon1));
         }
@@ -374,13 +381,15 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         this.isMeleeAttack = weaponIn.isMeleeWeapon;
         this.meleeDamage = weaponIn.meleeWeaponDamage;
         this.projectile = weaponIn.weaponProjectile;
+        this.projectile_Damage = weaponIn.projectile_Damage;
+        this.projectile_Speed = weaponIn.projectile_Speed;
         this.attackCooldown = weaponIn.weaponAttackCooldown;
         this.attackRange = weaponIn.weaponRange;
     }
 
     public void switchWeapons()
     {
-        WeaponEnum temp = weapon1;
+        WeaponID temp = weapon1;
         weapon1 = weapon2;
         weapon2 = temp;
     }
@@ -421,48 +430,67 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
     //Buffs
     public void applyBuff(Buffs.Buff aBuff)
     {
-        buffs.Add(aBuff);
-        buffs[buffs.Count - 1].durationLeft = buffs[buffs.Count - 1].duration;
+        activeBuffs.Add(aBuff);
+        activeBuffs[activeBuffs.Count - 1].durationLeft = activeBuffs[activeBuffs.Count - 1].duration;
     }
 
     private void applyBuffEffectsToStats()
     {
-        foreach(Buffs.Buff aBuff in buffs)
+        foreach(Buffs.Buff aBuff in activeBuffs)
         {
-            switch (aBuff.meleeWeaponDamageCalculation)
-            {
-                case Buffs.BuffEffect.set: this.meleeDamage = aBuff.meleeWeaponDamage; break;
-                case Buffs.BuffEffect.add: this.meleeDamage += aBuff.meleeWeaponDamage; break;
-                case Buffs.BuffEffect.subtract: this.meleeDamage -= aBuff.meleeWeaponDamage; break;
-                case Buffs.BuffEffect.multipleBy: this.meleeDamage *= aBuff.meleeWeaponDamage; break;
-                case Buffs.BuffEffect.divideBy: this.meleeDamage /= aBuff.meleeWeaponDamage; break;
-            }
-
-            switch (aBuff.weaponAttackCooldownCalculation)
-            {
-                case Buffs.BuffEffect.set: this.attackCooldown = aBuff.weaponAttackCooldown; break;
-                case Buffs.BuffEffect.add: this.attackCooldown += aBuff.weaponAttackCooldown; break;
-                case Buffs.BuffEffect.subtract: this.attackCooldown -= aBuff.weaponAttackCooldown; break;
-                case Buffs.BuffEffect.multipleBy: this.attackCooldown *= aBuff.weaponAttackCooldown; break;
-                case Buffs.BuffEffect.divideBy: this.attackCooldown /= aBuff.weaponAttackCooldown; break;
-            }
-
+            applyBuffToStat(ref this.attackCooldown, aBuff.weaponAttackCooldown, aBuff.weaponAttackCooldownOperator);
+            applyBuffToStat(ref this.meleeDamage, aBuff.meleeWeaponDamage, aBuff.meleeWeaponDamageOperator);
+            applyBuffToStat(ref this.projectile_Speed, aBuff.projectileSpeed, aBuff.projectileSpeedOperator);
         }
+    }
+
+
+    private void applyBuffToStat(ref float stat, float buffStat, Buffs.BuffOperator buffOperator)
+    {
+        switch (buffOperator)
+        {
+            case Buffs.BuffOperator.set: stat = buffStat; break;
+            case Buffs.BuffOperator.add: stat += buffStat; break;
+            case Buffs.BuffOperator.subtract: stat -= buffStat; break;
+            case Buffs.BuffOperator.multipleBy: stat *= buffStat; break;
+            case Buffs.BuffOperator.divideBy: stat /= buffStat; break;
+            case Buffs.BuffOperator.unused: break;
+        }
+    }
+
+    private void applyBuffToStat(ref int stat, int buffStat, Buffs.BuffOperator buffOperator)
+    {
+        switch (buffOperator)
+        {
+            case Buffs.BuffOperator.set: stat = buffStat; break;
+            case Buffs.BuffOperator.add: stat += buffStat; break;
+            case Buffs.BuffOperator.subtract: stat -= buffStat; break;
+            case Buffs.BuffOperator.multipleBy: stat *= buffStat; break;
+            case Buffs.BuffOperator.divideBy: stat /= buffStat; break;
+            case Buffs.BuffOperator.unused: break;
+        }
+    }
+
+    private void applyBuffToStat(ref bool stat, bool buffStat)
+    {
+        stat = buffStat;
     }
 
     private void tickBuffDurations()
     {
-        foreach(Buffs.Buff aBuff in buffs)
+        List<Buffs.Buff> expiredBuffs = new List<Buffs.Buff>();
+        foreach(Buffs.Buff aBuff in activeBuffs)
         {
             if(aBuff.duration >= 0)
             {
                 aBuff.durationLeft -= Time.deltaTime;
                 if (aBuff.durationLeft <= 0)
                 {
-                    buffs.Remove(aBuff);
+                    expiredBuffs.Add(aBuff);
                 }
             }
         }
+        activeBuffs = activeBuffs.Except(expiredBuffs).ToList<Buffs.Buff>(); //removes expired buffs from the list of active buffs.
     }
 
     //Death

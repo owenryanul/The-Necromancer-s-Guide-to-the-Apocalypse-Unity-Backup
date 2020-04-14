@@ -4,23 +4,6 @@ using UnityEngine;
 
 public class Ability_Database_Script : MonoBehaviour
 {
-    [Header("Molotov Ability")]
-    public GameObject molotovEffectPrefab;
-    public float molotovCooldown;
-    public AbilityType molotovType;
-
-    [Header("SprayAndPray Ability")]
-    public float sprayAndPrayCooldown;
-    public AbilityType sprayAndPrayType;
-
-    //Abilty Class Blueprint
-    // AbilityID
-    // cooldown
-    // casttype
-    // Map<String, Object> Extras
-    // start()
-    // cast()
-
     public enum AbilityType
     {
         aimCast,
@@ -33,55 +16,131 @@ public class Ability_Database_Script : MonoBehaviour
     {
         molotov,
         sprayAndPray,
+        fasterBullets,
         teleport,
         buildBarricade,
         fasterAttackPassive,
         none
     }
 
+    [System.Serializable]
+    public class Ability
+    {
+        [Header("ID")]
+        public AbilityID id;
+        [Header("Common Data")]
+        public AbilityType castType;
+        public float cooldown;
+        [Header("Ability Specfic Data")]
+        public List<AbilityExtra> extras; //Used by some abilties for extra data, e.g. molotov's effects prefab
+
+        public Ability(AbilityID inID, AbilityType castTypeIn, float cooldownIn)
+        {
+            this.id = inID;
+            this.castType = castTypeIn;
+            this.cooldown = cooldownIn;
+            this.extras = new List<AbilityExtra>();
+        }
+
+        public Ability(AbilityID inID, AbilityType castTypeIn, float cooldownIn, string[] keys)
+        {
+            this.id = inID;
+            this.castType = castTypeIn;
+            this.cooldown = cooldownIn;
+            this.extras = new List<AbilityExtra>();
+            foreach (string aKey in keys)
+            {
+                this.extras.Add(new AbilityExtra(aKey));
+            }
+        }
+
+        public Object getExtra(string keyIn)
+        {
+            foreach (AbilityExtra anExtra in extras)
+            {
+                if (string.Equals(anExtra.key, keyIn))
+                {
+                    return anExtra.value;
+                }
+            }
+            return null;
+        }
+
+        [System.Serializable]
+        public class AbilityExtra
+        {
+            public string key;
+            public Object value;
+
+            public AbilityExtra(string keyIn) { this.key = keyIn; }
+        }
+    }
+
     public void cast(AbilityID abilityToCast, int abilityIndex, GameObject caster, GameObject targetGridSpace)
     {
-        switch(abilityToCast)
+        switch (abilityToCast)
         {
             case AbilityID.molotov: castMolotov(caster, abilityIndex, targetGridSpace); break;
             case AbilityID.sprayAndPray: castSprayAndPray(caster, abilityIndex); break;
+            case AbilityID.fasterBullets: castFasterBullets(caster, abilityIndex); break;
         }
     }
 
-    public void castMolotov(GameObject caster, int abilityIndex, GameObject targetGridSpace)
+    public float getCooldown(AbilityID abilityIDin)
+    {
+        return findAbility(abilityIDin).cooldown;
+    }
+
+    public AbilityType getAbilityType(AbilityID abilityIDin)
+    {
+        return findAbility(abilityIDin).castType;
+    }
+
+    public Ability findAbility(AbilityID abilityIDin)
+    {
+        switch (abilityIDin)
+        {
+            case AbilityID.molotov: return ABILITY_Throw_Molotov;
+            case AbilityID.sprayAndPray: return ABILITY_SprayAndPray;
+            case AbilityID.fasterBullets: return ABILITY_FasterBullets;
+            default: return ABILITY_NONE;
+        }
+
+    }
+
+    /*To Add New Ability:
+        1. Add Ability below
+        2. Add Ability to findAbility() method
+        3. Add CastNewAbility() method for new ability
+        4. Add Cast method to cast() method above 
+    */
+    private Ability ABILITY_NONE = new Ability(AbilityID.none, AbilityType.none, 0.0f);
+    public Ability ABILITY_Throw_Molotov = new Ability(AbilityID.molotov, AbilityType.aimCast, 5.0f, new string[] { "MolotovEffectPrefab" });
+    public Ability ABILITY_SprayAndPray = new Ability(AbilityID.sprayAndPray, AbilityType.instantCast, 5.0f);
+    public Ability ABILITY_FasterBullets = new Ability(AbilityID.fasterBullets, AbilityType.instantCast, 5.0f);
+
+    private void castMolotov(GameObject caster, int abilityIndex, GameObject targetGridSpace)
     {
         Debug.Log("Throwing Molotov");
-        GameObject molotov = Instantiate(molotovEffectPrefab, targetGridSpace.transform.position, targetGridSpace.transform.rotation);
+        //Ability molotovAbility = findAbility(AbilityID.molotov);
+        GameObject molotov = Instantiate((GameObject)ABILITY_Throw_Molotov.getExtra("MolotovEffectPrefab"), targetGridSpace.transform.position, targetGridSpace.transform.rotation);
         molotov.GetComponent<Molotov_Effect_Script>().mySpace = targetGridSpace;
-        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex , molotovCooldown);
+        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_Throw_Molotov.cooldown);
     }
 
-    public void castSprayAndPray(GameObject caster, int abilityIndex)
+    private void castSprayAndPray(GameObject caster, int abilityIndex)
     {
         Debug.Log("Casting Spray and Pray");
+        //Ability sprayAndPray = findAbility(AbilityID.sprayAndPray);
         caster.GetComponent<Minion_Movement_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().sprayAndPrayBuff);
-        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, molotovCooldown);
+        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_SprayAndPray.cooldown);
     }
 
-    public float getCooldown(AbilityID ability)
+    private void castFasterBullets(GameObject caster, int abilityIndex)
     {
-        switch(ability)
-        {
-            case AbilityID.molotov: return molotovCooldown;
-            case AbilityID.sprayAndPray: return sprayAndPrayCooldown;
-        }
-        Debug.LogError(ability + " has undefined abilityCooldown, returning 0.0f.");
-        return 0.0f;
-    }
-
-    public AbilityType getAbilityType(AbilityID ability)
-    {
-        switch(ability)
-        {
-            case AbilityID.molotov: return molotovType;
-            case AbilityID.sprayAndPray: return sprayAndPrayType;
-        }
-        Debug.LogError(ability + " has undefined abilityType, returning AbilityType.none.");
-        return AbilityType.none;
+        Debug.Log("Casting Faster Bullets");
+        //Ability fasterBullets = findAbility(AbilityID.fasterBullets);
+        caster.GetComponent<Minion_Movement_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fasterBulletsBuff);
+        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);
     }
 }

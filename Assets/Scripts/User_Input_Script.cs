@@ -73,13 +73,16 @@ public class User_Input_Script : MonoBehaviour
 
             RaycastHit2D hit = Physics2D.Raycast(source, Vector3.forward, Mathf.Infinity, mask);
 
-            try
+            if (hit) //if rayCast hit at least 1 thing
             {
-                hit.collider.gameObject.GetComponent<MouseDownOverrider>().OnMouseDownOverride();
-            }
-            catch(System.NullReferenceException e)
-            {
-                Debug.LogError("Encountered Object: " + hit.collider.gameObject.name + " does not have a script that implments MouseDownOverrider)");
+                try
+                {
+                    hit.collider.gameObject.GetComponent<MouseDownOverrider>().OnMouseDownOverride();
+                }
+                catch (System.NullReferenceException e)
+                {
+                    Debug.LogError("Encountered Object: " + hit.collider.gameObject.name + " does not have a script that implments MouseDownOverrider)");
+                }
             }
         }
     }

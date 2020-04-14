@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Buffs = Buff_Database_Script;
 
 public class Projectile_Logic_Script : MonoBehaviour
 {
