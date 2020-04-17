@@ -108,6 +108,7 @@ public class User_Input_Script : MonoBehaviour
     {
         if (currentlySelectedMinion != null)
         {
+            currentMouseCommand = MouseCommand.SelectOrMove;
             currentlySelectedMinion.GetComponent<Minion_Movement_Script>().flipFacing();
         }
     }
@@ -117,6 +118,7 @@ public class User_Input_Script : MonoBehaviour
     {
         if (currentlySelectedMinion != null && currentlySelectedMinion.tag != "Necromancer")
         {
+            currentMouseCommand = MouseCommand.SelectOrMove;
             currentlySelectedMinion.GetComponent<Minion_Movement_Script>().switchWeapons();
         }
     }
@@ -143,7 +145,12 @@ public class User_Input_Script : MonoBehaviour
                 }
                 else if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.instantCast)
                 {
+                    currentMouseCommand = MouseCommand.SelectOrMove;
                     abilityDatabase.cast(currentAbilityToCast, currentAbilityIndex, currentlySelectedMinion, null);
+                }
+                else if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.passive)
+                {
+                    currentMouseCommand = MouseCommand.SelectOrMove;
                 }
             }
         }

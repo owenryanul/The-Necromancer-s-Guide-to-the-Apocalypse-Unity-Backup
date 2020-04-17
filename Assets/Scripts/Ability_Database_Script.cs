@@ -20,6 +20,7 @@ public class Ability_Database_Script : MonoBehaviour
         teleport,
         buildBarricade,
         fasterAttackPassive,
+        fleetOfFoot,
         none
     }
 
@@ -31,6 +32,8 @@ public class Ability_Database_Script : MonoBehaviour
         [Header("Common Data")]
         public AbilityType castType;
         public float cooldown;
+        [TextArea(2,10)]
+        public string abilityToolTip;
         [Header("Ability Specfic Data")]
         public List<AbilityExtra> extras; //Used by some abilties for extra data, e.g. molotov's effects prefab
 
@@ -83,6 +86,7 @@ public class Ability_Database_Script : MonoBehaviour
             case AbilityID.molotov: castMolotov(caster, abilityIndex, targetGridSpace); break;
             case AbilityID.sprayAndPray: castSprayAndPray(caster, abilityIndex); break;
             case AbilityID.fasterBullets: castFasterBullets(caster, abilityIndex); break;
+            case AbilityID.fleetOfFoot: castFleetOfFoot(caster, abilityIndex); break;
         }
     }
 
@@ -96,6 +100,11 @@ public class Ability_Database_Script : MonoBehaviour
         return findAbility(abilityIDin).castType;
     }
 
+    public string getAbilityTooltip(AbilityID abilityIDin)
+    {
+        return findAbility(abilityIDin).abilityToolTip;
+    }
+
     public Ability findAbility(AbilityID abilityIDin)
     {
         switch (abilityIDin)
@@ -103,6 +112,7 @@ public class Ability_Database_Script : MonoBehaviour
             case AbilityID.molotov: return ABILITY_Throw_Molotov;
             case AbilityID.sprayAndPray: return ABILITY_SprayAndPray;
             case AbilityID.fasterBullets: return ABILITY_FasterBullets;
+            case AbilityID.fleetOfFoot: return ABILITY_Fleet_Of_Foot;
             default: return ABILITY_NONE;
         }
 
@@ -118,6 +128,7 @@ public class Ability_Database_Script : MonoBehaviour
     public Ability ABILITY_Throw_Molotov = new Ability(AbilityID.molotov, AbilityType.aimCast, 5.0f, new string[] { "MolotovEffectPrefab" });
     public Ability ABILITY_SprayAndPray = new Ability(AbilityID.sprayAndPray, AbilityType.instantCast, 5.0f);
     public Ability ABILITY_FasterBullets = new Ability(AbilityID.fasterBullets, AbilityType.instantCast, 5.0f);
+    public Ability ABILITY_Fleet_Of_Foot = new Ability(AbilityID.fleetOfFoot, AbilityType.passive, 5.0f);
 
     private void castMolotov(GameObject caster, int abilityIndex, GameObject targetGridSpace)
     {
@@ -142,5 +153,13 @@ public class Ability_Database_Script : MonoBehaviour
         //Ability fasterBullets = findAbility(AbilityID.fasterBullets);
         caster.GetComponent<Minion_Movement_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fasterBulletsBuff);
         caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);
+    }
+
+    private void castFleetOfFoot(GameObject caster, int abilityIndex)
+    {
+        Debug.Log("Casting Faster Bullets");
+        //Ability fasterBullets = findAbility(AbilityID.fasterBullets);
+        caster.GetComponent<Minion_Movement_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fleetOfFootBuff);
+        //caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);
     }
 }

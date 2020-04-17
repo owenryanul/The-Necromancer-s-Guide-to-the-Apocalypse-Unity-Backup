@@ -26,6 +26,9 @@ public class Buff_Database_Script : MonoBehaviour
         public float projectileSpeed;
         public BuffOperator projectileSpeedOperator;
 
+        public float moveSpeed;
+        public BuffOperator moveSpeedOperator;
+
         public Buff(BuffID buffID, float durationIn)
         {
             this.buffID = buffID;
@@ -36,14 +39,16 @@ public class Buff_Database_Script : MonoBehaviour
             this.weaponAttackCooldownOperator = BuffOperator.unused;
             this.projectilePierceOperator = BuffOperator.unused;
             this.projectileSpeedOperator = BuffOperator.unused;
+            this.moveSpeedOperator = BuffOperator.unused;
         }
     }
 
     public enum BuffID
     {
-        sprayAndPrayBuff,
+        sprayAndPray,
         piercingShot,
-        fasterBullets
+        fasterBullets,
+        fleetOfFoot
     }
 
     public enum BuffOperator
@@ -69,8 +74,9 @@ public class Buff_Database_Script : MonoBehaviour
      *      4. Add appliance of this stat to Minion_Movement_Script.applyBuffToStat()
      */
 
-    public Buff sprayAndPrayBuff = new Buff(BuffID.sprayAndPrayBuff, 3.0f);
+    public Buff sprayAndPrayBuff = new Buff(BuffID.sprayAndPray, 3.0f);
     public Buff fasterBulletsBuff = new Buff(BuffID.fasterBullets, 5.0f);
+    public Buff fleetOfFootBuff = new Buff(BuffID.fleetOfFoot, 5.0f);
 
     //public Buff piercingShotBuff = new Buff(BuffID.sprayAndPrayBuff, 3.0f, 0, BuffEffect.add, 0.1f, BuffEffect.set);
 }

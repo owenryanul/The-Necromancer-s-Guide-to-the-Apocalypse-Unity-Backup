@@ -14,7 +14,8 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
     [Header("Movement")]
     public GameObject mySpace;
     private GameObject targetSpace;
-    public float speed = 1.0f;
+    public float baseMoveSpeed = 1.0f;
+    private float moveSpeed;
     public bool isFacingRight = true;
 
     private Animator rigAnimator;
@@ -44,6 +45,7 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
     private bool isDying;
 
     private Weapon_Database_Script WeaponDatabase;
+    private Ability_Database_Script AbilityDatabase;
 
     [Header("Abilities")]
     public AbilityID Ability1 = AbilityID.none;
@@ -67,6 +69,9 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         activeBuffs = new List<Buffs.Buff>();
 
         WeaponDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Weapon_Database_Script>();
+        AbilityDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
+
+        triggerPassiveAbilities();
     }
 
     // Update is called once per frame
@@ -74,6 +79,7 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
     {
         if (!isDying)
         {
+            moveSpeed = baseMoveSpeed; //reset movespeed to base before applying buffs etc.
             loadStatsForCurrentlySelectedWeapon();
             applyBuffEffectsToStats();
             tickBuffDurations();
@@ -87,7 +93,7 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
                 isMoving = true;
                 Vector3 directionVector = (mySpacePos - this.transform.position);
                 directionVector.z = 0;
-                Vector3 moveVector = directionVector.normalized * (speed * Time.deltaTime);
+                Vector3 moveVector = directionVector.normalized * (moveSpeed * Time.deltaTime);
                 if (moveVector.magnitude > directionVector.magnitude)
                 {
                     this.transform.position = mySpacePos;
@@ -369,7 +375,6 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
     private void loadStatsForCurrentlySelectedWeapon()
     {
         WeaponID currentWeapon = weapon1;
-        Debug.Log("Weapon1 = " + currentWeapon);
         if (currentWeapon != WeaponID.custom)
         {
             switchAttackStatsToWeapon(WeaponDatabase.findWeapon(weapon1));
@@ -416,7 +421,7 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         }
     }
 
-    public AbilityID getAbility(int i)
+    public AbilityID getAbilityIDforSlot(int i)
     {
         switch (i)
         {
@@ -424,6 +429,22 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
             case 2: return Ability2;
             case 3: return Ability3;
             default: return AbilityID.none;
+        }
+    }
+
+    public void triggerPassiveAbilities()
+    {
+        if(AbilityDatabase.getAbilityType(getAbilityIDforSlot(1)) == Ability_Database_Script.AbilityType.passive)
+        {
+            AbilityDatabase.cast(getAbilityIDforSlot(1), 1, this.gameObject, null);
+        }
+        if (AbilityDatabase.getAbilityType(getAbilityIDforSlot(2)) == Ability_Database_Script.AbilityType.passive)
+        {
+            AbilityDatabase.cast(getAbilityIDforSlot(2), 2, this.gameObject, null);
+        }
+        if (AbilityDatabase.getAbilityType(getAbilityIDforSlot(3)) == Ability_Database_Script.AbilityType.passive)
+        {
+            AbilityDatabase.cast(getAbilityIDforSlot(3), 3, this.gameObject, null);
         }
     }
 
@@ -441,6 +462,7 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
             applyBuffToStat(ref this.attackCooldown, aBuff.weaponAttackCooldown, aBuff.weaponAttackCooldownOperator);
             applyBuffToStat(ref this.meleeDamage, aBuff.meleeWeaponDamage, aBuff.meleeWeaponDamageOperator);
             applyBuffToStat(ref this.projectile_Speed, aBuff.projectileSpeed, aBuff.projectileSpeedOperator);
+            applyBuffToStat(ref this.moveSpeed, aBuff.moveSpeed, aBuff.moveSpeedOperator);
         }
     }
 
@@ -481,7 +503,7 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         List<Buffs.Buff> expiredBuffs = new List<Buffs.Buff>();
         foreach(Buffs.Buff aBuff in activeBuffs)
         {
-            if(aBuff.duration >= 0)
+            if(aBuff.duration >= 0) //buff duration of -1 are infinate
             {
                 aBuff.durationLeft -= Time.deltaTime;
                 if (aBuff.durationLeft <= 0)
