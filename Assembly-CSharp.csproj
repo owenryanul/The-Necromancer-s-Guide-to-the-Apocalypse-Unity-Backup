@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Ability_Button_Script.cs" />
     <Compile Include="Assets\Buff_Database_Script.cs" />
+    <Compile Include="Assets\Minion_Roster_Script.cs" />
     <Compile Include="Assets\Scripts\Ability_Database_Script.cs" />
     <Compile Include="Assets\Scripts\AnimationRelay_Script.cs" />
     <Compile Include="Assets\Scripts\Dark_Energy_Meter_Script.cs" />

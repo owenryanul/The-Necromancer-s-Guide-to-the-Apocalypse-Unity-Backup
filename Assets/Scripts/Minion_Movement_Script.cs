@@ -7,9 +7,12 @@ using WeaponID = Weapon_Database_Script.WeaponID;
 using Buffs = Buff_Database_Script;
 
 
-public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider 
+public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
 {
     public string name = "Unnamed Minion";
+    public string minionID;
+    public Sprite icon;
+    public int cost;
 
     [Header("Movement")]
     public GameObject mySpace;
@@ -521,6 +524,8 @@ public class Minion_Movement_Script : MonoBehaviour, MouseDownOverrider
         rigAnimator.SetTrigger("DoDie");
         this.gameObject.GetComponent<Collider2D>().enabled = false;
         this.isDying = true;
+        //Flag this minion's entry in the roster as not summoned, so that it's summoning button is re-enable and it may be resummoned.
+        GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>().flagMinionAsSummoned(this.minionID, false);
     }
 
     public void onDeathAnimationFinished()
