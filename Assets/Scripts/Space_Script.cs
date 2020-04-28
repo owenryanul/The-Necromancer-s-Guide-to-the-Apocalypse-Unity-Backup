@@ -43,15 +43,25 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
         }
         else if (User_Input_Script.currentlySelectedMinion == null)
         {
-            //if aiming minion summon, spawn the minion to be summoned on this space
+            //if aiming minion summon, and the space is unoccupied, spawn the minion to be summoned on this space
             if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.SummonMinion)
             {
+                bool thisSpaceIsUnoccupied = true;
+                foreach(GameObject aMinion in GameObject.FindGameObjectsWithTag("Minion"))
+                {
+                    if(aMinion.GetComponent<Minion_AI_Script>().getTargetSpace() == this.gameObject)
+                    {
+                        thisSpaceIsUnoccupied = false;
+                        break;
+                    }
+                }
 
-//TODO: PREVENT summoning minions on minion occupied spaces
-
-                summonMinion(User_Input_Script.currentMinionToSummon);
-                User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
-                User_Input_Script.setCurrentlySelectedMinion(null); //Will make selection circle disappear
+                if (thisSpaceIsUnoccupied)
+                {
+                    summonMinion(User_Input_Script.currentMinionToSummon);
+                    User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
+                    User_Input_Script.setCurrentlySelectedMinion(null); //Will make selection circle disappear
+                }
             }
         }
     }
