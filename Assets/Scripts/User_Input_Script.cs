@@ -192,6 +192,7 @@ public class User_Input_Script : MonoBehaviour
             RectTransform rosterRect = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>();
             Vector3 loweredPos = rosterRect.localPosition - new Vector3(0, rosterRect.sizeDelta.y, 0);
             GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>().localPosition = loweredPos;
+            GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<ScrollRect>().verticalScrollbar.value = 1; //reset scrollbar to top.
         }
         else
         {

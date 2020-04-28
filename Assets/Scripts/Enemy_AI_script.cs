@@ -297,13 +297,22 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         //If ritual complete, stop animations, spawn the ritual complete particle effect, kill the enemy and add a new minion to roster
         if (conversionProgress >= conversionProgressRequired)
         {
-            this.setBeingConverted(false);
-            this.gameObject.GetComponent<ParticleSystem>().Stop();
-            Instantiate(ritualCompleteParticleEmitter, this.transform.position, this.transform.rotation);
-            MinionRoster.addNewMinion("Absolute Unit");
-            Destroy(this.gameObject);
+            conversionComplete();
         }
 
+    }
+
+    private void conversionComplete()
+    {
+        this.setBeingConverted(false);
+        this.gameObject.GetComponent<ParticleSystem>().Stop();
+        Instantiate(ritualCompleteParticleEmitter, this.transform.position, this.transform.rotation);
+        MinionRoster.addNewMinion("Absolute Unit");
+        foreach(GameObject aMote in GameObject.FindGameObjectsWithTag("Dark Energy Mote"))
+        {
+            Destroy(aMote);
+        }
+        Destroy(this.gameObject);
     }
 
     public void setBeingConverted(bool inConverting)

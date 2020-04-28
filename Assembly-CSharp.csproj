@@ -64,7 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Ability_Button_Script.cs" />
     <Compile Include="Assets\Buff_Database_Script.cs" />
-    <Compile Include="Assets\Dark_Energy_Particle_Script.cs" />
+    <Compile Include="Assets\Dark_Energy_Mote_Script.cs" />
     <Compile Include="Assets\Minion_Roster_Script.cs" />
     <Compile Include="Assets\Necromancer_Ability_Button_Script.cs" />
     <Compile Include="Assets\Scripts\Ability_Database_Script.cs" />

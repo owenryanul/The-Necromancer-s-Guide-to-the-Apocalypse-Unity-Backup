@@ -53,7 +53,8 @@ public class Minion_Roster_Script : MonoBehaviour
             button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = aEntry.minionIcon;
             button.GetComponent<Tooltip_Button_Script>().tooltip = "Summon " + aEntry.minionName + " (" + aEntry.minionSummonCost + "E)";
             button.GetComponent<Button>().onClick.AddListener(() => proxyAimSummon(aEntry));
-            button.GetComponent<Button>().enabled = true;
+            button.GetComponent<Button>().enabled = !aEntry.isSummoned;
+            button.transform.GetChild(1).GetComponent<Image>().enabled = aEntry.isSummoned;
             aEntry.summonButton = button;
             i++;
         }
