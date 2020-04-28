@@ -30,7 +30,7 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
             //If issuing a move order to a minion, change the minion's targetSpace to this space and deselect them
             if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.SelectOrMove)
             {
-                User_Input_Script.currentlySelectedMinion.GetComponent<Minion_Movement_Script>().setTargetSpace(this.gameObject);
+                User_Input_Script.currentlySelectedMinion.GetComponent<Minion_AI_Script>().setTargetSpace(this.gameObject);
                 User_Input_Script.setCurrentlySelectedMinion(null); //Will make selection circle disappear
             }
             //If aiming an ability, cast the ability targeting this space
@@ -62,22 +62,22 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
         Vector3 spawnVector = this.gameObject.transform.position;
         spawnVector.z = 0;
         GameObject summonedMinion = Instantiate(rosterScript.minion_prefab, spawnVector, this.gameObject.transform.rotation);
-        summonedMinion.GetComponent<Minion_Movement_Script>().mySpace = this.gameObject;
-        summonedMinion.GetComponent<Minion_Movement_Script>().setTargetSpace(this.gameObject);
+        summonedMinion.GetComponent<Minion_AI_Script>().mySpace = this.gameObject;
+        summonedMinion.GetComponent<Minion_AI_Script>().setTargetSpace(this.gameObject);
 
-        summonedMinion.GetComponent<Minion_Movement_Script>().minionID = minionToSummonData.minionID;
-        summonedMinion.GetComponent<Minion_Movement_Script>().name = minionToSummonData.minionName;
-        summonedMinion.GetComponent<Minion_Movement_Script>().cost = minionToSummonData.minionSummonCost;
-        summonedMinion.GetComponent<Minion_Movement_Script>().icon = minionToSummonData.minionIcon;
-        summonedMinion.GetComponent<Minion_Movement_Script>().baseMoveSpeed = minionToSummonData.baseMovementSpeed;
-        summonedMinion.GetComponent<Minion_Movement_Script>().isFacingRight = true;
-        summonedMinion.GetComponent<Minion_Movement_Script>().MaxHp = minionToSummonData.minionMaxHp;
-        summonedMinion.GetComponent<Minion_Movement_Script>().currentHp = minionToSummonData.minionMaxHp;
-        summonedMinion.GetComponent<Minion_Movement_Script>().weapon1 = minionToSummonData.Weapon1ID;
-        summonedMinion.GetComponent<Minion_Movement_Script>().weapon2 = minionToSummonData.Weapon2ID;
-        summonedMinion.GetComponent<Minion_Movement_Script>().Ability1 = minionToSummonData.ability1ID;
-        summonedMinion.GetComponent<Minion_Movement_Script>().Ability2 = minionToSummonData.ability2ID;
-        summonedMinion.GetComponent<Minion_Movement_Script>().Ability3 = minionToSummonData.ability3ID;
+        summonedMinion.GetComponent<Minion_AI_Script>().minionID = minionToSummonData.minionID;
+        summonedMinion.GetComponent<Minion_AI_Script>().name = minionToSummonData.minionName;
+        summonedMinion.GetComponent<Minion_AI_Script>().cost = minionToSummonData.minionSummonCost;
+        summonedMinion.GetComponent<Minion_AI_Script>().icon = minionToSummonData.minionIcon;
+        summonedMinion.GetComponent<Minion_AI_Script>().baseMoveSpeed = minionToSummonData.baseMovementSpeed;
+        summonedMinion.GetComponent<Minion_AI_Script>().isFacingRight = true;
+        summonedMinion.GetComponent<Minion_AI_Script>().MaxHp = minionToSummonData.minionMaxHp;
+        summonedMinion.GetComponent<Minion_AI_Script>().currentHp = minionToSummonData.minionMaxHp;
+        summonedMinion.GetComponent<Minion_AI_Script>().weapon1 = minionToSummonData.Weapon1ID;
+        summonedMinion.GetComponent<Minion_AI_Script>().weapon2 = minionToSummonData.Weapon2ID;
+        summonedMinion.GetComponent<Minion_AI_Script>().Ability1 = minionToSummonData.ability1ID;
+        summonedMinion.GetComponent<Minion_AI_Script>().Ability2 = minionToSummonData.ability2ID;
+        summonedMinion.GetComponent<Minion_AI_Script>().Ability3 = minionToSummonData.ability3ID;
         Dark_Energy_Meter_Script.addDarkEnergy(-minionToSummonData.minionSummonCost);
         //Mark the MinionEntry in the roster as summoned, disabling the button so it can't be summoned again. On death a minion will flag the entry as unSummoned.
         GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>().flagMinionAsSummoned(minionToSummonData.minionID, true);

@@ -125,7 +125,7 @@ public class User_Input_Script : MonoBehaviour
         if (currentlySelectedMinion != null)
         {
             currentMouseCommand = MouseCommand.SelectOrMove;
-            currentlySelectedMinion.GetComponent<Minion_Movement_Script>().flipFacing();
+            currentlySelectedMinion.GetComponent<Minion_AI_Script>().flipFacing();
         }
     }
 
@@ -135,7 +135,7 @@ public class User_Input_Script : MonoBehaviour
         if (currentlySelectedMinion != null && currentlySelectedMinion.tag != "Necromancer")
         {
             currentMouseCommand = MouseCommand.SelectOrMove;
-            currentlySelectedMinion.GetComponent<Minion_Movement_Script>().switchWeapons();
+            currentlySelectedMinion.GetComponent<Minion_AI_Script>().switchWeapons();
         }
     }
 
@@ -146,13 +146,13 @@ public class User_Input_Script : MonoBehaviour
         switch (abilityNumber)
         {
             case -1: currentAbilityToCast = AbilityID.necromancer_ConversationRitual; break;
-            case 1: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_Movement_Script>().Ability1; break;
-            case 2: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_Movement_Script>().Ability2; break;
-            case 3: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_Movement_Script>().Ability3; break;
+            case 1: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_AI_Script>().Ability1; break;
+            case 2: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_AI_Script>().Ability2; break;
+            case 3: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_AI_Script>().Ability3; break;
         }
 
         //If ability is not on cooldown OR ability is a necromancer ability(ability number < 0)
-        if (currentlySelectedMinion.GetComponent<Minion_Movement_Script>().getAbilityCooldown(abilityNumber) <= 0 || (abilityNumber < 0))
+        if (currentlySelectedMinion.GetComponent<Minion_AI_Script>().getAbilityCooldown(abilityNumber) <= 0 || (abilityNumber < 0))
         {
             //MINION ABILITIES
             if (currentAbilityToCast != AbilityID.none)

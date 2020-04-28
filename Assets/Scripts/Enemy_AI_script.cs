@@ -78,7 +78,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         else
         {
             //Set target to the space currently occupied by the necromancer
-            this.targetSpace = tryingToKill.GetComponent<Minion_Movement_Script>().getTargetSpace();
+            this.targetSpace = tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace();
 
             Vector3 myPos = this.transform.position;
             Vector3 nextSpacePos = nextSpace.transform.position;
@@ -234,7 +234,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         GameObject targetMinion = findMinionToAttack();
         if (targetMinion != null)
         {
-            targetMinion.GetComponent<Minion_Movement_Script>().onHitByAttack(this.meleeDamage);
+            targetMinion.GetComponent<Minion_AI_Script>().onHitByAttack(this.meleeDamage);
         }
     }
 

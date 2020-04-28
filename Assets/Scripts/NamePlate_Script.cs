@@ -18,7 +18,7 @@ public class NamePlate_Script : MonoBehaviour
         if (User_Input_Script.currentlySelectedMinion != null && !User_Input_Script.currentlySelectedMinion.CompareTag("Necromancer"))
         {
             showNamePlate();
-            Minion_Movement_Script minion = User_Input_Script.currentlySelectedMinion.GetComponent<Minion_Movement_Script>();
+            Minion_AI_Script minion = User_Input_Script.currentlySelectedMinion.GetComponent<Minion_AI_Script>();
             this.gameObject.GetComponentInChildren<Text>().text = minion.name;
         }
         else

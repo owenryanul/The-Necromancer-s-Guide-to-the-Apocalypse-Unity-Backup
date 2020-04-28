@@ -20,7 +20,7 @@ public class Health_Meter_Script : MonoBehaviour
         if(User_Input_Script.currentlySelectedMinion != null && !User_Input_Script.currentlySelectedMinion.CompareTag("Necromancer"))
         {
             showHealthMeter();
-            Minion_Movement_Script minion = User_Input_Script.currentlySelectedMinion.GetComponent<Minion_Movement_Script>();
+            Minion_AI_Script minion = User_Input_Script.currentlySelectedMinion.GetComponent<Minion_AI_Script>();
             this.healthMeterText.GetComponent<Text>().text = minion.currentHp + "/" + minion.MaxHp;
             this.gameObject.GetComponentInChildren<SpriteMask>().alphaCutoff = 1.0f - (1.0f * ((float)minion.currentHp / (float)minion.MaxHp));
         }

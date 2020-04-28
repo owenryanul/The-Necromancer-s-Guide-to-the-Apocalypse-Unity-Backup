@@ -150,30 +150,30 @@ public class Ability_Database_Script : MonoBehaviour
         //Ability molotovAbility = findAbility(AbilityID.molotov);
         GameObject molotov = Instantiate((GameObject)ABILITY_Throw_Molotov.getExtra("MolotovEffectPrefab"), targetGridSpace.transform.position, targetGridSpace.transform.rotation);
         molotov.GetComponent<Molotov_Effect_Script>().mySpace = targetGridSpace;
-        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_Throw_Molotov.cooldown);
+        caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_Throw_Molotov.cooldown);
     }
 
     private void castSprayAndPray(GameObject caster, int abilityIndex)
     {
         Debug.Log("Casting Spray and Pray");
         //Ability sprayAndPray = findAbility(AbilityID.sprayAndPray);
-        caster.GetComponent<Minion_Movement_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().sprayAndPrayBuff);
-        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_SprayAndPray.cooldown);
+        caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().sprayAndPrayBuff);
+        caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_SprayAndPray.cooldown);
     }
 
     private void castFasterBullets(GameObject caster, int abilityIndex)
     {
         Debug.Log("Casting Faster Bullets");
         //Ability fasterBullets = findAbility(AbilityID.fasterBullets);
-        caster.GetComponent<Minion_Movement_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fasterBulletsBuff);
-        caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);
+        caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fasterBulletsBuff);
+        caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);
     }
 
     private void castFleetOfFoot(GameObject caster, int abilityIndex)
     {
         Debug.Log("Casting Fleet of Foot");
         //Ability fasterBullets = findAbility(AbilityID.fasterBullets);
-        caster.GetComponent<Minion_Movement_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fleetOfFootBuff);
+        caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fleetOfFootBuff);
         //caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);
     }
 }
