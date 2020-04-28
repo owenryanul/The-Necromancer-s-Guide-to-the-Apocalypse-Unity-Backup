@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy_AI_script : MonoBehaviour
+public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 {
     [Header("Movement")]
     public GameObject nextSpace;
@@ -30,8 +30,19 @@ public class Enemy_AI_script : MonoBehaviour
 
     [Header("Visuals")]
     public GameObject hurtParticleEmitter;
-    
+    public GameObject ritualCompleteParticleEmitter;
 
+    [Header("Conversion And Energy")]
+    public int energyRewardOnKill = 1;
+    public int conversionProgressRequired = 10;
+    private bool beingConverted;
+    private int conversionProgress;
+    private Vector3 conversionHoldingPoint;
+
+
+    private Ability_Database_Script AbilityDatabase;
+    private Minion_Roster_Script MinionRoster;
+    private Dark_Energy_Meter_Script darkEnergyMeterScript;
     
 
     // Start is called before the first frame update
@@ -41,8 +52,15 @@ public class Enemy_AI_script : MonoBehaviour
         rigAnimator = this.gameObject.GetComponentInChildren<Animator>();
         isMoving = false;
         isDying = false;
+        beingConverted = false;
+        conversionHoldingPoint = new Vector3(14, 10, 0);
+        this.gameObject.GetComponent<ParticleSystem>().Stop();
 
         currentHP = maxHP;
+
+        AbilityDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
+        MinionRoster = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>();
+        darkEnergyMeterScript = GameObject.FindGameObjectWithTag("Dark Energy Meter").GetComponent<Dark_Energy_Meter_Script>();
     }
 
     // Update is called once per frame
@@ -52,59 +70,82 @@ public class Enemy_AI_script : MonoBehaviour
         {
             return; //override update if playing the death animation
         }
-        //Set target to the space currently occupied by the necromancer
-        this.targetSpace =  tryingToKill.GetComponent<Minion_Movement_Script>().getTargetSpace();
 
-        Vector3 myPos = this.transform.position;
-        Vector3 nextSpacePos = nextSpace.transform.position;
-        if (nextSpacePos.x > myPos.x) //if next space is left of this enemy
+        if (this.beingConverted)
         {
-            nextSpacePos.x -= meleeRange; //offset the target position by melee range
-            flipSpriteRight();
+            conversionUpdate();
         }
-        else if (nextSpacePos.x <= myPos.x) //if next space is right of this enemy
+        else
         {
-            nextSpacePos.x += meleeRange;
-            flipSpriteLeft();
-        }
-        nextSpacePos.z = this.transform.position.z; //ignore the z dimension
+            //Set target to the space currently occupied by the necromancer
+            this.targetSpace = tryingToKill.GetComponent<Minion_Movement_Script>().getTargetSpace();
 
-
-
-        if (findMinionToAttack() != null) //if a valid target is in melee range, then attack
-        {
-            this.rigAnimator.SetTrigger("DoAttack");
-        }
-        else if (myPos != nextSpacePos) //otherwise, if not at nextSpace, move to it
-        {
-            isMoving = true;
-            Vector3 directionVector = (nextSpacePos - this.transform.position);
-            directionVector.z = 0;
-            Vector3 moveVector = directionVector.normalized * (speed * Time.deltaTime);
-            //if target position is close than 1 frame's worth of movement, snap to it, otherwise move towards it
-            if (moveVector.magnitude > directionVector.magnitude)
+            Vector3 myPos = this.transform.position;
+            Vector3 nextSpacePos = nextSpace.transform.position;
+            if (nextSpacePos.x > myPos.x) //if next space is left of this enemy
             {
-                this.transform.position = nextSpacePos;
+                nextSpacePos.x -= meleeRange; //offset the target position by melee range
+                flipSpriteRight();
             }
-            else
+            else if (nextSpacePos.x <= myPos.x) //if next space is right of this enemy
             {
-                this.transform.position += moveVector;
+                nextSpacePos.x += meleeRange;
+                flipSpriteLeft();
+            }
+            nextSpacePos.z = this.transform.position.z; //ignore the z dimension
+
+
+
+            if (findMinionToAttack() != null) //if a valid target is in melee range, then attack
+            {
+                this.rigAnimator.SetTrigger("DoAttack");
+            }
+            else if (myPos != nextSpacePos) //otherwise, if not at nextSpace, move to it
+            {
+                isMoving = true;
+                Vector3 directionVector = (nextSpacePos - this.transform.position);
+                directionVector.z = 0;
+                Vector3 moveVector = directionVector.normalized * (speed * Time.deltaTime);
+                //if target position is close than 1 frame's worth of movement, snap to it, otherwise move towards it
+                if (moveVector.magnitude > directionVector.magnitude)
+                {
+                    this.transform.position = nextSpacePos;
+                }
+                else
+                {
+                    this.transform.position += moveVector;
+                }
+            }
+            else if (nextSpace != targetSpace) //if at nextSpace check if its your target space, if not change nextSpace
+            {
+                nextSpace = findNextSpace();
+            }
+            else //if at nextSpace and it is your target space, stop moving
+            {
+                isMoving = false;
+            }
+
+
+            rigAnimator.SetBool("IsWalking", isMoving);
+            if (isMoving)
+            {
+                //TODO: Set sorting layer order to render based on y position
             }
         }
-        else if (nextSpace != targetSpace) //if at nextSpace check if its your target space, if not change nextSpace
-        {
-            nextSpace = findNextSpace();
-        }
-        else //if at nextSpace and it is your target space, stop moving
-        {
-            isMoving = false;
-        }
+    }
 
-
-        rigAnimator.SetBool("IsWalking", isMoving);
-        if (isMoving)
+    public void OnMouseDownOverride()
+    {
+        Debug.Log("Enemy Clicked");
+        if (User_Input_Script.currentlySelectedMinion != null)
         {
-            //TODO: Set sorting layer order to render based on y position
+            //If aiming an ability, cast the ability targeting this space
+            if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.CastAbilityOnEnemy)
+            {
+                AbilityDatabase.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentAbilityIndex, User_Input_Script.currentlySelectedMinion, this.gameObject);
+                User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
+                //Circle does not disappear because it goes back to the ability caster, who s the currently selected minion
+            }
         }
     }
 
@@ -197,6 +238,96 @@ public class Enemy_AI_script : MonoBehaviour
         }
     }
 
+    public static GameObject findNearestEnemy(Vector3 position)
+    {
+        Vector3 closestVector = new Vector3(-999999999999999999, -999999999999999999, 0);
+        GameObject closestSpace = null;
+        foreach (GameObject aSpace in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            Vector3 spacePosIgnoreZ = new Vector3(aSpace.transform.position.x, aSpace.transform.position.y, position.z);
+            if (Vector3.Distance(position, spacePosIgnoreZ) < Vector3.Distance(position, closestVector))
+            {
+                closestVector = spacePosIgnoreZ;
+                closestSpace = aSpace;
+            }
+        }
+        return closestSpace;
+    }
+
+    //returns the nearest grid space, unless the closest grid space is further away than range, then returns null
+    public static GameObject findNearestEnemyWithinRange(Vector3 position, float range)
+    {
+        GameObject closestSpace = findNearestEnemy(position);
+        Vector3 spacePosIgnoreZ = new Vector3(closestSpace.transform.position.x, closestSpace.transform.position.y, position.z);
+        if (Vector3.Distance(position, spacePosIgnoreZ) < range)
+        {
+            return closestSpace;
+        }
+        return null;
+    }
+
+    
+    //[Conversion Methods]
+    //Replaces the Update logic while the enemy is being converted
+    private void conversionUpdate()
+    {
+        //Move the Enemy to the ritual's holding position.
+        Vector3 ritualPos = conversionHoldingPoint;
+        float dragSpeed = 5.0f;
+        ritualPos.z = this.transform.position.z;
+        if(this.transform.position != ritualPos)
+        {
+            Vector3 v = (ritualPos - this.transform.position).normalized * dragSpeed * Time.deltaTime;
+            if ((ritualPos - this.transform.position).magnitude < v.magnitude)
+            {
+                this.transform.position = ritualPos;
+            }
+            else
+            {
+                this.transform.position += v;
+            }
+        }
+
+        //Update Ritual Particles to increase speed and emission rate as ritual progress increases.
+        ParticleSystem.ShapeModule ritualParticleShape = this.gameObject.GetComponent<ParticleSystem>().shape;
+        ritualParticleShape.radiusSpeed = 1 + (1.0f * (conversionProgress / conversionProgressRequired));
+        ParticleSystem.EmissionModule RitualParticleEmit = this.gameObject.GetComponent<ParticleSystem>().emission;
+        RitualParticleEmit.rateOverTime = 10 + (90 * (conversionProgress / conversionProgressRequired));
+
+        //If ritual complete, stop animations, spawn the ritual complete particle effect, kill the enemy and add a new minion to roster
+        if (conversionProgress >= conversionProgressRequired)
+        {
+            this.setBeingConverted(false);
+            this.gameObject.GetComponent<ParticleSystem>().Stop();
+            Instantiate(ritualCompleteParticleEmitter, this.transform.position, this.transform.rotation);
+            MinionRoster.addNewMinion("Absolute Unit");
+            Destroy(this.gameObject);
+        }
+
+    }
+
+    public void setBeingConverted(bool inConverting)
+    {
+        this.beingConverted = inConverting;
+        conversionProgress = 0;
+        this.rigAnimator.SetBool("IsConverting", inConverting);
+        if (inConverting)
+        {
+            this.rigAnimator.SetTrigger("StartConverting"); //trigger the transition animation
+            this.gameObject.GetComponent<ParticleSystem>().Play();
+        }
+    }
+
+    public bool isBeingConverted()
+    {
+        return this.beingConverted;
+    }
+
+    public void addProgressToConversion(int energyIn)
+    {
+        this.conversionProgress += energyIn;
+    }
+
     public void onHitByProjectile(Projectile_Logic_Script projectile)
     {
         this.currentHP -= projectile.projectileDamage;
@@ -229,6 +360,7 @@ public class Enemy_AI_script : MonoBehaviour
 
     public void die()
     {
+        darkEnergyMeterScript.addDarkEnergyOnEnemySlain(this.energyRewardOnKill, this.gameObject);
         isDying = true;
         rigAnimator.SetBool("IsDying", isDying);
         this.gameObject.GetComponent<Collider2D>().enabled = false;

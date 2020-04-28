@@ -34,7 +34,7 @@ public class Minion_Roster_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        markRosterButtonsAsUnaffordable();
     }
 
     private void generateRosterButtons()
@@ -56,6 +56,33 @@ public class Minion_Roster_Script : MonoBehaviour
             button.GetComponent<Button>().enabled = true;
             aEntry.summonButton = button;
             i++;
+        }
+        GameObject.FindGameObjectWithTag("Minion Roster Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0 ,120 * (1 + Mathf.FloorToInt(rosterOfMinions.Count / 7)));
+    }
+
+    private void clearRosterButtons()
+    {
+        GameObject content = GameObject.FindGameObjectWithTag("Minion Roster Content");
+        foreach (Transform aButton in content.transform)
+        {
+            Destroy(aButton.gameObject);
+        }
+    }
+
+    private void markRosterButtonsAsUnaffordable()
+    {
+        foreach(MinionEntry aEntry in rosterOfMinions)
+        {
+            if(aEntry.minionSummonCost < Dark_Energy_Meter_Script.getDarkEnergy())
+            {
+                aEntry.summonButton.GetComponent<Button>().interactable = true;
+                aEntry.summonButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            }
+            else
+            {
+                aEntry.summonButton.GetComponent<Button>().interactable = false;
+                aEntry.summonButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = new Color(0.4811321f, 0.4811321f, 0.4811321f, 1.0f);
+            }
         }
     }
 
@@ -89,9 +116,17 @@ public class Minion_Roster_Script : MonoBehaviour
                 anEntry.isSummoned = flag;
                 anEntry.summonButton.GetComponent<Button>().enabled = !flag;
                 anEntry.summonButton.transform.GetChild(1).GetComponent<Image>().enabled = flag;
-                //
             }
         }
+    }
+
+    public void addNewMinion(string inName)
+    {
+        Debug.Log("inName : " + inName);
+        clearRosterButtons();
+        MinionEntry newMinion = new MinionEntry("MIN-" + (rosterOfMinions.Count + 2), inName, MinionDefaultIcon, 5, 1.0f, WeaponID.thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fleetOfFoot, AbilityID.fleetOfFoot);
+        rosterOfMinions.Add(newMinion);
+        generateRosterButtons();
     }
 
     [System.Serializable]

@@ -8,6 +8,7 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
     private static int darkEnergy;
     public int startingDarkEnergy = 10;
     public int meterFilledInAt = 300;
+    public GameObject darkEnergyParticle;
 
     // Start is called before the first frame update
     void Start()
@@ -43,5 +44,26 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
     public static void addDarkEnergy(int darkEnergyIn)
     {
         darkEnergy += darkEnergyIn;
+    }
+
+    public void addDarkEnergyOnEnemySlain(int darkEnergyIn, GameObject enemy)
+    {
+        bool noEnemyBeingConverted = true;
+        foreach(GameObject anEnemy in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            if(anEnemy.GetComponent<Enemy_AI_script>().isBeingConverted())
+            {
+                anEnemy.GetComponent<Enemy_AI_script>().addProgressToConversion(darkEnergyIn);
+                GameObject effect = Instantiate(darkEnergyParticle, enemy.transform.position, enemy.transform.rotation);
+                effect.GetComponent<Dark_Energy_Particle_Script>().target = anEnemy.transform.position;
+                noEnemyBeingConverted = false;
+                break;
+            }
+        }
+
+        if (noEnemyBeingConverted)
+        {
+            darkEnergy += darkEnergyIn;
+        }
     }
 }

@@ -19,7 +19,8 @@ public class User_Input_Script : MonoBehaviour
 
     [Header("Mouse LayerMasks")]
     public LayerMask selectOrMove_LayersToIgnore;
-    public LayerMask castAbility_LayersToIgnore;
+    public LayerMask castAbilityOnSpace_LayersToIgnore;
+    public LayerMask castAbilityOnEnemy_LayersToIgnore;
     public LayerMask none_LayersToIgnore;
 
     public static bool rosterVisable;
@@ -29,7 +30,8 @@ public class User_Input_Script : MonoBehaviour
     public enum MouseCommand
     {
         SelectOrMove,
-        CastAbility,
+        CastAbilityOnSpace,
+        CastAbilityOnEnemy,
         SummonMinion,
         None
     }
@@ -60,6 +62,7 @@ public class User_Input_Script : MonoBehaviour
         if(Input.GetMouseButtonDown(1))//right-click resets mouse inputs to default state
         {
             currentlySelectedMinion = null;
+            currentAbilityToCast = AbilityID.none;
             currentMouseCommand = MouseCommand.SelectOrMove;
             selectionCircle.GetComponent<SpriteRenderer>().enabled = false;
         }
@@ -77,8 +80,10 @@ public class User_Input_Script : MonoBehaviour
             switch(currentMouseCommand)
             {
                 case MouseCommand.SelectOrMove: mask = ~selectOrMove_LayersToIgnore; break;
-                case MouseCommand.CastAbility: mask = ~castAbility_LayersToIgnore; break;
-                case MouseCommand.SummonMinion: mask = ~castAbility_LayersToIgnore; break;
+                case MouseCommand.CastAbilityOnSpace: mask = ~castAbilityOnSpace_LayersToIgnore; break;
+                case MouseCommand.CastAbilityOnEnemy: mask = ~castAbilityOnEnemy_LayersToIgnore; break;
+                case MouseCommand.SummonMinion: mask = ~castAbilityOnSpace_LayersToIgnore; break;
+                
                 default: mask = new LayerMask(); Debug.LogWarning("That mouse command does not have any layer mask associated with it. Check User_Input_Script.mouseRayTraceOverride()"); break;
             }
 
@@ -140,18 +145,22 @@ public class User_Input_Script : MonoBehaviour
         currentAbilityIndex = abilityNumber;
         switch (abilityNumber)
         {
+            case -1: currentAbilityToCast = AbilityID.necromancer_ConversationRitual; break;
             case 1: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_Movement_Script>().Ability1; break;
             case 2: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_Movement_Script>().Ability2; break;
             case 3: currentAbilityToCast = currentlySelectedMinion.GetComponent<Minion_Movement_Script>().Ability3; break;
         }
 
-        if (currentlySelectedMinion.GetComponent<Minion_Movement_Script>().getAbilityCooldown(abilityNumber) <= 0)
+        //If ability is not on cooldown OR ability is a necromancer ability(ability number < 0)
+        if (currentlySelectedMinion.GetComponent<Minion_Movement_Script>().getAbilityCooldown(abilityNumber) <= 0 || (abilityNumber < 0))
         {
+            //MINION ABILITIES
             if (currentAbilityToCast != AbilityID.none)
             {
                 if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.aimCast)
                 {
-                    currentMouseCommand = MouseCommand.CastAbility;
+                    currentMouseCommand = MouseCommand.CastAbilityOnSpace;
+                    selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
                     //Space_Script will handle the OnMouseDown portion of aiming from here
                 }
                 else if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.instantCast)
@@ -162,6 +171,12 @@ public class User_Input_Script : MonoBehaviour
                 else if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.passive)
                 {
                     currentMouseCommand = MouseCommand.SelectOrMove;
+                }
+                else if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.targetEnemyCast)
+                {
+                    currentMouseCommand = MouseCommand.CastAbilityOnEnemy;
+                    selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
+                    //......... will handle the OnMouseDown portion of aiming from here
                 }
             }
         }
@@ -194,7 +209,7 @@ public class User_Input_Script : MonoBehaviour
     {
         
         Debug.Log("Aiming Summon Minion Dummy Response: " + inData.minionName);
-        if (inData.minionSummonCost < Dark_Energy_Meter_Script.getDarkEnergy() + 1)
+        if (inData.minionSummonCost < Dark_Energy_Meter_Script.getDarkEnergy())
         {
             currentlySelectedMinion = null;
             currentMouseCommand = MouseCommand.SummonMinion;
@@ -209,5 +224,4 @@ public class User_Input_Script : MonoBehaviour
         }
         
     }
-
 }

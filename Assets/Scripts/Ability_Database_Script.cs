@@ -8,12 +8,14 @@ public class Ability_Database_Script : MonoBehaviour
     {
         aimCast,
         instantCast,
+        targetEnemyCast,
         passive,
         none
     }
 
     public enum AbilityID
     {
+        necromancer_ConversationRitual,
         molotov,
         sprayAndPray,
         fasterBullets,
@@ -83,6 +85,7 @@ public class Ability_Database_Script : MonoBehaviour
     {
         switch (abilityToCast)
         {
+            case AbilityID.necromancer_ConversationRitual: castNecromancerConversionRitual(caster, targetGridSpace); break;
             case AbilityID.molotov: castMolotov(caster, abilityIndex, targetGridSpace); break;
             case AbilityID.sprayAndPray: castSprayAndPray(caster, abilityIndex); break;
             case AbilityID.fasterBullets: castFasterBullets(caster, abilityIndex); break;
@@ -109,6 +112,7 @@ public class Ability_Database_Script : MonoBehaviour
     {
         switch (abilityIDin)
         {
+            case AbilityID.necromancer_ConversationRitual: return ABILITY_NECROMANCER_ConversionRitual;
             case AbilityID.molotov: return ABILITY_Throw_Molotov;
             case AbilityID.sprayAndPray: return ABILITY_SprayAndPray;
             case AbilityID.fasterBullets: return ABILITY_FasterBullets;
@@ -125,10 +129,20 @@ public class Ability_Database_Script : MonoBehaviour
         4. Add Cast method to cast() method above 
     */
     private Ability ABILITY_NONE = new Ability(AbilityID.none, AbilityType.none, 0.0f);
+
+    public Ability ABILITY_NECROMANCER_ConversionRitual = new Ability(AbilityID.necromancer_ConversationRitual, AbilityType.targetEnemyCast, 0.0f);
+
     public Ability ABILITY_Throw_Molotov = new Ability(AbilityID.molotov, AbilityType.aimCast, 5.0f, new string[] { "MolotovEffectPrefab" });
     public Ability ABILITY_SprayAndPray = new Ability(AbilityID.sprayAndPray, AbilityType.instantCast, 5.0f);
     public Ability ABILITY_FasterBullets = new Ability(AbilityID.fasterBullets, AbilityType.instantCast, 5.0f);
     public Ability ABILITY_Fleet_Of_Foot = new Ability(AbilityID.fleetOfFoot, AbilityType.passive, 5.0f);
+
+    private void castNecromancerConversionRitual(GameObject caster, GameObject targetEnemy)
+    {
+        Debug.Log("Casting Conversion Ritual");
+        Debug.Log("Casting Conversion Ritual targeting " + targetEnemy.GetComponent<Enemy_AI_script>().name);
+        targetEnemy.GetComponent<Enemy_AI_script>().setBeingConverted(true);
+    }
 
     private void castMolotov(GameObject caster, int abilityIndex, GameObject targetGridSpace)
     {
@@ -157,7 +171,7 @@ public class Ability_Database_Script : MonoBehaviour
 
     private void castFleetOfFoot(GameObject caster, int abilityIndex)
     {
-        Debug.Log("Casting Faster Bullets");
+        Debug.Log("Casting Fleet of Foot");
         //Ability fasterBullets = findAbility(AbilityID.fasterBullets);
         caster.GetComponent<Minion_Movement_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fleetOfFootBuff);
         //caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);

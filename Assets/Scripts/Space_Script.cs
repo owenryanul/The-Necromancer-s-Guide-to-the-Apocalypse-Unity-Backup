@@ -34,7 +34,7 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
                 User_Input_Script.setCurrentlySelectedMinion(null); //Will make selection circle disappear
             }
             //If aiming an ability, cast the ability targeting this space
-            else if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.CastAbility)
+            else if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.CastAbilityOnSpace)
             {
                 abilityDatabase.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentAbilityIndex, User_Input_Script.currentlySelectedMinion, this.gameObject);
                 User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
@@ -46,6 +46,9 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
             //if aiming minion summon, spawn the minion to be summoned on this space
             if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.SummonMinion)
             {
+
+//TODO: PREVENT summoning minions on minion occupied spaces
+
                 summonMinion(User_Input_Script.currentMinionToSummon);
                 User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
                 User_Input_Script.setCurrentlySelectedMinion(null); //Will make selection circle disappear
