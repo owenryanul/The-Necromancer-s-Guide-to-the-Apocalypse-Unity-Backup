@@ -42,7 +42,6 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 
     private Ability_Database_Script AbilityDatabase;
     private Minion_Roster_Script MinionRoster;
-    private Dark_Energy_Meter_Script darkEnergyMeterScript;
     
 
     // Start is called before the first frame update
@@ -60,7 +59,6 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 
         AbilityDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
         MinionRoster = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>();
-        darkEnergyMeterScript = GameObject.FindGameObjectWithTag("Dark Energy Meter").GetComponent<Dark_Energy_Meter_Script>();
     }
 
     // Update is called once per frame
@@ -369,7 +367,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 
     public void die()
     {
-        darkEnergyMeterScript.addDarkEnergyOnEnemySlain(this.energyRewardOnKill, this.gameObject);
+        Dark_Energy_Meter_Script.addDarkEnergyOnEnemySlain(this.energyRewardOnKill, this.gameObject);
         isDying = true;
         rigAnimator.SetBool("IsDying", isDying);
         this.gameObject.GetComponent<Collider2D>().enabled = false;

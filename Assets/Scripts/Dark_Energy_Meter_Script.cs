@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class Dark_Energy_Meter_Script : MonoBehaviour
 {
-    private static int darkEnergy;
+    private static Dark_Energy_Meter_Script instance; 
+    private int darkEnergy;
     public int startingDarkEnergy = 10;
     public int meterFilledInAt = 300;
     public GameObject darkEnergyMote;
@@ -13,6 +14,7 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
         darkEnergy = startingDarkEnergy;
     }
 
@@ -33,20 +35,20 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
 
     public static int getDarkEnergy()
     {
-        return darkEnergy;
+        return instance.darkEnergy;
     }
 
     public static void setDarkEnergy(int darkEnergyIn)
     {
-        darkEnergy = darkEnergyIn;
+        instance.darkEnergy = darkEnergyIn;
     }
 
     public static void addDarkEnergy(int darkEnergyIn)
     {
-        darkEnergy += darkEnergyIn;
+        instance.darkEnergy += darkEnergyIn;
     }
 
-    public void addDarkEnergyOnEnemySlain(int darkEnergyIn, GameObject enemy)
+    public static void addDarkEnergyOnEnemySlain(int darkEnergyIn, GameObject enemy)
     {
         bool noEnemyBeingConverted = true;
         foreach(GameObject anEnemy in GameObject.FindGameObjectsWithTag("Enemy"))
@@ -54,7 +56,7 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
             if(anEnemy.GetComponent<Enemy_AI_script>().isBeingConverted())
             {
                 anEnemy.GetComponent<Enemy_AI_script>().addProgressToConversion(darkEnergyIn);
-                GameObject effect = Instantiate(darkEnergyMote, enemy.transform.position, enemy.transform.rotation);
+                GameObject effect = Instantiate(instance.darkEnergyMote, enemy.transform.position, enemy.transform.rotation);
                 effect.GetComponent<Dark_Energy_Mote_Script>().target = anEnemy.transform.position;
                 noEnemyBeingConverted = false;
                 break;
@@ -63,7 +65,7 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
 
         if (noEnemyBeingConverted)
         {
-            darkEnergy += darkEnergyIn;
+            instance.darkEnergy += darkEnergyIn;
         }
     }
 }
