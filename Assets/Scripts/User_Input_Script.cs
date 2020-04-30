@@ -153,29 +153,33 @@ public class User_Input_Script : MonoBehaviour
         //If ability is not on cooldown OR ability is a necromancer ability(ability number < 0)
         if (currentlySelectedMinion.GetComponent<Minion_AI_Script>().getAbilityCooldown(abilityNumber) <= 0 || (abilityNumber < 0))
         {
-            //MINION ABILITIES
+            //If ability is not null
             if (currentAbilityToCast != AbilityID.none)
             {
-                if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.aimCast)
+                //If player has enough ammo to cast ability
+                if (Ability_Database.getAbilityAmmoCost(currentAbilityToCast) <= Ammo_Meter_Script.getAmmoCount())
                 {
-                    currentMouseCommand = MouseCommand.CastAbilityOnSpace;
-                    selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
-                    //Space_Script will handle the OnMouseDown portion of aiming from here
-                }
-                else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.instantCast)
-                {
-                    currentMouseCommand = MouseCommand.SelectOrMove;
-                    Ability_Database.cast(currentAbilityToCast, currentAbilityIndex, currentlySelectedMinion, null);
-                }
-                else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.passive)
-                {
-                    currentMouseCommand = MouseCommand.SelectOrMove;
-                }
-                else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.targetEnemyCast)
-                {
-                    currentMouseCommand = MouseCommand.CastAbilityOnEnemy;
-                    selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
-                    //......... will handle the OnMouseDown portion of aiming from here
+                    if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.aimCast)
+                    {
+                        currentMouseCommand = MouseCommand.CastAbilityOnSpace;
+                        selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
+                        //Space_Script will handle the OnMouseDown portion of aiming from here
+                    }
+                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.instantCast)
+                    {
+                        currentMouseCommand = MouseCommand.SelectOrMove;
+                        Ability_Database.cast(currentAbilityToCast, currentAbilityIndex, currentlySelectedMinion, null);
+                    }
+                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.passive)
+                    {
+                        currentMouseCommand = MouseCommand.SelectOrMove;
+                    }
+                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.targetEnemyCast)
+                    {
+                        currentMouseCommand = MouseCommand.CastAbilityOnEnemy;
+                        selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
+                        //......... will handle the OnMouseDown portion of aiming from here
+                    }
                 }
             }
         }

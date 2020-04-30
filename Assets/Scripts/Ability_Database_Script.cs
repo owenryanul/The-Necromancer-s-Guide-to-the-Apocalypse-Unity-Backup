@@ -41,7 +41,9 @@ public class Ability_Database_Script : MonoBehaviour
         [Header("Common Data")]
         public AbilityType castType;
         public float cooldown;
+        public int ammoCost;
         public Sprite icon;
+
         [TextArea(2,10)]
         public string abilityToolTip;
         [Header("Ability Specfic Data")]
@@ -52,6 +54,7 @@ public class Ability_Database_Script : MonoBehaviour
             this.id = inID;
             this.castType = castTypeIn;
             this.cooldown = cooldownIn;
+            this.ammoCost = 0;
             this.extras = new List<AbilityExtra>();
         }
 
@@ -60,6 +63,7 @@ public class Ability_Database_Script : MonoBehaviour
             this.id = inID;
             this.castType = castTypeIn;
             this.cooldown = cooldownIn;
+            this.ammoCost = 0;
             this.extras = new List<AbilityExtra>();
             foreach (string aKey in keys)
             {
@@ -91,6 +95,7 @@ public class Ability_Database_Script : MonoBehaviour
 
     public static void cast(AbilityID abilityToCast, int abilityIndex, GameObject caster, GameObject targetGridSpace)
     {
+        Ammo_Meter_Script.addAmmoCount(-(getAbilityAmmoCost(abilityToCast)));
         switch (abilityToCast)
         {
             case AbilityID.necromancer_ConversationRitual: instance.castNecromancerConversionRitual(caster, targetGridSpace); break;
@@ -119,6 +124,11 @@ public class Ability_Database_Script : MonoBehaviour
     public static string getAbilityTooltip(AbilityID abilityIDin)
     {
         return instance.findAbility(abilityIDin).abilityToolTip;
+    }
+
+    public static int getAbilityAmmoCost(AbilityID abilityIDin)
+    {
+        return instance.findAbility(abilityIDin).ammoCost;
     }
 
     public Ability findAbility(AbilityID abilityIDin)
@@ -163,7 +173,6 @@ public class Ability_Database_Script : MonoBehaviour
     private void castMolotov(GameObject caster, int abilityIndex, GameObject targetGridSpace)
     {
         Debug.Log("Throwing Molotov");
-        //Ability molotovAbility = findAbility(AbilityID.molotov);
         GameObject molotov = Instantiate((GameObject)ABILITY_Throw_Molotov.getExtra("MolotovEffectPrefab"), targetGridSpace.transform.position, targetGridSpace.transform.rotation);
         molotov.GetComponent<Molotov_Effect_Script>().mySpace = targetGridSpace;
         caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_Throw_Molotov.cooldown);
@@ -172,7 +181,6 @@ public class Ability_Database_Script : MonoBehaviour
     private void castSprayAndPray(GameObject caster, int abilityIndex)
     {
         Debug.Log("Casting Spray and Pray");
-        //Ability sprayAndPray = findAbility(AbilityID.sprayAndPray);
         caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().sprayAndPrayBuff);
         caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_SprayAndPray.cooldown);
     }
@@ -180,7 +188,6 @@ public class Ability_Database_Script : MonoBehaviour
     private void castFasterBullets(GameObject caster, int abilityIndex)
     {
         Debug.Log("Casting Faster Bullets");
-        //Ability fasterBullets = findAbility(AbilityID.fasterBullets);
         caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fasterBulletsBuff);
         caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);
     }
@@ -188,8 +195,7 @@ public class Ability_Database_Script : MonoBehaviour
     private void castFleetOfFoot(GameObject caster, int abilityIndex)
     {
         Debug.Log("Casting Fleet of Foot");
-        //Ability fasterBullets = findAbility(AbilityID.fasterBullets);
         caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fleetOfFootBuff);
-        //caster.GetComponent<Minion_Movement_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);
+        //don't set cooldown because this is a passive
     }
 }

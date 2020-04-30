@@ -40,19 +40,24 @@ public class Ability_Button_Script : MonoBehaviour, IPointerEnterHandler, IPoint
     {
         this.gameObject.GetComponent<Image>().enabled = true;
         this.GetComponentInChildren<SpriteRenderer>().enabled = true;
+        this.gameObject.GetComponent<Button>().interactable = true;
         this.gameObject.GetComponentInChildren<Text>().enabled = true;
         this.gameObject.transform.Find("Ability Icon").GetComponent<Image>().enabled = true;
+        this.gameObject.transform.Find("Ability Icon").GetComponent<Image>().color = Color.white;
         setIconImage();
         showPassiveBorderIfAppropriate();
+        showAmmoCounterIfAppropriate();
     }
 
     private void hideButton()
     {
         this.gameObject.GetComponent<Image>().enabled = false;
+        this.gameObject.GetComponent<Button>().interactable = false;
         this.GetComponentInChildren<SpriteRenderer>().enabled = false;
         this.gameObject.GetComponentInChildren<Text>().enabled = false;
         this.gameObject.transform.Find("Ability Icon").GetComponent<Image>().enabled = false;
         this.gameObject.transform.Find("Passive Fill").GetComponent<Image>().enabled = false;
+        hideAmmoCounter();
     }
 
     private void updateCooldownDial()
@@ -86,5 +91,38 @@ public class Ability_Button_Script : MonoBehaviour, IPointerEnterHandler, IPoint
         {
             this.gameObject.transform.Find("Passive Fill").GetComponent<Image>().enabled = false;
         }
+    }
+
+    private void showAmmoCounterIfAppropriate()
+    {
+        int ammoCost = Ability_Database.getAbilityAmmoCost(User_Input_Script.currentlySelectedMinion.GetComponent<Minion_AI_Script>().getAbilityIDforSlot(abilitySlot));
+        if (ammoCost > 0)
+        {
+            this.gameObject.transform.Find("Ammo Cost").GetComponentInChildren<Image>().enabled = true;
+            this.gameObject.transform.Find("Ammo Cost").GetComponent<Text>().enabled = true;
+            this.gameObject.transform.Find("Ammo Cost").GetComponent<Text>().text = "" + ammoCost;
+            this.gameObject.transform.Find("Ammo Cost").GetComponent<Outline>().enabled = true;
+            if(ammoCost > Ammo_Meter_Script.getAmmoCount())
+            {
+                this.gameObject.GetComponent<Button>().interactable = false;
+                this.gameObject.transform.Find("Ability Icon").GetComponent<Image>().color = Color.grey;
+            }
+            else
+            {
+                this.gameObject.GetComponent<Button>().interactable = true;
+                this.gameObject.transform.Find("Ability Icon").GetComponent<Image>().color = Color.white;
+            }
+        }
+        else
+        {
+            hideAmmoCounter();
+        }
+    }
+
+    private void hideAmmoCounter()
+    {
+        this.gameObject.transform.Find("Ammo Cost").GetComponentInChildren<Image>().enabled = false;
+        this.gameObject.transform.Find("Ammo Cost").GetComponent<Text>().enabled = false;
+        this.gameObject.transform.Find("Ammo Cost").GetComponent<Outline>().enabled = false;
     }
 }
