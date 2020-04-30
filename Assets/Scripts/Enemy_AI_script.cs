@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ability_Database = Ability_Database_Script;
 
 public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 {
@@ -40,7 +41,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     private Vector3 conversionHoldingPoint;
 
 
-    private Ability_Database_Script AbilityDatabase;
+    private Ability_Database_Script Ability_Database;
     private Minion_Roster_Script MinionRoster;
     
 
@@ -57,7 +58,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 
         currentHP = maxHP;
 
-        AbilityDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
+        Ability_Database = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
         MinionRoster = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>();
     }
 
@@ -140,7 +141,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
             //If aiming an ability, cast the ability targeting this space
             if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.CastAbilityOnEnemy)
             {
-                AbilityDatabase.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentAbilityIndex, User_Input_Script.currentlySelectedMinion, this.gameObject);
+                Ability_Database.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentAbilityIndex, User_Input_Script.currentlySelectedMinion, this.gameObject);
                 User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
                 //Circle does not disappear because it goes back to the ability caster, who s the currently selected minion
             }

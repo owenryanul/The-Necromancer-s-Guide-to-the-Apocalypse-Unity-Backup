@@ -1,18 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ability_Database = Ability_Database_Script;
 
 public class Space_Script : MonoBehaviour, MouseDownOverrider
 {
     public Vector2 gridPosition = new Vector2(0,0);
-    private Ability_Database_Script abilityDatabase;
     private Minion_Roster_Script rosterScript;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        abilityDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
         rosterScript = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>();
     }
 
@@ -36,7 +35,7 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
             //If aiming an ability, cast the ability targeting this space
             else if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.CastAbilityOnSpace)
             {
-                abilityDatabase.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentAbilityIndex, User_Input_Script.currentlySelectedMinion, this.gameObject);
+                Ability_Database.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentAbilityIndex, User_Input_Script.currentlySelectedMinion, this.gameObject);
                 User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
                 //Circle does not disappear because it goes back to the ability caster, who s the currently selected minion
             }

@@ -1,9 +1,12 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using AbilityID = Ability_Database_Script.AbilityID;
+using Ability_Database = Ability_Database_Script;
 using WeaponID = Weapon_Database_Script.WeaponID;
+using Weapon_Database = Weapon_Database_Script;
 using Buffs = Buff_Database_Script;
 
 
@@ -47,9 +50,6 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
 
     private bool isDying;
 
-    private Weapon_Database_Script WeaponDatabase;
-    private Ability_Database_Script AbilityDatabase;
-
     [Header("Abilities")]
     public AbilityID Ability1 = AbilityID.none;
     private float ability1CurrentCooldown;
@@ -70,9 +70,6 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         isMoving = false;
         isDying = false;
         activeBuffs = new List<Buffs.Buff>();
-
-        WeaponDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Weapon_Database_Script>();
-        AbilityDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
 
         triggerPassiveAbilities();
     }
@@ -380,7 +377,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         WeaponID currentWeapon = weapon1;
         if (currentWeapon != WeaponID.custom)
         {
-            switchAttackStatsToWeapon(WeaponDatabase.findWeapon(weapon1));
+            switchAttackStatsToWeapon(Weapon_Database.findWeapon(weapon1));
         }
     }
 
@@ -437,17 +434,26 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
 
     public void triggerPassiveAbilities()
     {
-        if(AbilityDatabase.getAbilityType(getAbilityIDforSlot(1)) == Ability_Database_Script.AbilityType.passive)
+        try
         {
-            AbilityDatabase.cast(getAbilityIDforSlot(1), 1, this.gameObject, null);
+
+            if (Ability_Database.getAbilityType(getAbilityIDforSlot(1)) == Ability_Database_Script.AbilityType.passive)
+            {
+                Ability_Database.cast(getAbilityIDforSlot(1), 1, this.gameObject, null);
+            }
+            if (Ability_Database.getAbilityType(getAbilityIDforSlot(2)) == Ability_Database_Script.AbilityType.passive)
+            {
+                Ability_Database.cast(getAbilityIDforSlot(2), 2, this.gameObject, null);
+            }
+            if (Ability_Database.getAbilityType(getAbilityIDforSlot(3)) == Ability_Database_Script.AbilityType.passive)
+            {
+                Ability_Database.cast(getAbilityIDforSlot(3), 3, this.gameObject, null);
+            }
         }
-        if (AbilityDatabase.getAbilityType(getAbilityIDforSlot(2)) == Ability_Database_Script.AbilityType.passive)
+        catch(NullReferenceException e)
         {
-            AbilityDatabase.cast(getAbilityIDforSlot(2), 2, this.gameObject, null);
-        }
-        if (AbilityDatabase.getAbilityType(getAbilityIDforSlot(3)) == Ability_Database_Script.AbilityType.passive)
-        {
-            AbilityDatabase.cast(getAbilityIDforSlot(3), 3, this.gameObject, null);
+            Debug.LogWarning("TriggerPassiveAbilities encountered a NullReferenceException, retrying TriggerPassiveAbilities(), this may be caused by Database instances being slow to assign, if this message persists past startup check your passive logic.");
+            Invoke("triggerPassiveAbilities", 0.1f);
         }
     }
 

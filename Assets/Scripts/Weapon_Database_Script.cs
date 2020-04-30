@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Weapon_Database_Script : MonoBehaviour
 {
+    private static Weapon_Database_Script instance;
+
+    private void Start()
+    {
+        instance = this;
+    }
+
     [System.Serializable]
     public class Weapon
     {
@@ -29,7 +36,12 @@ public class Weapon_Database_Script : MonoBehaviour
         }
     }
 
-    public Weapon findWeapon(WeaponID inWeaponID)
+    public static Weapon findWeapon(WeaponID inWeaponID)
+    {
+        return instance.findWeaponById(inWeaponID);
+    }
+
+    public Weapon findWeaponById(WeaponID inWeaponID)
     {
         switch(inWeaponID)
         {

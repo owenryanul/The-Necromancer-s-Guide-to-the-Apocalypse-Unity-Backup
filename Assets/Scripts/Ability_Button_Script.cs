@@ -3,19 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Ability_Database = Ability_Database_Script;
 
 //Note: OnClick logic is handled in the inspector, not here. Those function are likely in User_Input_Script
 
 public class Ability_Button_Script : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public int abilitySlot;
-    private Ability_Database_Script Ability_Database;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        Ability_Database = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
-    }
 
     // Update is called once per frame
     void Update()
@@ -47,6 +41,8 @@ public class Ability_Button_Script : MonoBehaviour, IPointerEnterHandler, IPoint
         this.gameObject.GetComponent<Image>().enabled = true;
         this.GetComponentInChildren<SpriteRenderer>().enabled = true;
         this.gameObject.GetComponentInChildren<Text>().enabled = true;
+        this.gameObject.transform.Find("Ability Icon").GetComponent<Image>().enabled = true;
+        setIconImage();
         showPassiveBorderIfAppropriate();
     }
 
@@ -55,6 +51,7 @@ public class Ability_Button_Script : MonoBehaviour, IPointerEnterHandler, IPoint
         this.gameObject.GetComponent<Image>().enabled = false;
         this.GetComponentInChildren<SpriteRenderer>().enabled = false;
         this.gameObject.GetComponentInChildren<Text>().enabled = false;
+        this.gameObject.transform.Find("Ability Icon").GetComponent<Image>().enabled = false;
         this.gameObject.transform.Find("Passive Fill").GetComponent<Image>().enabled = false;
     }
 
@@ -71,6 +68,12 @@ public class Ability_Button_Script : MonoBehaviour, IPointerEnterHandler, IPoint
         {
             this.GetComponentInChildren<SpriteRenderer>().enabled = false;
         }      
+    }
+
+    private void setIconImage()
+    {
+        Sprite icon = Ability_Database.getAbilityIcon(User_Input_Script.currentlySelectedMinion.GetComponent<Minion_AI_Script>().getAbilityIDforSlot(abilitySlot));
+        this.gameObject.transform.Find("Ability Icon").GetComponent<Image>().sprite = icon;
     }
 
     private void showPassiveBorderIfAppropriate()

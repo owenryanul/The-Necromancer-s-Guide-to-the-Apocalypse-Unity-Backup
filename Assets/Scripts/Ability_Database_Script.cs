@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Ability_Database_Script : MonoBehaviour
 {
+    private static Ability_Database_Script instance;
+
+    private void Start()
+    {
+        instance = this;
+    }
+
     public enum AbilityType
     {
         aimCast,
@@ -34,6 +41,7 @@ public class Ability_Database_Script : MonoBehaviour
         [Header("Common Data")]
         public AbilityType castType;
         public float cooldown;
+        public Sprite icon;
         [TextArea(2,10)]
         public string abilityToolTip;
         [Header("Ability Specfic Data")]
@@ -81,31 +89,36 @@ public class Ability_Database_Script : MonoBehaviour
         }
     }
 
-    public void cast(AbilityID abilityToCast, int abilityIndex, GameObject caster, GameObject targetGridSpace)
+    public static void cast(AbilityID abilityToCast, int abilityIndex, GameObject caster, GameObject targetGridSpace)
     {
         switch (abilityToCast)
         {
-            case AbilityID.necromancer_ConversationRitual: castNecromancerConversionRitual(caster, targetGridSpace); break;
-            case AbilityID.molotov: castMolotov(caster, abilityIndex, targetGridSpace); break;
-            case AbilityID.sprayAndPray: castSprayAndPray(caster, abilityIndex); break;
-            case AbilityID.fasterBullets: castFasterBullets(caster, abilityIndex); break;
-            case AbilityID.fleetOfFoot: castFleetOfFoot(caster, abilityIndex); break;
+            case AbilityID.necromancer_ConversationRitual: instance.castNecromancerConversionRitual(caster, targetGridSpace); break;
+            case AbilityID.molotov: instance.castMolotov(caster, abilityIndex, targetGridSpace); break;
+            case AbilityID.sprayAndPray: instance.castSprayAndPray(caster, abilityIndex); break;
+            case AbilityID.fasterBullets: instance.castFasterBullets(caster, abilityIndex); break;
+            case AbilityID.fleetOfFoot: instance.castFleetOfFoot(caster, abilityIndex); break;
         }
     }
 
-    public float getCooldown(AbilityID abilityIDin)
+    public static float getCooldown(AbilityID abilityIDin)
     {
-        return findAbility(abilityIDin).cooldown;
+        return instance.findAbility(abilityIDin).cooldown;
     }
 
-    public AbilityType getAbilityType(AbilityID abilityIDin)
+    public static AbilityType getAbilityType(AbilityID abilityIDin)
     {
-        return findAbility(abilityIDin).castType;
+        return instance.findAbility(abilityIDin).castType;
     }
 
-    public string getAbilityTooltip(AbilityID abilityIDin)
+    public static Sprite getAbilityIcon(AbilityID abilityIDin)
     {
-        return findAbility(abilityIDin).abilityToolTip;
+        return instance.findAbility(abilityIDin).icon;
+    }
+
+    public static string getAbilityTooltip(AbilityID abilityIDin)
+    {
+        return instance.findAbility(abilityIDin).abilityToolTip;
     }
 
     public Ability findAbility(AbilityID abilityIDin)
@@ -128,10 +141,13 @@ public class Ability_Database_Script : MonoBehaviour
         3. Add CastNewAbility() method for new ability
         4. Add Cast method to cast() method above 
     */
+
     private Ability ABILITY_NONE = new Ability(AbilityID.none, AbilityType.none, 0.0f);
 
+    //Necromancer Abilities
     public Ability ABILITY_NECROMANCER_ConversionRitual = new Ability(AbilityID.necromancer_ConversationRitual, AbilityType.targetEnemyCast, 0.0f);
 
+    //Minion Abilities
     public Ability ABILITY_Throw_Molotov = new Ability(AbilityID.molotov, AbilityType.aimCast, 5.0f, new string[] { "MolotovEffectPrefab" });
     public Ability ABILITY_SprayAndPray = new Ability(AbilityID.sprayAndPray, AbilityType.instantCast, 5.0f);
     public Ability ABILITY_FasterBullets = new Ability(AbilityID.fasterBullets, AbilityType.instantCast, 5.0f);

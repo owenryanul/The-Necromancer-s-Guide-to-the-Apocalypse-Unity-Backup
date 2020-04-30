@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using AbilityID = Ability_Database_Script.AbilityID;
+using Ability_Database = Ability_Database_Script;
 
 public class User_Input_Script : MonoBehaviour
 {
@@ -10,7 +11,6 @@ public class User_Input_Script : MonoBehaviour
     public static MouseCommand currentMouseCommand;
     private static GameObject selectionCircle;
 
-    private static Ability_Database_Script abilityDatabase;
     public static AbilityID currentAbilityToCast;
     public static int currentAbilityIndex;
 
@@ -40,7 +40,6 @@ public class User_Input_Script : MonoBehaviour
     void Start()
     {
         selectionCircle = GameObject.FindGameObjectWithTag("Selection Circle");
-        abilityDatabase = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
         rosterVisable = false;
     }
 
@@ -157,22 +156,22 @@ public class User_Input_Script : MonoBehaviour
             //MINION ABILITIES
             if (currentAbilityToCast != AbilityID.none)
             {
-                if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.aimCast)
+                if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.aimCast)
                 {
                     currentMouseCommand = MouseCommand.CastAbilityOnSpace;
                     selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
                     //Space_Script will handle the OnMouseDown portion of aiming from here
                 }
-                else if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.instantCast)
+                else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.instantCast)
                 {
                     currentMouseCommand = MouseCommand.SelectOrMove;
-                    abilityDatabase.cast(currentAbilityToCast, currentAbilityIndex, currentlySelectedMinion, null);
+                    Ability_Database.cast(currentAbilityToCast, currentAbilityIndex, currentlySelectedMinion, null);
                 }
-                else if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.passive)
+                else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.passive)
                 {
                     currentMouseCommand = MouseCommand.SelectOrMove;
                 }
-                else if (abilityDatabase.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.targetEnemyCast)
+                else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.targetEnemyCast)
                 {
                     currentMouseCommand = MouseCommand.CastAbilityOnEnemy;
                     selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
