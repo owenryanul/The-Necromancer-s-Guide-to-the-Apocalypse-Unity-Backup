@@ -28,11 +28,18 @@ public class Switch_Weapon_Button_Script : MonoBehaviour
     {
         this.gameObject.GetComponent<Image>().enabled = true;
         this.gameObject.GetComponentInChildren<Text>().enabled = true;
+        this.transform.Find("Current Weapon").GetComponent<Image>().enabled = true;
+        this.transform.Find("Other Weapon").GetComponent<Image>().enabled = true;
+
+        this.transform.Find("Current Weapon").GetComponent<Image>().sprite = User_Input_Script.currentlySelectedMinion.GetComponent<Minion_AI_Script>().getCurrentWeaponIcon();
+        this.transform.Find("Other Weapon").GetComponent<Image>().sprite = User_Input_Script.currentlySelectedMinion.GetComponent<Minion_AI_Script>().getOtherWeaponIcon();
     }
 
     private void hideButton()
     {
         this.gameObject.GetComponent<Image>().enabled = false;
         this.gameObject.GetComponentInChildren<Text>().enabled = false;
+        this.transform.Find("Current Weapon").GetComponent<Image>().enabled = false;
+        this.transform.Find("Other Weapon").GetComponent<Image>().enabled = false;
     }
 }

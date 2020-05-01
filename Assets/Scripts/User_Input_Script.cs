@@ -21,6 +21,7 @@ public class User_Input_Script : MonoBehaviour
     public LayerMask selectOrMove_LayersToIgnore;
     public LayerMask castAbilityOnSpace_LayersToIgnore;
     public LayerMask castAbilityOnEnemy_LayersToIgnore;
+    public LayerMask castAbilityOnAlly_LayersToIgnore;
     public LayerMask none_LayersToIgnore;
 
     public static bool rosterVisable;
@@ -33,6 +34,7 @@ public class User_Input_Script : MonoBehaviour
         CastAbilityOnSpace,
         CastAbilityOnEnemy,
         SummonMinion,
+        CastAbilityOnAlly,
         None
     }
 
@@ -59,11 +61,15 @@ public class User_Input_Script : MonoBehaviour
         }
 
         if(Input.GetMouseButtonDown(1))//right-click resets mouse inputs to default state
-        {
+        {          
             currentlySelectedMinion = null;
             currentAbilityToCast = AbilityID.none;
             currentMouseCommand = MouseCommand.SelectOrMove;
             selectionCircle.GetComponent<SpriteRenderer>().enabled = false;
+            if (rosterVisable)
+            {
+                showHideRoster(GameObject.FindGameObjectWithTag("Roster Button").GetComponent<Button>());
+            }
         }
     }
 
@@ -82,6 +88,7 @@ public class User_Input_Script : MonoBehaviour
                 case MouseCommand.CastAbilityOnSpace: mask = ~castAbilityOnSpace_LayersToIgnore; break;
                 case MouseCommand.CastAbilityOnEnemy: mask = ~castAbilityOnEnemy_LayersToIgnore; break;
                 case MouseCommand.SummonMinion: mask = ~castAbilityOnSpace_LayersToIgnore; break;
+                case MouseCommand.CastAbilityOnAlly: mask = ~castAbilityOnAlly_LayersToIgnore; break;
                 
                 default: mask = new LayerMask(); Debug.LogWarning("That mouse command does not have any layer mask associated with it. Check User_Input_Script.mouseRayTraceOverride()"); break;
             }
@@ -178,7 +185,13 @@ public class User_Input_Script : MonoBehaviour
                     {
                         currentMouseCommand = MouseCommand.CastAbilityOnEnemy;
                         selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
-                        //......... will handle the OnMouseDown portion of aiming from here
+                        //Enemy_AI_Script will handle the OnMouseDown portion of aiming from here
+                    }
+                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.targetAllyCast)
+                    {
+                        currentMouseCommand = MouseCommand.CastAbilityOnAlly;
+                        selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
+                        //Minion_AI_Script will handle the OnMouseDown portion of aiming from here
                     }
                 }
             }

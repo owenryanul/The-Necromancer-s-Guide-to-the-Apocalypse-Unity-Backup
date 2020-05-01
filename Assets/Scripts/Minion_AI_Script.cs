@@ -32,6 +32,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
     [Header("Attack")]
     public WeaponID weapon1 = WeaponID.custom;
     public WeaponID weapon2 = WeaponID.custom;
+    private WeaponID currentWeapon;
     public bool isMeleeAttack;
     public int meleeDamage;
     public GameObject projectile;
@@ -64,12 +65,15 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
     // Start is called before the first frame update
     void Start()
     {
-        targetSpace = mySpace;
+        if(this.mySpace == null) { Debug.LogError(this.gameObject.name + " does not have it's MySpace assigned. Please assign it."); }
+
+        targetSpace = this.mySpace;
         rigAnimator = this.gameObject.GetComponentInChildren<Animator>();
         currentHp = MaxHp;
         isMoving = false;
         isDying = false;
         activeBuffs = new List<Buffs.Buff>();
+        currentWeapon = this.weapon1;
 
         triggerPassiveAbilities();
     }
@@ -146,7 +150,16 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
     public void OnMouseDownOverride()
     {
         Debug.Log("Minion Clicked");
-        User_Input_Script.setCurrentlySelectedMinion(this.gameObject);      
+        if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.SelectOrMove)
+        {
+            User_Input_Script.setCurrentlySelectedMinion(this.gameObject);
+        }
+        else if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.CastAbilityOnAlly)
+        {
+            Ability_Database.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentAbilityIndex, User_Input_Script.currentlySelectedMinion, this.gameObject);
+            User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
+            //Circle does not disappear because it goes back to the ability caster, who s the currently selected minion
+        }
     }
 
 
@@ -374,10 +387,9 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
 
     private void loadStatsForCurrentlySelectedWeapon()
     {
-        WeaponID currentWeapon = weapon1;
         if (currentWeapon != WeaponID.custom)
         {
-            switchAttackStatsToWeapon(Weapon_Database.findWeapon(weapon1));
+            switchAttackStatsToWeapon(Weapon_Database.findWeapon(currentWeapon));
         }
     }
 
@@ -394,10 +406,33 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
 
     public void switchWeapons()
     {
-        WeaponID temp = weapon1;
-        weapon1 = weapon2;
-        weapon2 = temp;
+        if(currentWeapon == weapon1)
+        {
+            currentWeapon = weapon2;
+        }
+        else
+        {
+            currentWeapon = weapon1;
+        }
     }
+
+    public Sprite getCurrentWeaponIcon()
+    {
+        return Weapon_Database.findWeapon(currentWeapon).icon;
+    }
+
+    public Sprite getOtherWeaponIcon()
+    {
+        if (currentWeapon == weapon1)
+        {
+            return Weapon_Database.findWeapon(weapon2).icon;
+        }
+        else
+        {
+            return Weapon_Database.findWeapon(weapon1).icon;
+        }
+    }
+
 
     //Abilities
     public float getAbilityCooldown(int i)
@@ -522,6 +557,35 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
             }
         }
         activeBuffs = activeBuffs.Except(expiredBuffs).ToList<Buffs.Buff>(); //removes expired buffs from the list of active buffs.
+    }
+
+    //Find Nearest Minion
+    public static GameObject findNearestMinion(Vector3 position)
+    {
+        Vector3 closestVector = new Vector3(-999999999999999999, -999999999999999999, 0);
+        GameObject closestSpace = null;
+        foreach (GameObject aSpace in GameObject.FindGameObjectsWithTag("Minion"))
+        {
+            Vector3 spacePosIgnoreZ = new Vector3(aSpace.transform.position.x, aSpace.transform.position.y, position.z);
+            if (Vector3.Distance(position, spacePosIgnoreZ) < Vector3.Distance(position, closestVector))
+            {
+                closestVector = spacePosIgnoreZ;
+                closestSpace = aSpace;
+            }
+        }
+        return closestSpace;
+    }
+
+    //returns the nearest grid space, unless the closest grid space is further away than range, then returns null
+    public static GameObject findNearestMinionWithinRange(Vector3 position, float range)
+    {
+        GameObject closestSpace = findNearestMinion(position);
+        Vector3 spacePosIgnoreZ = new Vector3(closestSpace.transform.position.x, closestSpace.transform.position.y, position.z);
+        if (Vector3.Distance(position, spacePosIgnoreZ) < range)
+        {
+            return closestSpace;
+        }
+        return null;
     }
 
     //Death

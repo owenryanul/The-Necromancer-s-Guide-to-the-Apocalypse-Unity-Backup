@@ -9,6 +9,7 @@ public class SelectionCircle_Script : MonoBehaviour
     public Sprite selectionCircle_Purple;
     public float snapToSpaceRange = 2.0f;
     public float snapToEnemyRange = 2.0f;
+    public float snapToAllyRange = 2.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +34,11 @@ public class SelectionCircle_Script : MonoBehaviour
         {
             this.gameObject.GetComponent<SpriteRenderer>().sprite = selectionCircle_Yellow;
             snapToNearestEnemy();
+        }
+        else if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.CastAbilityOnAlly)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = selectionCircle_Yellow;
+            snapToNearestAlly();
         }
         else if (User_Input_Script.currentMouseCommand == User_Input_Script.MouseCommand.SummonMinion)
         {
@@ -62,6 +68,21 @@ public class SelectionCircle_Script : MonoBehaviour
         if (nearestEnemy != null)
         {
             this.transform.position = nearestEnemy.transform.position;
+        }
+        else
+        {
+            Vector3 v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            v.z = this.transform.position.z;
+            this.transform.position = v;
+        }
+    }
+
+    private void snapToNearestAlly()
+    {
+        GameObject nearestAlly = Minion_AI_Script.findNearestMinionWithinRange(Camera.main.ScreenToWorldPoint(Input.mousePosition), snapToEnemyRange);
+        if (nearestAlly != null)
+        {
+            this.transform.position = nearestAlly.transform.position;
         }
         else
         {

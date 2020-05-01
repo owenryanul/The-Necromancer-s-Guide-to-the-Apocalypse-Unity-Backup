@@ -16,6 +16,8 @@ public class Weapon_Database_Script : MonoBehaviour
     {
         [Header("ID")]
         public WeaponID weaponID;
+        [Header("Visuals")]
+        public Sprite icon;
         [Header("Stats")]
         public bool isMeleeWeapon;
         public int meleeWeaponDamage;

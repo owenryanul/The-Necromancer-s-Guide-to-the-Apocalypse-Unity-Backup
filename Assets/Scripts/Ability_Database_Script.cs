@@ -17,6 +17,7 @@ public class Ability_Database_Script : MonoBehaviour
         instantCast,
         targetEnemyCast,
         passive,
+        targetAllyCast,
         none
     }
 
@@ -30,6 +31,7 @@ public class Ability_Database_Script : MonoBehaviour
         buildBarricade,
         fasterAttackPassive,
         fleetOfFoot,
+        firstAid,
         none
     }
 
@@ -93,16 +95,17 @@ public class Ability_Database_Script : MonoBehaviour
         }
     }
 
-    public static void cast(AbilityID abilityToCast, int abilityIndex, GameObject caster, GameObject targetGridSpace)
+    public static void cast(AbilityID abilityToCast, int abilityIndex, GameObject caster, GameObject targetGameObject)
     {
         Ammo_Meter_Script.addAmmoCount(-(getAbilityAmmoCost(abilityToCast)));
         switch (abilityToCast)
         {
-            case AbilityID.necromancer_ConversationRitual: instance.castNecromancerConversionRitual(caster, targetGridSpace); break;
-            case AbilityID.molotov: instance.castMolotov(caster, abilityIndex, targetGridSpace); break;
+            case AbilityID.necromancer_ConversationRitual: instance.castNecromancerConversionRitual(caster, targetGameObject); break;
+            case AbilityID.molotov: instance.castMolotov(caster, abilityIndex, targetGameObject); break;
             case AbilityID.sprayAndPray: instance.castSprayAndPray(caster, abilityIndex); break;
             case AbilityID.fasterBullets: instance.castFasterBullets(caster, abilityIndex); break;
             case AbilityID.fleetOfFoot: instance.castFleetOfFoot(caster, abilityIndex); break;
+            case AbilityID.firstAid: instance.castFirstAid(caster, abilityIndex, targetGameObject); break;
         }
     }
 
@@ -140,6 +143,7 @@ public class Ability_Database_Script : MonoBehaviour
             case AbilityID.sprayAndPray: return ABILITY_SprayAndPray;
             case AbilityID.fasterBullets: return ABILITY_FasterBullets;
             case AbilityID.fleetOfFoot: return ABILITY_Fleet_Of_Foot;
+            case AbilityID.firstAid: return ABILITY_First_Aid;
             default: return ABILITY_NONE;
         }
 
@@ -162,6 +166,7 @@ public class Ability_Database_Script : MonoBehaviour
     public Ability ABILITY_SprayAndPray = new Ability(AbilityID.sprayAndPray, AbilityType.instantCast, 5.0f);
     public Ability ABILITY_FasterBullets = new Ability(AbilityID.fasterBullets, AbilityType.instantCast, 5.0f);
     public Ability ABILITY_Fleet_Of_Foot = new Ability(AbilityID.fleetOfFoot, AbilityType.passive, 5.0f);
+    public Ability ABILITY_First_Aid = new Ability(AbilityID.firstAid, AbilityType.targetAllyCast, 5.0f, new string[] { "FirstAidEffectPrefab" });
 
     private void castNecromancerConversionRitual(GameObject caster, GameObject targetEnemy)
     {
@@ -197,5 +202,13 @@ public class Ability_Database_Script : MonoBehaviour
         Debug.Log("Casting Fleet of Foot");
         caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fleetOfFootBuff);
         //don't set cooldown because this is a passive
+    }
+
+    private void castFirstAid(GameObject caster, int abilityIndex, GameObject targetAlly)
+    {
+        Debug.Log("Casting First Aid");
+        targetAlly.GetComponent<Minion_AI_Script>().currentHp = targetAlly.GetComponent<Minion_AI_Script>().MaxHp;
+        GameObject FirstAidEffect = Instantiate((GameObject)ABILITY_First_Aid.getExtra("FirstAidEffectPrefab"), targetAlly.transform.position, targetAlly.transform.rotation);
+        caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_First_Aid.cooldown);
     }
 }
