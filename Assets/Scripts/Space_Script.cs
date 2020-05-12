@@ -92,12 +92,12 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
         GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>().flagMinionAsSummoned(minionToSummonData.minionID, true);
     }
 
-    public static GameObject findGridSpace(int x, int y)
+    public static GameObject findGridSpace(int x, int y, bool returnNearestEndSpaceIfSpaceNotFound = false)
     {
-        return findGridSpace(new Vector2(x, y));
+        return findGridSpace(new Vector2(x, y), returnNearestEndSpaceIfSpaceNotFound);
     }
 
-    public static GameObject findGridSpace(Vector2 position)
+    public static GameObject findGridSpace(Vector2 position, bool returnNearestEndSpaceIfSpaceNotFound = false)
     {    
         foreach(GameObject aSpace in GameObject.FindGameObjectsWithTag("Space"))
         {
@@ -106,8 +106,25 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
                 return aSpace;
             }
         }
-        //throw new MissingReferenceException("Grid Space with grid position " + position.ToString() + " not found");
-        return null;
+
+        //If a gridSpace matching the provided position cannot be found, and if instructed to in methodCall, will attempt to return the endSpace closest to the provided co-ordinates.
+        if (returnNearestEndSpaceIfSpaceNotFound)
+        {
+            GameObject endSpace = findGridEndSpace(position);
+            if(endSpace != null)
+            {
+                return endSpace;
+            }
+            else
+            {
+                return findEndSpaceOnSameRow(position);
+            }
+        }
+        else //otherwise return null.
+        {
+            //throw new MissingReferenceException("Grid Space with grid position " + position.ToString() + " not found");
+            return null;
+        }
     }
 
     public static GameObject findNearestGridSpace(Vector3 position)
@@ -148,6 +165,19 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
         foreach (GameObject aSpace in GameObject.FindGameObjectsWithTag("End Space"))
         {
             if (aSpace.GetComponent<Space_Script>().gridPosition == position)
+            {
+                return aSpace;
+            }
+        }
+        //throw new MissingReferenceException("Grid Space with grid position " + position.ToString() + " not found");
+        return null;
+    }
+
+    public static GameObject findEndSpaceOnSameRow(Vector2 position)
+    {
+        foreach (GameObject aSpace in GameObject.FindGameObjectsWithTag("End Space"))
+        {
+            if (aSpace.GetComponent<Space_Script>().gridPosition.y == position.y && (Mathf.Sign(aSpace.GetComponent<Space_Script>().gridPosition.x) == Mathf.Sign(position.x)))
             {
                 return aSpace;
             }

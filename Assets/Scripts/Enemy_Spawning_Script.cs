@@ -30,7 +30,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
 
     private void spawnEnemy()
     {
-        GameObject spawnPoint =  Space_Script.findGridEndSpace(3, Random.Range(0, 3));
+        GameObject spawnPoint =  Space_Script.findGridEndSpace(4, Random.Range(0, 3));
         GameObject anEnemy = Instantiate(EnemyType1, spawnPoint.transform.position, spawnPoint.transform.rotation);
         anEnemy.GetComponent<Enemy_AI_script>().nextSpace = spawnPoint;
     }

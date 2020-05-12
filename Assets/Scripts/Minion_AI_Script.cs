@@ -88,39 +88,13 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
             applyBuffEffectsToStats();
             tickBuffDurations();
 
-            Vector3 myPos = this.transform.position;
-            Vector3 mySpacePos = mySpace.transform.position;
-            mySpacePos.z = this.transform.position.z; //ignore the z dimension
-
-            if (myPos != mySpacePos) //if not at mySpace, move to it
-            {
-                isMoving = true;
-                Vector3 directionVector = (mySpacePos - this.transform.position);
-                directionVector.z = 0;
-                Vector3 moveVector = directionVector.normalized * (moveSpeed * Time.deltaTime);
-                if (moveVector.magnitude > directionVector.magnitude)
-                {
-                    this.transform.position = mySpacePos;
-                }
-                else
-                {
-                    this.transform.position += moveVector;
-                }
-            }
-            else if (mySpace != targetSpace) //if at mySpace check if its your target space, if not change mySpace
-            {
-                mySpace = findNextSpace();
-            }
-            else //if at mySpace and it is your target space, stop moving
-            {
-                isMoving = false;
-            }
+            movementLogic();
 
             rigAnimator.SetBool("IsWalking", isMoving);
 
             if (isMoving)
             {
-                //TODO: Set sorting layer order to render based on y position
+//TODO: Set sorting layer order to render based on y position
             }
 
             //Attack
@@ -159,6 +133,37 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
             Ability_Database.cast(User_Input_Script.currentAbilityToCast, User_Input_Script.currentAbilityIndex, User_Input_Script.currentlySelectedMinion, this.gameObject);
             User_Input_Script.currentMouseCommand = User_Input_Script.MouseCommand.SelectOrMove;
             //Circle does not disappear because it goes back to the ability caster, who s the currently selected minion
+        }
+    }
+
+    private void movementLogic()
+    {
+        Vector3 myPos = this.transform.position;
+        Vector3 mySpacePos = mySpace.transform.position;
+        mySpacePos.z = this.transform.position.z; //ignore the z dimension
+
+        if (myPos != mySpacePos) //if not at mySpace, move to it
+        {
+            isMoving = true;
+            Vector3 directionVector = (mySpacePos - this.transform.position);
+            directionVector.z = 0;
+            Vector3 moveVector = directionVector.normalized * (moveSpeed * Time.deltaTime);
+            if (moveVector.magnitude > directionVector.magnitude)
+            {
+                this.transform.position = mySpacePos;
+            }
+            else
+            {
+                this.transform.position += moveVector;
+            }
+        }
+        else if (mySpace != targetSpace) //if at mySpace check if its your target space, if not change mySpace
+        {
+            mySpace = findNextSpace();
+        }
+        else //if at mySpace and it is your target space, stop moving
+        {
+            isMoving = false;
         }
     }
 
@@ -211,8 +216,8 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
             GameObject spaceAimedAt = calculateAttacksTargetSpace();
 
             //Detect enemies along aim
-            Vector3 vectorToTargetSpace = (spaceAimedAt.transform.position - this.transform.position);
-            if(areEnemiesAlongVector(vectorToTargetSpace, spaceAimedAt.tag))
+            //if(areEnemiesAlongVector(this.transform.position, vectorToTargetSpace, spaceAimedAt.tag)  && areEnemiesAlongScatterVectors(this.transform.position, spaceAimedAt))
+            if (areEnemiesAlongAnyAimVectors(this.transform.position, spaceAimedAt))
             {
                 //Make the attack
                 if (this.isMeleeAttack)
@@ -228,6 +233,8 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
                     proj.GetComponent<Projectile_Logic_Script>().setTargetSpace(spaceAimedAt);
                     proj.GetComponent<Projectile_Logic_Script>().projectileDamage = this.projectile_Damage;
                     proj.GetComponent<Projectile_Logic_Script>().speed = this.projectile_Speed;
+                    proj.GetComponent<Projectile_Logic_Script>().setScatterDirection(Projectile_Logic_Script.ScatterDirection.Both);
+                    proj.GetComponent<Projectile_Logic_Script>().setScatterPattern(this.attackRange);
                 }
             }
         }
@@ -264,9 +271,9 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         return spaceAimedAt;
     }
 
-    private bool areEnemiesAlongVector(Vector3 vectorToTargetSpace, string targetSpaceTag)
+    private bool areEnemiesAlongVector(Vector3 source, Vector3 vectorToTargetSpace, string targetSpaceTag, int gridYOffset = 0)
     {
-        Debug.DrawRay(this.transform.position, vectorToTargetSpace, Color.red, 1);
+        //Debug.DrawRay(source, vectorToTargetSpace, Color.red, 1);
         float rayLength;
         if (string.Equals(targetSpaceTag, "End Space") && this.isMeleeAttack) //if targeting an end space with a melee attack, do not use the distance to the space as the length of the raycast
         {
@@ -277,19 +284,81 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
             rayLength = vectorToTargetSpace.magnitude;
         }
 
-        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, rayLength, LayerMask.GetMask("Enemies"));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(source, vectorToTargetSpace, rayLength, LayerMask.GetMask("Enemies"));
         foreach (RaycastHit2D aHit in hits)
         {
             //Detect if object spotted is an Enemy
             if (aHit.collider.gameObject.CompareTag("Enemy"))
             {
                 //Debug.Log("Enemy hit " + aHit.collider.gameObject.ToString());
-                //Detect if enemy hit is on the right grid-row
+                //Detect if enemy hit is on the correct row of the grid
                 float hitEnemyGridY = aHit.collider.gameObject.GetComponent<Enemy_AI_script>().nextSpace.GetComponent<Space_Script>().gridPosition.y;
-                if (hitEnemyGridY == this.mySpace.GetComponent<Space_Script>().gridPosition.y)
+                if (hitEnemyGridY == this.mySpace.GetComponent<Space_Script>().gridPosition.y + gridYOffset)
                 {
                     //Debug.Log("Enemy hit is on right y ");
                     return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private bool areEnemiesAlongAnyAimVectors(Vector3 source, GameObject directTargetSpace)
+    {
+        Vector2 directTargetGridPos = directTargetSpace.GetComponent<Space_Script>().gridPosition;
+        Vector2 directSourceGridPos = this.mySpace.GetComponent<Space_Script>().gridPosition;
+
+        Vector3 vectorToTargetSpace = (directTargetSpace.transform.position - source);
+
+
+        //If enemies are along direct shot vector, return true
+        if (areEnemiesAlongVector(source, vectorToTargetSpace, directTargetSpace.tag))
+        {
+            return true;
+        }
+
+        //If enemies are along scatter vectors, return true....note, there are some redundent checks going on here.
+        for (int x = 0; x < this.attackRange.Length; x++)
+        {
+            for(int y = 1; y <= this.attackRange[x]; y++) //y = 1 because if attackRange[x] = 0, skip this calculation as weapon has no scatter for this x.
+            {
+                //Calculate x offset to grid position
+                int scatterSourceGridPosX = (int)directSourceGridPos.x;
+                int scatterTargetGridPosX = (int)directTargetGridPos.x;
+                if(this.isFacingRight)
+                {
+                    scatterSourceGridPosX += x;
+                    
+                }
+                else
+                {
+                    scatterSourceGridPosX -= x;
+                }
+
+                //Get the source and target gridSpaces to scatter to.
+                GameObject scatterDownTargetSpace = Space_Script.findGridSpace((int)directTargetGridPos.x, (int)directTargetGridPos.y + y, true);
+                GameObject scatterDownSourceSpace = Space_Script.findGridSpace((int)scatterSourceGridPosX, (int)directSourceGridPos.y + y, true); 
+                GameObject scatterUpTargetSpace = Space_Script.findGridSpace((int)directTargetGridPos.x, (int)directTargetGridPos.y - y, true);
+                GameObject scatterUpSourceSpace = Space_Script.findGridSpace((int)scatterSourceGridPosX, (int)directSourceGridPos.y - y, true); 
+
+                if(scatterDownSourceSpace != null && scatterDownTargetSpace != null)
+                {
+                    Vector3 vectorToScatterDownTargetSpace = (scatterDownTargetSpace.transform.position - scatterDownSourceSpace.transform.position);
+                    Debug.DrawRay(scatterDownSourceSpace.transform.position, vectorToScatterDownTargetSpace, Color.blue, 1);
+                    if (areEnemiesAlongVector(scatterDownSourceSpace.transform.position, vectorToScatterDownTargetSpace, scatterDownTargetSpace.tag, y))
+                    {
+                        return true;
+                    }
+                }
+
+                if (scatterUpSourceSpace != null && scatterUpTargetSpace != null)
+                {
+                    Vector3 vectorToScatterUpTargetSpace = (scatterUpTargetSpace.transform.position - scatterUpSourceSpace.transform.position);
+                    Debug.DrawRay(scatterUpSourceSpace.transform.position, vectorToScatterUpTargetSpace, Color.blue, 1);
+                    if (areEnemiesAlongVector(scatterUpSourceSpace.transform.position, vectorToScatterUpTargetSpace, scatterUpTargetSpace.tag, -y))
+                    {
+                        return true;
+                    }
                 }
             }
         }
