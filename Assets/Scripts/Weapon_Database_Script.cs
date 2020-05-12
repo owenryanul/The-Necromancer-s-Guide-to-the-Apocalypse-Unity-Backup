@@ -47,11 +47,12 @@ public class Weapon_Database_Script : MonoBehaviour
     {
         switch(inWeaponID)
         {
-            case WeaponID.thrown_bone: return WEAPON_thrown_bone;
+            case WeaponID.Thrown_bone: return WEAPON_thrown_bone;
             case WeaponID.Unarmed_Melee: return WEAPON_Unarmed_Melee;
             case WeaponID.Swift_Unarmed_Melee: return WEAPON_Swift_Unarmed_Melee;
-            case WeaponID.quick_thrown_bone: return WEAPON_quick_thrown_bone;
-            case WeaponID.scatter_thrown_bone: return WEAPON_scatter_thrown_bone;
+            case WeaponID.Quick_thrown_bone: return WEAPON_quick_thrown_bone;
+            case WeaponID.Scatter_thrown_bone: return WEAPON_scatter_thrown_bone;
+            case WeaponID.Wide_Unarmed_Melee: return WEAPON_wide_unarmed_melee;
             default: return null;
         }
     }
@@ -59,11 +60,12 @@ public class Weapon_Database_Script : MonoBehaviour
     public enum WeaponID
     {
         custom, //custom is a unique Weapon ID used for prototyping.
-        thrown_bone,
-        quick_thrown_bone,
+        Thrown_bone,
+        Quick_thrown_bone,
         Unarmed_Melee,
         Swift_Unarmed_Melee,
-        scatter_thrown_bone
+        Scatter_thrown_bone,
+        Wide_Unarmed_Melee,
     }
     
     /*  To Add New Weapon:
@@ -73,11 +75,11 @@ public class Weapon_Database_Script : MonoBehaviour
      *      4. Add Projectiles in Inspector if necessary.
      */
 
-    public Weapon WEAPON_thrown_bone = new Weapon(WeaponID.thrown_bone, false, 1, 3, new int[3] { 0, 0, 0 });
+    public Weapon WEAPON_thrown_bone = new Weapon(WeaponID.Thrown_bone, false, 1, 3, new int[3] { 0, 0, 0 });
     public Weapon WEAPON_Unarmed_Melee = new Weapon(WeaponID.Unarmed_Melee, true, 1, 0, new int[1] { 0 });
     public Weapon WEAPON_Swift_Unarmed_Melee = new Weapon(WeaponID.Swift_Unarmed_Melee, true, 1, 0, new int[1] { 0 });
-    public Weapon WEAPON_quick_thrown_bone = new Weapon(WeaponID.quick_thrown_bone, false, 1, 0.1f, new int[3] { 0, 0, 0 });
-    public Weapon WEAPON_scatter_thrown_bone = new Weapon(WeaponID.scatter_thrown_bone, false, 1, 0.1f, new int[3] { 0, 1, 2 });
-
+    public Weapon WEAPON_quick_thrown_bone = new Weapon(WeaponID.Quick_thrown_bone, false, 1, 0.1f, new int[3] { 0, 0, 0 });
+    public Weapon WEAPON_scatter_thrown_bone = new Weapon(WeaponID.Scatter_thrown_bone, false, 1, 0.1f, new int[3] { 0, 1, 2 });
+    public Weapon WEAPON_wide_unarmed_melee = new Weapon(WeaponID.Wide_Unarmed_Melee, true, 1, 0.1f, new int[1] { 1 });
 
 }

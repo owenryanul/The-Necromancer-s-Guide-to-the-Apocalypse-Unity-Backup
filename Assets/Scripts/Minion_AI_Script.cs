@@ -369,23 +369,86 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
     public void onMeleeAttackAnimationFinished()
     {
         //Calculate where we're aiming
-        GameObject spaceAimedAt = calculateAttacksTargetSpace();
+        GameObject directTargetSpace = calculateAttacksTargetSpace();
+        Vector3 source = this.mySpace.transform.position;
 
-        //Detect enemies along aim
-        Vector3 vectorToTargetSpace = (spaceAimedAt.transform.position - this.transform.position);
-        Debug.DrawRay(this.transform.position, vectorToTargetSpace, Color.red, 1);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(this.transform.position, vectorToTargetSpace, vectorToTargetSpace.magnitude, LayerMask.GetMask("Enemies"));
+        Vector2 directTargetGridPos = directTargetSpace.GetComponent<Space_Script>().gridPosition;
+        Vector2 directSourceGridPos = this.mySpace.GetComponent<Space_Script>().gridPosition;
+
+        Vector3 vectorToTargetSpace = (directTargetSpace.transform.position - source);
+
+
+        //If enemies are along direct shot vector, damage them
+        damageEnemiesAlongVector(source, vectorToTargetSpace, directTargetSpace.tag); 
+
+
+        //If enemies are along scatter vectors, damage them
+        for (int x = 0; x < this.attackRange.Length; x++)
+        {
+            for (int y = 1; y <= this.attackRange[x]; y++) //y = 1 because if attackRange[x] = 0, skip this calculation as weapon has no scatter for this x.
+            {
+                //Calculate x offset to grid position
+                int scatterSourceGridPosX = (int)directSourceGridPos.x;
+                int scatterTargetGridPosX = (int)directTargetGridPos.x;
+                if (this.isFacingRight)
+                {
+                    scatterSourceGridPosX += x;
+
+                }
+                else
+                {
+                    scatterSourceGridPosX -= x;
+                }
+
+                //Get the source and target gridSpaces to scatter to.
+                GameObject scatterDownTargetSpace = Space_Script.findGridSpace((int)directTargetGridPos.x, (int)directTargetGridPos.y + y, true);
+                GameObject scatterDownSourceSpace = Space_Script.findGridSpace((int)scatterSourceGridPosX, (int)directSourceGridPos.y + y, true);
+                GameObject scatterUpTargetSpace = Space_Script.findGridSpace((int)directTargetGridPos.x, (int)directTargetGridPos.y - y, true);
+                GameObject scatterUpSourceSpace = Space_Script.findGridSpace((int)scatterSourceGridPosX, (int)directSourceGridPos.y - y, true);
+
+                if (scatterDownSourceSpace != null && scatterDownTargetSpace != null)
+                {
+                    Vector3 vectorToScatterDownTargetSpace = (scatterDownTargetSpace.transform.position - scatterDownSourceSpace.transform.position);
+                    Debug.DrawRay(scatterDownSourceSpace.transform.position, vectorToScatterDownTargetSpace, Color.blue, 1);
+                    damageEnemiesAlongVector(scatterDownSourceSpace.transform.position, vectorToScatterDownTargetSpace, scatterDownTargetSpace.tag, y);
+                }
+
+                if (scatterUpSourceSpace != null && scatterUpTargetSpace != null)
+                {
+                    Vector3 vectorToScatterUpTargetSpace = (scatterUpTargetSpace.transform.position - scatterUpSourceSpace.transform.position);
+                    Debug.DrawRay(scatterUpSourceSpace.transform.position, vectorToScatterUpTargetSpace, Color.blue, 1);
+                    damageEnemiesAlongVector(scatterUpSourceSpace.transform.position, vectorToScatterUpTargetSpace, scatterUpTargetSpace.tag, -y);
+                }
+            }
+        }
+    }
+
+    //Inflict melee damage on all enemies along the vector from source to targetSpace
+    private void damageEnemiesAlongVector(Vector3 source, Vector3 vectorToTargetSpace, string targetSpaceTag, int gridYOffset = 0)
+    {
+        Debug.DrawRay(source, vectorToTargetSpace, Color.green, 1);
+        float rayLength;
+        if (string.Equals(targetSpaceTag, "End Space") && this.isMeleeAttack) //if targeting an end space with a melee attack, do not use the distance to the space as the length of the raycast
+        {
+            rayLength = this.attackRange.Length * 3; //TODO: find a more elegant off the board range that just 3 co-ordinate units per gridspace of attackrange.
+        }
+        else //if a ranged attack, or melee attack targeting a normal space, use the distance to the space as the length of the raycast
+        {
+            rayLength = vectorToTargetSpace.magnitude;
+        }
+
+        RaycastHit2D[] hits = Physics2D.RaycastAll(source, vectorToTargetSpace, rayLength, LayerMask.GetMask("Enemies"));
         foreach (RaycastHit2D aHit in hits)
         {
             //Detect if object spotted is an Enemy
             if (aHit.collider.gameObject.CompareTag("Enemy"))
             {
-                Debug.Log("Enemy hit " + aHit.collider.gameObject.ToString());
-                //Detect if enemy hit is on the right grid-row
+                //Debug.Log("Enemy hit " + aHit.collider.gameObject.ToString());
+                //Detect if enemy hit is on the correct row of the grid
                 float hitEnemyGridY = aHit.collider.gameObject.GetComponent<Enemy_AI_script>().nextSpace.GetComponent<Space_Script>().gridPosition.y;
-                if (hitEnemyGridY == this.mySpace.GetComponent<Space_Script>().gridPosition.y)
+                if (hitEnemyGridY == this.mySpace.GetComponent<Space_Script>().gridPosition.y + gridYOffset)
                 {
-                    Debug.Log("Enemy hit is on right y ");
+                    //Debug.Log("Enemy hit is on right y ");
                     aHit.collider.gameObject.GetComponent<Enemy_AI_script>().onHitByMelee(this.meleeDamage);
                 }
             }
