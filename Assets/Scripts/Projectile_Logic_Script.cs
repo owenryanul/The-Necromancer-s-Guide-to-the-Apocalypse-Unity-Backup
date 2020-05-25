@@ -19,7 +19,13 @@ public class Projectile_Logic_Script : MonoBehaviour
     public int projectileDamage = 1;
 
     [Header("Effects")]
+    public ProjectileAnimation projectileAnimation;
     public GameObject deathParticles;
+    public enum ProjectileAnimation
+    {
+        thrown_bullet = 1,
+        pistol1_bullet = 2
+    }
 
     [Header("Scatter Projectile")]
     public GameObject scatterProjectilePrefab;
@@ -38,6 +44,7 @@ public class Projectile_Logic_Script : MonoBehaviour
     void Start()
     {
         //currentLifeTime = 0;
+        this.gameObject.GetComponent<Animator>().SetInteger("AnimationClip", (int)projectileAnimation);
         scatterLogic();
     }
 

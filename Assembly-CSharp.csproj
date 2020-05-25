@@ -63,6 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Ammo_Meter_Script.cs" />
+    <Compile Include="Assets\Cosmetic_Database_Script.cs" />
+    <Compile Include="Assets\Minion_Cosmetic_Script.cs" />
     <Compile Include="Assets\Scripts\Ability_Button_Script.cs" />
     <Compile Include="Assets\Scripts\Ability_Database_Script.cs" />
     <Compile Include="Assets\Scripts\AnimationRelay_Script.cs" />

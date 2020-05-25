@@ -33,6 +33,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
     public WeaponID weapon1 = WeaponID.custom;
     public WeaponID weapon2 = WeaponID.custom;
     private WeaponID currentWeapon;
+    private const string weaponSprite_Path = "Skeleton Rig/bone_1/bone_16/bone_17/bone_18/bone_19/Weapon Sprite";
     public bool isMeleeAttack;
     public int meleeDamage;
     public GameObject projectile;
@@ -522,6 +523,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         if (currentWeapon != WeaponID.custom)
         {
             switchAttackStatsToWeapon(Weapon_Database.findWeapon(currentWeapon));
+            switchWeaponVisualsToWeapon(Weapon_Database.findWeapon(currentWeapon));
         }
     }
 
@@ -534,6 +536,22 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         this.projectile_Speed = weaponIn.projectile_Speed;
         this.attackCooldown = weaponIn.weaponAttackCooldown;
         this.attackRange = weaponIn.weaponRange;
+    }
+
+    private void switchWeaponVisualsToWeapon(Weapon_Database_Script.Weapon weaponIn)
+    {
+        GameObject weaponSprite = this.transform.Find(weaponSprite_Path).gameObject;
+        if (weaponIn.weaponSprite == null)
+        {
+            weaponSprite.GetComponent<SpriteRenderer>().enabled = false;
+        }
+        else
+        {
+            weaponSprite.GetComponent<SpriteRenderer>().enabled = true;
+            weaponSprite.GetComponent<SpriteRenderer>().sprite = weaponIn.weaponSprite;
+            weaponSprite.transform.localPosition = weaponIn.weaponOffset;
+            weaponSprite.transform.localEulerAngles = weaponIn.weaponRotation;
+        }
     }
 
     public void switchWeapons()

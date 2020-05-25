@@ -18,6 +18,9 @@ public class Weapon_Database_Script : MonoBehaviour
         public WeaponID weaponID;
         [Header("Visuals")]
         public Sprite icon;
+        public Sprite weaponSprite;
+        public Vector3 weaponOffset;
+        public Vector3 weaponRotation;
         [Header("Stats")]
         public bool isMeleeWeapon;
         public int meleeWeaponDamage;
@@ -53,6 +56,8 @@ public class Weapon_Database_Script : MonoBehaviour
             case WeaponID.Quick_thrown_bone: return WEAPON_quick_thrown_bone;
             case WeaponID.Scatter_thrown_bone: return WEAPON_scatter_thrown_bone;
             case WeaponID.Wide_Unarmed_Melee: return WEAPON_wide_unarmed_melee;
+            case WeaponID.Scrap_Hammer_Melee: return WEAPON_scrap_hammer_melee;
+            case WeaponID.Revolver_Ranged: return WEAPON_revolver_ranged;
             default: return null;
         }
     }
@@ -66,6 +71,8 @@ public class Weapon_Database_Script : MonoBehaviour
         Swift_Unarmed_Melee,
         Scatter_thrown_bone,
         Wide_Unarmed_Melee,
+        Scrap_Hammer_Melee,
+        Revolver_Ranged
     }
     
     /*  To Add New Weapon:
@@ -81,5 +88,7 @@ public class Weapon_Database_Script : MonoBehaviour
     public Weapon WEAPON_quick_thrown_bone = new Weapon(WeaponID.Quick_thrown_bone, false, 1, 0.1f, new int[3] { 0, 0, 0 });
     public Weapon WEAPON_scatter_thrown_bone = new Weapon(WeaponID.Scatter_thrown_bone, false, 1, 0.1f, new int[3] { 0, 1, 2 });
     public Weapon WEAPON_wide_unarmed_melee = new Weapon(WeaponID.Wide_Unarmed_Melee, true, 1, 0.1f, new int[1] { 1 });
+    public Weapon WEAPON_scrap_hammer_melee = new Weapon(WeaponID.Scrap_Hammer_Melee, true, 4, 0.1f, new int[1] { 0 });
+    public Weapon WEAPON_revolver_ranged = new Weapon(WeaponID.Revolver_Ranged, false, 1, 1.0f, new int[3] { 0, 0, 0 });
 
 }
