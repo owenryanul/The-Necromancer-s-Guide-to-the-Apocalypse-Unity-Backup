@@ -1,0 +1,46 @@
+TODO List:
+-Cleanup Enemy AI Update()
+-Add Enemy Cosmetics System
+-Add enemy Flinching system
+
+-Fix Bullets visuals being in wrong spot
+
+-Add Minion Generate on enemy Conversion
+
+-Add Enemy Wave System
+-Add persistance to Dark Energy and Ammo
+-Add Map System
+-Add Multiple Battles
+
+-Add Minion Equipment Screen
+-Add Equipment Inventory
+-Add Equipment Inventory Persistance
+
+-Add map events system
+
+-Improve Minion Movement order issueing(Advanced Wars Arrow system? Revelent to where you mouse is hovering on the square?)
+
+-Add Minion Customisation
+-Add Minion Renaming
+
+-Add Sound Effects
+-Add Music
+
+-Add Additional Enemy Types
+-Add Additional Abilities
+-Add Additional Equipment
+
+-Add Runes(Mutators) System
+
+-Add Story Mode
+
+-Comission Artist for artwork rework 
+
+
+
+
+
+
+
+
+

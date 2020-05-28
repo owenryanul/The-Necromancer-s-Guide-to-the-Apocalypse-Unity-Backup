@@ -62,6 +62,10 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
     [Header("Buffs")]
     public List<Buffs.Buff> activeBuffs;
 
+    //Sprite SortingLayer Orderings
+    private List<int> baseSpriteSortingLayerOrderings;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -74,6 +78,15 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         isDying = false;
         activeBuffs = new List<Buffs.Buff>();
         currentWeapon = this.weapon1;
+
+        //Store the original order in sortinglayer for each part of the minion's rig.
+        baseSpriteSortingLayerOrderings = new List<int>();
+        foreach(SpriteRenderer aRender in this.gameObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            baseSpriteSortingLayerOrderings.Add(aRender.sortingOrder);
+        }
+        updateSpriteSortingLayers();
+
 
         triggerPassiveAbilities();
     }
@@ -94,7 +107,8 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
 
             if (isMoving)
             {
-//TODO: Set sorting layer order to render based on y position
+                //Set sorting layer order to render based on y position, so minion higher on the grid render behind lower minions
+                updateSpriteSortingLayers();
             }
 
             //Attack
@@ -203,6 +217,18 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
 
         Debug.LogError("WARNING: Space could not be found, check your space's gridPositions as no space could be found with co-ordinates: " + nextGridPos + " on the path to " + targetGridPos);
         return null;
+    }
+
+    //Set sorting layer order to render based on y position, so minion higher on the grid render behind lower minions
+    private void updateSpriteSortingLayers()
+    {
+        int i = 0;
+        foreach(SpriteRenderer aRender in this.gameObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            //Set this spriteRenderer's order in the sorting layer to its original order(so it renders correctly relevant to other parts of the minion rig) - an offset based on the minion's sprite position
+            aRender.sortingOrder = baseSpriteSortingLayerOrderings[i] - Mathf.FloorToInt(100 * this.gameObject.transform.position.y);
+            i++;
+        }
     }
 
     private void attackLogic()

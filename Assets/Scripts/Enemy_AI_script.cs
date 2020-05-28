@@ -41,7 +41,9 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     private Vector3 conversionHoldingPoint;
 
 
-    private Ability_Database_Script Ability_Database;
+    //Sprite SortingLayer Orderings
+    private List<int> baseSpriteSortingLayerOrderings;
+
     private Minion_Roster_Script MinionRoster;
     
 
@@ -56,9 +58,17 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         conversionHoldingPoint = new Vector3(14, 10, 0);
         this.gameObject.GetComponent<ParticleSystem>().Stop();
 
+        //Store the original order in sortinglayer for each part of the minion's rig.
+        baseSpriteSortingLayerOrderings = new List<int>();
+        foreach (SpriteRenderer aRender in this.gameObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            baseSpriteSortingLayerOrderings.Add(aRender.sortingOrder);
+        }
+        updateSpriteSortingLayers();
+
+
         currentHP = maxHP;
 
-        Ability_Database = GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Ability_Database_Script>();
         MinionRoster = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>();
     }
 
@@ -76,6 +86,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         }
         else
         {
+//TODO: Cleanup Update Method by segregating different bits of logic into their own methods
             //Set target to the space currently occupied by the necromancer
             this.targetSpace = tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace();
 
@@ -128,8 +139,20 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
             rigAnimator.SetBool("IsWalking", isMoving);
             if (isMoving)
             {
-                //TODO: Set sorting layer order to render based on y position
+                updateSpriteSortingLayers();
             }
+        }
+    }
+
+    //Set sorting layer order to render based on y position, so minion higher on the grid render behind lower minions
+    private void updateSpriteSortingLayers()
+    {
+        int i = 0;
+        foreach (SpriteRenderer aRender in this.gameObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            //Set this spriteRenderer's order in the sorting layer to its original order(so it renders correctly relevant to other parts of the minion rig) - an offset based on the minion's sprite position
+            aRender.sortingOrder = baseSpriteSortingLayerOrderings[i] - Mathf.FloorToInt(100 * this.gameObject.transform.position.y);
+            i++;
         }
     }
 
