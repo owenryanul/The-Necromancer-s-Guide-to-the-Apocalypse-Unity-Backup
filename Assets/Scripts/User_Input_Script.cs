@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using UnityEngine.UI;
 using AbilityID = Ability_Database_Script.AbilityID;
@@ -70,6 +72,15 @@ public class User_Input_Script : MonoBehaviour
             {
                 showHideRoster(GameObject.FindGameObjectWithTag("Roster Button").GetComponent<Button>());
             }
+        }
+
+        if(Input.GetKeyDown(KeyCode.F1))
+        {
+            saveRoster();
+        }
+        else if(Input.GetKeyDown(KeyCode.F12))
+        {
+            loadRoster();
         }
     }
 
@@ -221,7 +232,7 @@ public class User_Input_Script : MonoBehaviour
         
     }
 
-    //Called by Roster Button's OnClick Listener
+    //Called by Roster Minion Button's OnClick Listener
     public void aimSummonMinion(Minion_Roster_Script.MinionEntry inData)
     {
         
@@ -240,5 +251,30 @@ public class User_Input_Script : MonoBehaviour
             //TODO: Add not enough dark energy message for player
         }
         
+    }
+
+    //Save/Load Roster Contents
+    private void saveRoster()
+    {
+        Debug.Log("Saving Roster");
+        RosterSave rosterToSave = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>().convertRosterToSaveFile();
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/Roster1.RosterSave");
+        bf.Serialize(file, rosterToSave);
+        file.Close();
+    }
+
+    private void loadRoster()
+    {
+        Debug.Log("Loading Roster");
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Open(Application.persistentDataPath + "/Roster1.RosterSave", FileMode.Open);
+        RosterSave save = (RosterSave)bf.Deserialize(file);
+        file.Close();
+
+        GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>().loadRosterFromSaveFile(save);
+
     }
 }

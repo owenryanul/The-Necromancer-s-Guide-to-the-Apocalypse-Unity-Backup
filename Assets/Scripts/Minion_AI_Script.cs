@@ -14,7 +14,6 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
 {
     public string name = "Unnamed Minion";
     public string minionID;
-    public Sprite icon;
     public int cost;
 
     [Header("Movement")]

@@ -69,6 +69,8 @@
     <Compile Include="Assets\Scripts\Ability_Database_Script.cs" />
     <Compile Include="Assets\Scripts\AnimationRelay_Script.cs" />
     <Compile Include="Assets\Scripts\Buff_Database_Script.cs" />
+    <Compile Include="Assets\Scripts\Classes\MinionSave.cs" />
+    <Compile Include="Assets\Scripts\Classes\RosterSave.cs" />
     <Compile Include="Assets\Scripts\Dark_Energy_Meter_Script.cs" />
     <Compile Include="Assets\Scripts\Dark_Energy_Mote_Script.cs" />
     <Compile Include="Assets\Scripts\Enemy_AI_script.cs" />

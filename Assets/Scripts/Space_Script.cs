@@ -77,7 +77,6 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
         summonedMinion.GetComponent<Minion_AI_Script>().minionID = minionToSummonData.minionID;
         summonedMinion.GetComponent<Minion_AI_Script>().name = minionToSummonData.minionName;
         summonedMinion.GetComponent<Minion_AI_Script>().cost = minionToSummonData.minionSummonCost;
-        summonedMinion.GetComponent<Minion_AI_Script>().icon = minionToSummonData.minionIcon;
         summonedMinion.GetComponent<Minion_AI_Script>().baseMoveSpeed = minionToSummonData.baseMovementSpeed;
         summonedMinion.GetComponent<Minion_AI_Script>().isFacingRight = true;
         summonedMinion.GetComponent<Minion_AI_Script>().MaxHp = minionToSummonData.minionMaxHp;
@@ -87,6 +86,8 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
         summonedMinion.GetComponent<Minion_AI_Script>().Ability1 = minionToSummonData.ability1ID;
         summonedMinion.GetComponent<Minion_AI_Script>().Ability2 = minionToSummonData.ability2ID;
         summonedMinion.GetComponent<Minion_AI_Script>().Ability3 = minionToSummonData.ability3ID;
+        summonedMinion.GetComponent<Minion_Cosmetic_Script>().Hat = minionToSummonData.hat;
+
         Dark_Energy_Meter_Script.addDarkEnergy(-minionToSummonData.minionSummonCost);
         //Mark the MinionEntry in the roster as summoned, disabling the button so it can't be summoned again. On death a minion will flag the entry as unSummoned.
         GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>().flagMinionAsSummoned(minionToSummonData.minionID, true);

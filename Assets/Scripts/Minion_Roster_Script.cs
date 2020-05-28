@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Linq;
 using WeaponID = Weapon_Database_Script.WeaponID;
 using AbilityID = Ability_Database_Script.AbilityID;
+using CosmeticID = Cosmetic_Database_Script.CosmeticID;
 
 
 public class Minion_Roster_Script : MonoBehaviour
@@ -20,20 +21,33 @@ public class Minion_Roster_Script : MonoBehaviour
     [Header("Dummy Data Variables")]
     public Sprite MinionDefaultIcon;
     public Sprite MinionDefaultIcon2;
-    
+
+    private bool hasRanOnce;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
+    {
+        hasRanOnce = false;
+    }
+
+    // Run during the first frame update rather than before, to ensure that all databases have been instanced and static calls won't throw exceptions for being uninstanced yet.
+    void StartAfterDatabases()
     {
         dummyPopulateRosterWithPremadeMinions();
         //loadMinonRosterFromSaveFile();
 
         generateRosterButtons();
+        hasRanOnce = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(!hasRanOnce)
+        {
+            StartAfterDatabases();
+        }
+
         markRosterButtonsAsUnaffordable();
     }
 
@@ -49,8 +63,7 @@ public class Minion_Roster_Script : MonoBehaviour
 
             GameObject button = Instantiate(rosterButtonPrefab, content.transform);
             button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
-
-            button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = aEntry.minionIcon;
+            assembleMinionPortrait(ref button, aEntry);
             button.GetComponent<Tooltip_Button_Script>().tooltip = "Summon " + aEntry.minionName + " (" + aEntry.minionSummonCost + "E)";
             button.GetComponent<Button>().onClick.AddListener(() => proxyAimSummon(aEntry));
             button.GetComponent<Button>().enabled = !aEntry.isSummoned;
@@ -67,6 +80,34 @@ public class Minion_Roster_Script : MonoBehaviour
         foreach (Transform aButton in content.transform)
         {
             Destroy(aButton.gameObject);
+        }
+    }
+
+    private void assembleMinionPortrait(ref GameObject button, MinionEntry aEntry)
+    {
+        button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = getSpriteFromIconID(aEntry.minionIcon);
+
+        if (aEntry.hat != CosmeticID.None)
+        {
+            button.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().enabled = true;
+            Cosmetic_Database_Script.Cosmetic hat = Cosmetic_Database_Script.findCosmetic(aEntry.hat);
+            button.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = hat.cosmeticSprite;
+            button.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().rectTransform.localPosition = hat.iconOffset;
+            button.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().rectTransform.localEulerAngles = hat.iconRotation;
+        }
+        else
+        {
+            button.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().enabled = false;
+        }
+    }
+
+    private Sprite getSpriteFromIconID(MinionEntry.IconID idIn)
+    {
+        switch(idIn)
+        {
+            case MinionEntry.IconID.Minion_Skeleton1: return MinionDefaultIcon;
+            case MinionEntry.IconID.Minion_Skeleton2: return MinionDefaultIcon2;
+            default: return null;
         }
     }
 
@@ -91,16 +132,16 @@ public class Minion_Roster_Script : MonoBehaviour
     {
         rosterOfMinions = new List<MinionEntry>();
         //              Name,    Icon,              Cost,   Speed,  Weapon1,        Weapon2,                Hp, Ability1,       Ability2,           Ability3                                    
-        rosterOfMinions.Add(new MinionEntry("MIN-1", "Better Off Ted", MinionDefaultIcon, 10, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 5, AbilityID.fleetOfFoot, AbilityID.molotov, AbilityID.fleetOfFoot));
-        rosterOfMinions.Add(new MinionEntry("MIN-2", "Pipes", MinionDefaultIcon2, 10, 3.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 2, AbilityID.molotov, AbilityID.molotov, AbilityID.molotov));
-        rosterOfMinions.Add(new MinionEntry("MIN-3", "BIG JOEY!", MinionDefaultIcon, 200, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 100, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets));
-        rosterOfMinions.Add(new MinionEntry("MIN-4", "Joey 2", MinionDefaultIcon2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets));
-        rosterOfMinions.Add(new MinionEntry("MIN-5", "Joey 3", MinionDefaultIcon2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets));
-        rosterOfMinions.Add(new MinionEntry("MIN-6", "Joey 4", MinionDefaultIcon2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets));
-        rosterOfMinions.Add(new MinionEntry("MIN-7", "Joey 5", MinionDefaultIcon2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets));
-        rosterOfMinions.Add(new MinionEntry("MIN-8", "Joey 6", MinionDefaultIcon2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets));
-        rosterOfMinions.Add(new MinionEntry("MIN-9", "Joey 7", MinionDefaultIcon2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets));
-        rosterOfMinions.Add(new MinionEntry("MIN-10", "Joey 8", MinionDefaultIcon, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets));
+        rosterOfMinions.Add(new MinionEntry("MIN-1", "Better Off Ted", MinionEntry.IconID.Minion_Skeleton1, 10, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 5, AbilityID.fleetOfFoot, AbilityID.molotov, AbilityID.fleetOfFoot, CosmeticID.Red_Baseball_Cap));
+        rosterOfMinions.Add(new MinionEntry("MIN-2", "Pipes", MinionEntry.IconID.Minion_Skeleton2, 10, 3.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 2, AbilityID.molotov, AbilityID.molotov, AbilityID.molotov, CosmeticID.None));
+        rosterOfMinions.Add(new MinionEntry("MIN-3", "BIG JOEY!", MinionEntry.IconID.Minion_Skeleton1, 200, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 100, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.Red_Baseball_X_Cap));
+        rosterOfMinions.Add(new MinionEntry("MIN-4", "Joey 2", MinionEntry.IconID.Minion_Skeleton2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.None));
+        rosterOfMinions.Add(new MinionEntry("MIN-5", "Joey 3", MinionEntry.IconID.Minion_Skeleton2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.None));
+        rosterOfMinions.Add(new MinionEntry("MIN-6", "Joey 4", MinionEntry.IconID.Minion_Skeleton2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.None));
+        rosterOfMinions.Add(new MinionEntry("MIN-7", "Joey 5", MinionEntry.IconID.Minion_Skeleton2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.None));
+        rosterOfMinions.Add(new MinionEntry("MIN-8", "Joey 6", MinionEntry.IconID.Minion_Skeleton2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.None));
+        rosterOfMinions.Add(new MinionEntry("MIN-9", "Joey 7", MinionEntry.IconID.Minion_Skeleton2, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.None));
+        rosterOfMinions.Add(new MinionEntry("MIN-10", "Joey 8", MinionEntry.IconID.Minion_Skeleton1, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.Red_Baseball_X_Cap));
     }
 
     private void proxyAimSummon(MinionEntry inData)
@@ -125,18 +166,45 @@ public class Minion_Roster_Script : MonoBehaviour
     {
         Debug.Log("inName : " + inName);
         clearRosterButtons();
-        MinionEntry newMinion = new MinionEntry("MIN-" + (rosterOfMinions.Count + 2), inName, MinionDefaultIcon, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fleetOfFoot, AbilityID.fleetOfFoot);
+        MinionEntry newMinion = new MinionEntry("MIN-" + (rosterOfMinions.Count + 2), inName, MinionEntry.IconID.Minion_Skeleton1, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fleetOfFoot, AbilityID.fleetOfFoot, CosmeticID.None);
         rosterOfMinions.Add(newMinion);
         generateRosterButtons();
     }
 
+    public RosterSave convertRosterToSaveFile()
+    {
+        List<MinionSave> rosterToSave = new List<MinionSave>();
+
+        foreach (MinionEntry aEntry in rosterOfMinions)
+        {
+            rosterToSave.Add(new MinionSave(aEntry.minionID, aEntry.minionName, aEntry.minionIcon, aEntry.minionSummonCost, aEntry.baseMovementSpeed, aEntry.minionMaxHp, aEntry.Weapon1ID, aEntry.Weapon2ID, aEntry.ability1ID, aEntry.ability2ID, aEntry.ability3ID, aEntry.hat));
+        }
+        RosterSave save = new RosterSave(rosterToSave);
+        return save;
+    }
+
+    public void loadRosterFromSaveFile(RosterSave save)
+    {
+        List<MinionEntry> newRoster = new List<MinionEntry>();
+        foreach(MinionSave aSave in save.getMinionSaveList())
+        {
+            Debug.Log("Loading sprite icon path: " + aSave.getIcon());
+            MinionEntry newEntry = new MinionEntry(aSave.getMinionId(), aSave.getName(), aSave.getIcon(), aSave.getCost(), aSave.getBaseMovementSpeed(), aSave.getWeapon1(), aSave.getWeapon2(), aSave.getMaxHp(), aSave.getAbility1(), aSave.getAbility2(), aSave.getAbility3(), aSave.getHat());
+            newRoster.Add(newEntry);
+        }
+        clearRosterButtons();
+        this.rosterOfMinions = newRoster;
+        generateRosterButtons();
+    }
+
+    //An entry in the roster containing all of the important data used by a minion
     [System.Serializable]
     public class MinionEntry
     {
         public string minionID;
         public bool isSummoned;
         public string minionName;
-        public Sprite minionIcon;
+        public IconID minionIcon;
         public int minionSummonCost;
         public float baseMovementSpeed;
         public WeaponID Weapon1ID;
@@ -145,9 +213,16 @@ public class Minion_Roster_Script : MonoBehaviour
         public AbilityID ability1ID;
         public AbilityID ability2ID;
         public AbilityID ability3ID;
+        public CosmeticID hat;
         public GameObject summonButton;
 
-        public MinionEntry(string IDin, string inMinionName, Sprite inMinionIcon, int inMinionSummonCost, float baseMovementSpeedIn, WeaponID inWeapon1ID, WeaponID inWeapon2ID, int inMinionMaxHp, AbilityID inAbility1ID, AbilityID inAbility2ID, AbilityID inAbility3ID)
+        public enum IconID
+        {
+            Minion_Skeleton1,
+            Minion_Skeleton2
+        }
+
+        public MinionEntry(string IDin, string inMinionName, IconID inMinionIcon, int inMinionSummonCost, float baseMovementSpeedIn, WeaponID inWeapon1ID, WeaponID inWeapon2ID, int inMinionMaxHp, AbilityID inAbility1ID, AbilityID inAbility2ID, AbilityID inAbility3ID, CosmeticID hatin)
         {
             minionID = IDin;
             minionName = inMinionName;
@@ -160,7 +235,7 @@ public class Minion_Roster_Script : MonoBehaviour
             ability1ID = inAbility1ID;
             ability2ID = inAbility2ID;
             ability3ID = inAbility3ID;
-
+            hat = hatin;
             isSummoned = false;
         }
     }
