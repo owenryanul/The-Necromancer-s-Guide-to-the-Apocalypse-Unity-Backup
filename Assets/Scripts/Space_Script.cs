@@ -87,6 +87,7 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
         summonedMinion.GetComponent<Minion_AI_Script>().Ability2 = minionToSummonData.ability2ID;
         summonedMinion.GetComponent<Minion_AI_Script>().Ability3 = minionToSummonData.ability3ID;
         summonedMinion.GetComponent<Minion_Cosmetic_Script>().Hat = minionToSummonData.hat;
+        summonedMinion.GetComponent<Minion_Cosmetic_Script>().Torso = minionToSummonData.torso;
 
         Dark_Energy_Meter_Script.addDarkEnergy(-minionToSummonData.minionSummonCost);
         //Mark the MinionEntry in the roster as summoned, disabling the button so it can't be summoned again. On death a minion will flag the entry as unSummoned.

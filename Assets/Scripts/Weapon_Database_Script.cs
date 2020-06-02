@@ -21,6 +21,8 @@ public class Weapon_Database_Script : MonoBehaviour
         public Sprite weaponSprite;
         public Vector3 weaponOffset;
         public Vector3 weaponRotation;
+        public Vector3 weaponPortraitOffset;
+        public Vector3 weaponPortraitRotation;
         [Header("Stats")]
         public bool isMeleeWeapon;
         public int meleeWeaponDamage;

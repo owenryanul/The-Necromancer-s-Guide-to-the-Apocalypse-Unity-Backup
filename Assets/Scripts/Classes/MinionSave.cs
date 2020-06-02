@@ -16,8 +16,6 @@ public class MinionSave
     private int cost;
     private float baseMovementSpeed;
 
-    private MinionEntry.IconID icon;
-
     private int maxHp;
 
     private WeaponID weapon1;
@@ -29,13 +27,12 @@ public class MinionSave
 
     //TODO: Add Cosmetics
     private CosmeticID hat;
+    private CosmeticID torso;
 
-    public MinionSave(string minion_IDin, string nameIn, MinionEntry.IconID iconIn, int costIn, float baseMovementSpeedIn, int maxHpIn, WeaponID weapon1IDin, WeaponID weapon2IDin, AbilityID ability1IDin, AbilityID ability2IDin, AbilityID ability3IDin, CosmeticID hatin)
+    public MinionSave(string minion_IDin, string nameIn, int costIn, float baseMovementSpeedIn, int maxHpIn, WeaponID weapon1IDin, WeaponID weapon2IDin, AbilityID ability1IDin, AbilityID ability2IDin, AbilityID ability3IDin, CosmeticID hatin, CosmeticID torsoin)
     {
         this.minion_ID = minion_IDin;
         this.name = nameIn;
-        this.icon = iconIn;
-        Debug.Log("Saving sprite icon path: " + this.icon);
         this.cost = costIn;
         this.baseMovementSpeed = baseMovementSpeedIn;
         this.maxHp = maxHpIn;
@@ -45,6 +42,7 @@ public class MinionSave
         this.ability2 = ability2IDin;
         this.ability3 = ability3IDin;
         this.hat = hatin;
+        this.torso = torsoin;
     }
 
     public string getMinionId()
@@ -55,11 +53,6 @@ public class MinionSave
     public string getName()
     {
         return name;
-    }
-
-    public MinionEntry.IconID getIcon()
-    {
-        return icon;
     }
 
     public int getCost()
@@ -105,5 +98,10 @@ public class MinionSave
     public CosmeticID getHat()
     {
         return hat;
+    }
+
+    public CosmeticID getTorso()
+    {
+        return torso;
     }
 }

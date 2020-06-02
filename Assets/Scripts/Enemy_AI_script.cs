@@ -86,61 +86,66 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         }
         else
         {
-//TODO: Cleanup Update Method by segregating different bits of logic into their own methods
-            //Set target to the space currently occupied by the necromancer
-            this.targetSpace = tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace();
-
-            Vector3 myPos = this.transform.position;
-            Vector3 nextSpacePos = nextSpace.transform.position;
-            if (nextSpacePos.x > myPos.x) //if next space is left of this enemy
-            {
-                nextSpacePos.x -= meleeRange; //offset the target position by melee range
-                flipSpriteRight();
-            }
-            else if (nextSpacePos.x <= myPos.x) //if next space is right of this enemy
-            {
-                nextSpacePos.x += meleeRange;
-                flipSpriteLeft();
-            }
-            nextSpacePos.z = this.transform.position.z; //ignore the z dimension
-
-
-
-            if (findMinionToAttack() != null) //if a valid target is in melee range, then attack
-            {
-                this.rigAnimator.SetTrigger("DoAttack");
-            }
-            else if (myPos != nextSpacePos) //otherwise, if not at nextSpace, move to it
-            {
-                isMoving = true;
-                Vector3 directionVector = (nextSpacePos - this.transform.position);
-                directionVector.z = 0;
-                Vector3 moveVector = directionVector.normalized * (speed * Time.deltaTime);
-                //if target position is close than 1 frame's worth of movement, snap to it, otherwise move towards it
-                if (moveVector.magnitude > directionVector.magnitude)
-                {
-                    this.transform.position = nextSpacePos;
-                }
-                else
-                {
-                    this.transform.position += moveVector;
-                }
-            }
-            else if (nextSpace != targetSpace) //if at nextSpace check if its your target space, if not change nextSpace
-            {
-                nextSpace = findNextSpace();
-            }
-            else //if at nextSpace and it is your target space, stop moving
-            {
-                isMoving = false;
-            }
-
+            movementAndAttacksUpdate();
 
             rigAnimator.SetBool("IsWalking", isMoving);
             if (isMoving)
             {
                 updateSpriteSortingLayers();
             }
+        }
+    }
+
+    //Attempt to find target space, then move to target space, stopping to attack anything in the way.
+    //Also makes the sprite face the direction they're moving in.
+    private void movementAndAttacksUpdate()
+    {
+        //Set target to the space currently occupied by the necromancer
+        this.targetSpace = tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace();
+
+        Vector3 myPos = this.transform.position;
+        Vector3 nextSpacePos = nextSpace.transform.position;
+        if (nextSpacePos.x > myPos.x) //if next space is left of this enemy
+        {
+            nextSpacePos.x -= meleeRange; //offset the target position by melee range
+            flipSpriteRight();
+        }
+        else if (nextSpacePos.x <= myPos.x) //if next space is right of this enemy
+        {
+            nextSpacePos.x += meleeRange;
+            flipSpriteLeft();
+        }
+        nextSpacePos.z = this.transform.position.z; //ignore the z dimension
+
+
+
+        if (findMinionToAttack() != null) //if a valid target is in melee range, then attack
+        {
+            this.rigAnimator.SetTrigger("DoAttack");
+        }
+        else if (myPos != nextSpacePos) //otherwise, if not at nextSpace, move to it
+        {
+            isMoving = true;
+            Vector3 directionVector = (nextSpacePos - this.transform.position);
+            directionVector.z = 0;
+            Vector3 moveVector = directionVector.normalized * (speed * Time.deltaTime);
+            //if target position is close than 1 frame's worth of movement, snap to it, otherwise move towards it
+            if (moveVector.magnitude > directionVector.magnitude)
+            {
+                this.transform.position = nextSpacePos;
+            }
+            else
+            {
+                this.transform.position += moveVector;
+            }
+        }
+        else if (nextSpace != targetSpace) //if at nextSpace check if its your target space, if not change nextSpace
+        {
+            nextSpace = findNextSpace();
+        }
+        else //if at nextSpace and it is your target space, stop moving
+        {
+            isMoving = false;
         }
     }
 

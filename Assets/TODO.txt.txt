@@ -1,11 +1,11 @@
 TODO List:
--Cleanup Enemy AI Update()
--Add Enemy Cosmetics System
 -Add enemy Flinching system
 
 -Fix Bullets visuals being in wrong spot
 
 -Add Minion Generate on enemy Conversion
+
+-Add 2nd Enemy Type (Raider Pyshco, on taking damage, trigger rage animation then moves at double speed)
 
 -Add Enemy Wave System
 -Add persistance to Dark Energy and Ammo

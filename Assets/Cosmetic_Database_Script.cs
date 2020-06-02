@@ -24,14 +24,19 @@ public class Cosmetic_Database_Script : MonoBehaviour
         [Header("Portrait Positioning")]
         public Vector3 iconOffset;
         public Vector3 iconRotation;
+        [Header("Positioning on enemies")]
+        public Vector3 enemyOffset;
+        public Vector3 enemyRotation;
 
-        public Cosmetic(CosmeticID IDin, Vector3 offsetIn, Vector3 rotationIn, Vector3 iconOffsetIn, Vector3 iconRotationIn)
+        public Cosmetic(CosmeticID IDin, Vector3 offsetIn, Vector3 rotationIn, Vector3 iconOffsetIn, Vector3 iconRotationIn, Vector3 enemyOffsetIn, Vector3 enemyRotationIn)
         {
             this.cosmeticID = IDin;
             this.offset = offsetIn;
             this.rotation = rotationIn;
             this.iconOffset = iconOffsetIn;
             this.iconRotation = iconRotationIn;
+            this.enemyOffset = enemyOffsetIn;
+            this.enemyRotation = enemyRotationIn;
         }
     }
 
@@ -46,6 +51,7 @@ public class Cosmetic_Database_Script : MonoBehaviour
         {
             case CosmeticID.Red_Baseball_Cap: return COSMETIC_Red_Baseball_Cap;
             case CosmeticID.Red_Baseball_X_Cap: return COSMETIC_Red_Baseball_X_Cap;
+            case CosmeticID.Blue_Shirt: return COSMETIC_Blue_Shirt;
             default: return null;
         }
     }
@@ -54,7 +60,8 @@ public class Cosmetic_Database_Script : MonoBehaviour
     {
         None,
         Red_Baseball_Cap,
-        Red_Baseball_X_Cap
+        Red_Baseball_X_Cap,
+        Blue_Shirt,
     }
 
     /*  To Add New Weapon:
@@ -64,7 +71,7 @@ public class Cosmetic_Database_Script : MonoBehaviour
      *      4. Add Projectiles in Inspector if necessary.
      */
 
-    public Cosmetic COSMETIC_Red_Baseball_Cap = new Cosmetic(CosmeticID.Red_Baseball_Cap, new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
-    public Cosmetic COSMETIC_Red_Baseball_X_Cap = new Cosmetic(CosmeticID.Red_Baseball_X_Cap, new Vector3(0, 0, 0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
-
+    public Cosmetic COSMETIC_Red_Baseball_Cap = new Cosmetic(CosmeticID.Red_Baseball_Cap, new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+    public Cosmetic COSMETIC_Red_Baseball_X_Cap = new Cosmetic(CosmeticID.Red_Baseball_X_Cap, new Vector3(0, 0, 0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+    public Cosmetic COSMETIC_Blue_Shirt = new Cosmetic(CosmeticID.Blue_Shirt, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
 }
