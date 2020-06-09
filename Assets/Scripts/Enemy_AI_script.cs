@@ -8,14 +8,14 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     [Header("Movement")]
     public GameObject nextSpace;
     public float speed = 1.0f;
-    private GameObject targetSpace;
-    private bool isMoving;
+    protected GameObject targetSpace;
+    protected bool isMoving;
 
     [Header("Attacks")]
     public float meleeRange = 1.0f;
     public int meleeDamage = 1;
-    //private GameObject minionToAttack;
-    private const float yDistanceToBeConsideredInTheSameRow = 0.1f;
+    //protected GameObject minionToAttack;
+    protected const float yDistanceToBeConsideredInTheSameRow = 0.1f;
 
     [Header("AI")]
     public GameObject tryingToKill;
@@ -25,9 +25,9 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     public int currentHP;
 
     [Header("Animation")]
-    private Animator rigAnimator;
-    private bool isFacingRight;
-    private bool isDying;
+    protected Animator rigAnimator;
+    protected bool isFacingRight;
+    protected bool isDying;
 
     [Header("Visuals")]
     public GameObject hurtParticleEmitter;
@@ -36,19 +36,19 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     [Header("Conversion And Energy")]
     public int energyRewardOnKill = 1;
     public int conversionProgressRequired = 10;
-    private bool beingConverted;
-    private int conversionProgress;
-    private Vector3 conversionHoldingPoint;
+    protected bool beingConverted;
+    protected int conversionProgress;
+    protected Vector3 conversionHoldingPoint;
 
 
     //Sprite SortingLayer Orderings
-    private List<int> baseSpriteSortingLayerOrderings;
+    protected List<int> baseSpriteSortingLayerOrderings;
 
-    private Minion_Roster_Script MinionRoster;
+    protected Minion_Roster_Script MinionRoster;
     
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         tryingToKill = GameObject.FindGameObjectWithTag("Necromancer");
         rigAnimator = this.gameObject.GetComponentInChildren<Animator>();
@@ -86,7 +86,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         }
         else
         {
-            movementAndAttacksUpdate();
+            basicEnemyMovementAndAttacksUpdate();
 
             rigAnimator.SetBool("IsWalking", isMoving);
             if (isMoving)
@@ -98,7 +98,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 
     //Attempt to find target space, then move to target space, stopping to attack anything in the way.
     //Also makes the sprite face the direction they're moving in.
-    private void movementAndAttacksUpdate()
+    protected void basicEnemyMovementAndAttacksUpdate()
     {
         //Set target to the space currently occupied by the necromancer
         this.targetSpace = tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace();
@@ -150,7 +150,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     }
 
     //Set sorting layer order to render based on y position, so minion higher on the grid render behind lower minions
-    private void updateSpriteSortingLayers()
+    protected void updateSpriteSortingLayers()
     {
         int i = 0;
         foreach (SpriteRenderer aRender in this.gameObject.GetComponentsInChildren<SpriteRenderer>())
@@ -176,7 +176,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         }
     }
 
-    private GameObject findMinionToAttack()
+    protected GameObject findMinionToAttack()
     {
         Vector3 vectorDirection;
         if(isFacingRight)
@@ -209,7 +209,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 
     //Find the next space on the path between the currently occupied space and the target space.
     //Note: Will attempt to match target spaces X before matching Y
-    private GameObject findNextSpace()
+    protected GameObject findNextSpace()
     {
         Vector2 myGridPos = nextSpace.GetComponent<Space_Script>().gridPosition;
         Vector2 targetGridPos = targetSpace.GetComponent<Space_Script>().gridPosition;
@@ -244,13 +244,13 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         return null;
     }
 
-    private void flipSpriteRight()
+    protected void flipSpriteRight()
     {
         isFacingRight = true;
         this.transform.localScale = new Vector3(-Mathf.Abs(this.transform.localScale.x), this.transform.localScale.y, this.transform.localScale.z);
     }
 
-    private void flipSpriteLeft()
+    protected void flipSpriteLeft()
     {
         isFacingRight = false;
         this.transform.localScale = new Vector3(Mathf.Abs(this.transform.localScale.x), this.transform.localScale.y, this.transform.localScale.z);
@@ -296,7 +296,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     
     //[Conversion Methods]
     //Replaces the Update logic while the enemy is being converted
-    private void conversionUpdate()
+    protected void conversionUpdate()
     {
         //Move the Enemy to the ritual's holding position.
         Vector3 ritualPos = conversionHoldingPoint;
@@ -329,7 +329,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 
     }
 
-    private void conversionComplete()
+    protected void conversionComplete()
     {
         this.setBeingConverted(false);
         this.gameObject.GetComponent<ParticleSystem>().Stop();

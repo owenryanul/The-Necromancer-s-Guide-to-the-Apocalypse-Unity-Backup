@@ -29,4 +29,9 @@ public class AnimationRelay_Script : MonoBehaviour
     {
         this.GetComponentInParent<Minion_AI_Script>().onDeathAnimationFinished();
     }
+
+    public void onEnemyBeserkRageAnimationDone()
+    {
+        this.GetComponentInParent<Enemy_AI_Berserker_Script>().onBeserkAnimationDone();
+    }
 }

@@ -27,9 +27,10 @@ public class MinionSave
 
     //TODO: Add Cosmetics
     private CosmeticID hat;
+    private CosmeticID mask;
     private CosmeticID torso;
 
-    public MinionSave(string minion_IDin, string nameIn, int costIn, float baseMovementSpeedIn, int maxHpIn, WeaponID weapon1IDin, WeaponID weapon2IDin, AbilityID ability1IDin, AbilityID ability2IDin, AbilityID ability3IDin, CosmeticID hatin, CosmeticID torsoin)
+    public MinionSave(string minion_IDin, string nameIn, int costIn, float baseMovementSpeedIn, int maxHpIn, WeaponID weapon1IDin, WeaponID weapon2IDin, AbilityID ability1IDin, AbilityID ability2IDin, AbilityID ability3IDin, CosmeticID hatin, CosmeticID torsoin, CosmeticID maskin)
     {
         this.minion_ID = minion_IDin;
         this.name = nameIn;
@@ -43,6 +44,7 @@ public class MinionSave
         this.ability3 = ability3IDin;
         this.hat = hatin;
         this.torso = torsoin;
+        this.mask = maskin;
     }
 
     public string getMinionId()
@@ -103,5 +105,10 @@ public class MinionSave
     public CosmeticID getTorso()
     {
         return torso;
+    }
+
+    public CosmeticID getMask()
+    {
+        return mask;
     }
 }

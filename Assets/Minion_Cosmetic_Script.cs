@@ -10,9 +10,12 @@ public class Minion_Cosmetic_Script : MonoBehaviour
 
     public bool isEnemy;
     public CosmeticID Hat;
+    public CosmeticID Mask;
     public CosmeticID Torso;
     private const string hatsprite_Path = "Skeleton Rig/bone_1/bone_16/bone_2/bone_3/Hat Sprite";
     private const string hatsprite_Enemy_Path = "Zomble Rig/bone_1/bone_2/bone_3/bone_4/Hat Sprite";
+    private const string masksprite_Path = "Skeleton Rig/bone_1/bone_16/bone_2/bone_3/Mask Sprite";
+    private const string masksprite_Enemy_Path = "Zomble Rig/bone_1/bone_2/bone_3/bone_4/Mask Sprite";
     private const string torsosprite_Path = "Skeleton Rig/bone_1/bone_16/Torso Sprite";
     private const string torsosprite_Enemy_Path = "Zomble Rig/bone_1/bone_2/Torso Sprite";
 
@@ -44,11 +47,13 @@ public class Minion_Cosmetic_Script : MonoBehaviour
         if (isEnemy)
         {
             applyCosmetic(Hat, hatsprite_Enemy_Path);
+            applyCosmetic(Mask, masksprite_Enemy_Path);
             applyCosmetic(Torso, torsosprite_Enemy_Path);
         }
         else
         {
             applyCosmetic(Hat, hatsprite_Path);
+            applyCosmetic(Mask, masksprite_Path);
             applyCosmetic(Torso, torsosprite_Path);
         }
         

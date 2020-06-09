@@ -52,6 +52,7 @@ public class Cosmetic_Database_Script : MonoBehaviour
             case CosmeticID.Red_Baseball_Cap: return COSMETIC_Red_Baseball_Cap;
             case CosmeticID.Red_Baseball_X_Cap: return COSMETIC_Red_Baseball_X_Cap;
             case CosmeticID.Blue_Shirt: return COSMETIC_Blue_Shirt;
+            case CosmeticID.Crazy_Paint: return COSMETIC_Crazy_Paint;
             default: return null;
         }
     }
@@ -62,6 +63,7 @@ public class Cosmetic_Database_Script : MonoBehaviour
         Red_Baseball_Cap,
         Red_Baseball_X_Cap,
         Blue_Shirt,
+        Crazy_Paint
     }
 
     /*  To Add New Weapon:
@@ -74,4 +76,5 @@ public class Cosmetic_Database_Script : MonoBehaviour
     public Cosmetic COSMETIC_Red_Baseball_Cap = new Cosmetic(CosmeticID.Red_Baseball_Cap, new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
     public Cosmetic COSMETIC_Red_Baseball_X_Cap = new Cosmetic(CosmeticID.Red_Baseball_X_Cap, new Vector3(0, 0, 0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
     public Cosmetic COSMETIC_Blue_Shirt = new Cosmetic(CosmeticID.Blue_Shirt, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+    public Cosmetic COSMETIC_Crazy_Paint = new Cosmetic(CosmeticID.Crazy_Paint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
 }
