@@ -51,11 +51,22 @@ public class Projectile_Logic_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
 
         Vector3 myPos = this.transform.position;
         Vector3 mySpacePos = mySpace.transform.position;
         mySpacePos.z = this.transform.position.z; //ignore the z dimension
+
+        //Flip sprite X if traveling left
+        if(myPos.x > mySpacePos.x)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = true;
+        }
+        else
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = false;
+        }
+
 
         if (myPos != mySpacePos) //if not at mySpace, move to it
         {

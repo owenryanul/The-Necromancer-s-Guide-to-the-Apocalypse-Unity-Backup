@@ -82,6 +82,15 @@ public class User_Input_Script : MonoBehaviour
         {
             loadRoster();
         }
+
+        if(Input.GetKeyDown(KeyCode.F6))
+        {
+            GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Enemy_Spawning_Script>().setHorde("Test Horde 1");
+        }
+        else if (Input.GetKeyDown(KeyCode.F7))
+        {
+            GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Enemy_Spawning_Script>().setHorde("Test Horde 2");
+        }
     }
 
     private void mouseRayTraceOverride()
