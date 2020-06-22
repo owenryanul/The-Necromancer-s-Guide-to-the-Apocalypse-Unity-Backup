@@ -67,7 +67,11 @@
     <Compile Include="Assets\Custom Editors\EnemySpawningEditor.cs" />
     <Compile Include="Assets\Custom Editors\HordePropertyDrawer.cs" />
     <Compile Include="Assets\Enemy_AI_Berserker_Script.cs" />
+    <Compile Include="Assets\Journal_Text_Script.cs" />
+    <Compile Include="Assets\Map_Camera_Script.cs" />
+    <Compile Include="Assets\Map_Icon_Script.cs" />
     <Compile Include="Assets\Minion_Cosmetic_Script.cs" />
+    <Compile Include="Assets\Scenarios_Database_Script.cs" />
     <Compile Include="Assets\Scripts\Ability_Button_Script.cs" />
     <Compile Include="Assets\Scripts\Ability_Database_Script.cs" />
     <Compile Include="Assets\Scripts\AnimationRelay_Script.cs" />
