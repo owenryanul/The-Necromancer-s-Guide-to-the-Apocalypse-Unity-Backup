@@ -12,15 +12,17 @@ public class Ammo_Meter_Script : MonoBehaviour
     void Start()
     {
         instance = this;
+        //ammoCount = Player_Inventory_Script.getPlayersAmmo();
     }
 
     // Update is called once per frame
     void Update()
     {
+        ammoCount = Player_Inventory_Script.getPlayersAmmo();
         this.gameObject.GetComponentInChildren<Text>().text = "" + ammoCount;
     }
 
-    public static void setAmmoCount(int inAmmo)
+    /*public static void setAmmoCount(int inAmmo)
     {
         instance.ammoCount = inAmmo;
     }
@@ -33,5 +35,5 @@ public class Ammo_Meter_Script : MonoBehaviour
     public static int getAmmoCount()
     {
         return instance.ammoCount;
-    }
+    }*/
 }

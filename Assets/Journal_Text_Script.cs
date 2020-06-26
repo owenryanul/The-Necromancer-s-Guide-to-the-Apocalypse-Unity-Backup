@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Journal_Text_Script : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class Journal_Text_Script : MonoBehaviour
     public string journalText;
 
     public GameObject pageButtonPrefab;
+
+    [TextArea]
+    [Tooltip("Use [SIZE] to mark placement of horde size and [COMPOSITION] to mark where to place the composition")]
+    public string preBattleText;
 
     private string[] journalPages;
     private int pageNumber;
@@ -22,6 +27,9 @@ public class Journal_Text_Script : MonoBehaviour
 
     private Button closeJournalButton;
 
+    private Button toBattleButton;
+    private string currentBattleName;
+
     private string buttonMarkupReplacementText = ""; //TODO: Design a more elegant solution to this.
 
     // Start is called before the first frame update
@@ -33,6 +41,7 @@ public class Journal_Text_Script : MonoBehaviour
         previousButton = this.gameObject.transform.Find("Previous Page Button").GetComponent<Button>();
         nextButton = this.gameObject.transform.Find("Next Page Button").GetComponent<Button>();
         closeJournalButton = this.gameObject.transform.Find("Close Button").GetComponent<Button>();
+        toBattleButton = this.gameObject.transform.Find("To Battle Button").GetComponent<Button>();
         this.setJournalText(journalText);
         updateText();
     }
@@ -51,10 +60,20 @@ public class Journal_Text_Script : MonoBehaviour
         updateText();
     }
 
+    //Loads a scenario/battle into the journel and sets the journal text to that of the scenario.
+    //Called from Map_Icon_Script and from JournalButton's OnCLick()(created in this.createJournalButtons). 
     public void setJournalScenario(string scenarioName)
     {
-        this.journalText = Scenarios_Database_Script.findScenario(scenarioName).journelText;
-        this.journalPages = this.journalText.Split(new string[] { "[PAGE BREAK]" }, System.StringSplitOptions.None);
+        if (scenarioName.StartsWith("BATTLE_"))
+        {
+            loadBattleScreen(scenarioName.Substring(7));
+        }
+        else //else load the scenario text
+        {
+            this.journalText = Scenarios_Database_Script.findScenario(scenarioName).journelText;
+            this.journalText = processEffectsMarkup(this.journalText);
+            this.journalPages = this.journalText.Split(new string[] { "[PAGE BREAK]" }, System.StringSplitOptions.None);
+        }
         pageNumber = 0;
         updateText();
     }
@@ -95,6 +114,44 @@ public class Journal_Text_Script : MonoBehaviour
         {
             createJournalButtons();
         }
+    }
+
+    //Process markup for the effects of a scenario on the player's resources, this changes the users resources 
+    //and compiles all of the effects into a list at the end of a the scenario text.
+    //Uses the markup [EFFECT](Keyword){amount}: e.g. [EFFECT](ADD_AMMO){12}
+    private string processEffectsMarkup(string journalTextin)
+    {
+        string text = journalTextin;
+        if(text.Contains("[EFFECT]"))
+        {
+            text += "[PAGE BREAK] Effects:\n";
+        }
+        while(text.Contains("[EFFECT]"))
+        {
+            int startOfMarkup = text.IndexOf("[EFFECT]");
+            int endOfMarkup = text.IndexOf("]", startOfMarkup); ;
+            int startOfKeyword = text.IndexOf("(", startOfMarkup);
+            int endOfKeyword = text.IndexOf(")", startOfMarkup);
+            int startOfAmount = text.IndexOf("{", startOfMarkup);
+            int endOfAmount = text.IndexOf("}", startOfMarkup);
+            string effect = text.Substring(startOfKeyword + 1, endOfKeyword - (startOfKeyword + 1));
+            string amountString = text.Substring(startOfAmount + 1, endOfAmount - (startOfAmount + 1));
+            Debug.Log("amountString = " + amountString);
+            int amount = int.Parse(amountString);
+            string record = "";
+            switch(effect)
+            {
+                case "ADD_AMMO": Player_Inventory_Script.addPlayersAmmo(amount); record = ("Gained " + amount + " Ammo"); break;
+                case "SUB_AMMO": Player_Inventory_Script.addPlayersAmmo(-amount); record = ("Lost " + amount + " Ammo"); break;
+                case "ADD_ENERGY": Player_Inventory_Script.addPlayersDarkEnergy(amount); record = ("Gained " + amount + " Dark Energy"); break;
+                case "SUB_ENERGY": Player_Inventory_Script.addPlayersDarkEnergy(-amount); record = ("Lost " + amount + " Dark Energy"); break;
+                default: Debug.LogWarning("Effects markup keyword: " + effect + " not recognised. Check your journal markup for the current scenario."); break;
+            }
+            text = text.Remove(startOfMarkup, (endOfAmount + 1) - startOfMarkup);
+            text += ("\n" + record);
+        }
+        Debug.Log("Super Stuffs " + text);
+        return text;
     }
 
     //Replaces [BUTTON] markup with a button.
@@ -238,20 +295,41 @@ public class Journal_Text_Script : MonoBehaviour
 
     public void nextPage()
     {
-        this.pageNumber += 2;
+        this.pageNumber += 2; //+2 because the journal displays 2 pages at a time
         this.updateText();
     }
 
     public void previousPage()
     {
-        this.pageNumber -= 2;
+        this.pageNumber -= 2; //-2 because the journal displays 2 pages at a time
         this.updateText();
     }
 
-    public void loadScenario(string name)
+    //Loads the battle screen a populates it with details(number of enemies and composition) about the horde with the matching hordeName.
+    //Also loads the "To Battle" button that will take the user to the battle scene.
+    public void loadBattleScreen(string hordeName)
     {
-        Scenario scenarioToLoad = Scenarios_Database_Script.findScenario(name);
-        this.setJournalText(scenarioToLoad.journelText);
+        this.journalPages = this.journalText.Split(new string[] { "[PAGE BREAK]" }, System.StringSplitOptions.None);
+        Enemy_Spawning_Script.Horde horde = Enemy_Spawning_Script.findHorde(hordeName);
+        string battleText = this.preBattleText;
+        battleText = battleText.Replace("[SIZE]", "" + horde.getTotalSize());
+
+        string compoText = "";
+        foreach(Enemy_Spawning_Script.Wave aWave in horde.waves)
+        {
+            foreach(Enemy_Spawning_Script.EnemyPool aPool in aWave.enemyPools)
+            {
+                if(!compoText.Contains(aPool.enemyPrefab.name))
+                {
+                    compoText += (aPool.enemyPrefab.name + "\n");
+                }
+            }
+        }
+
+        battleText = battleText.Replace("[COMPOSITION]", compoText);
+        this.setJournalText(battleText);
+        currentBattleName = hordeName;
+        toBattleButton.gameObject.SetActive(true);
     }
 
     public void showJournel()
@@ -274,8 +352,9 @@ public class Journal_Text_Script : MonoBehaviour
         previousButton.gameObject.SetActive(false);
         nextButton.gameObject.SetActive(false);
         closeJournalButton.gameObject.SetActive(false);
+        toBattleButton.gameObject.SetActive(false);
 
-        foreach(Transform journalInTextButton in rightText.transform)
+        foreach (Transform journalInTextButton in rightText.transform)
         {
             if(journalInTextButton.tag == "Journal Button")
             {
@@ -290,5 +369,12 @@ public class Journal_Text_Script : MonoBehaviour
                 journalInTextButton.gameObject.SetActive(false);
             }
         }
+    }
+
+    public void goToBattleScene()
+    {
+        Debug.LogWarning("Loading Battle Scene with horde: " + currentBattleName);
+        Enemy_Spawning_Script.setHorde(currentBattleName);
+        SceneManager.LoadSceneAsync("Battle Test Rework Scene", LoadSceneMode.Single);
     }
 }

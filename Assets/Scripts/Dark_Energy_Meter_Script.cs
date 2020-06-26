@@ -7,7 +7,7 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
 {
     private static Dark_Energy_Meter_Script instance; 
     private int darkEnergy;
-    public int startingDarkEnergy = 10;
+    //public int startingDarkEnergy = 10;
     public int meterFilledInAt = 300;
     public GameObject darkEnergyMote;
 
@@ -15,12 +15,14 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
     void Start()
     {
         instance = this;
-        darkEnergy = startingDarkEnergy;
+        //darkEnergy = startingDarkEnergy;
+        //darkEnergy = Player_Inventory_Script.getPlayersDarkEnergy();
     }
 
     // Update is called once per frame
     void Update()
     {
+        darkEnergy = Player_Inventory_Script.getPlayersDarkEnergy();
         GameObject.FindGameObjectWithTag("Dark Energy Meter Text").GetComponent<Text>().text = (darkEnergy + "\nDark Energy");
         if(darkEnergy > meterFilledInAt)
         {
@@ -33,7 +35,7 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
         
     }
 
-    public static int getDarkEnergy()
+    /*public static int getDarkEnergy()
     {
         return instance.darkEnergy;
     }
@@ -46,7 +48,7 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
     public static void addDarkEnergy(int darkEnergyIn)
     {
         instance.darkEnergy += darkEnergyIn;
-    }
+    }*/
 
     public static void addDarkEnergyOnEnemySlain(int darkEnergyIn, GameObject enemy)
     {
@@ -65,7 +67,7 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
 
         if (noEnemyBeingConverted)
         {
-            instance.darkEnergy += darkEnergyIn;
+            Player_Inventory_Script.addPlayersDarkEnergy(darkEnergyIn);
         }
     }
 }

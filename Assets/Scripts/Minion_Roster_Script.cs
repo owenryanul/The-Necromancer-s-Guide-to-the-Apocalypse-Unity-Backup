@@ -13,7 +13,7 @@ public class Minion_Roster_Script : MonoBehaviour
 
     public List<MinionEntry> rosterOfMinions;
     public GameObject rosterButtonPrefab;
-    public GameObject LevelScriptContainer;
+    public GameObject UserInputContainer;
 
     [Header("Minion Prefabs")]
     public GameObject minion_prefab;
@@ -130,7 +130,7 @@ public class Minion_Roster_Script : MonoBehaviour
     {
         foreach(MinionEntry aEntry in rosterOfMinions)
         {
-            if(aEntry.minionSummonCost < Dark_Energy_Meter_Script.getDarkEnergy())
+            if(aEntry.minionSummonCost < Player_Inventory_Script.getPlayersDarkEnergy())
             {
                 aEntry.summonButton.GetComponent<Button>().interactable = true;
                 aEntry.summonButton.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -161,7 +161,7 @@ public class Minion_Roster_Script : MonoBehaviour
 
     private void proxyAimSummon(MinionEntry inData)
     {
-        LevelScriptContainer.GetComponent<User_Input_Script>().aimSummonMinion(inData);
+        UserInputContainer.GetComponent<User_Input_Script>().aimSummonMinion(inData);
     }
 
     public void flagMinionAsSummoned(string minionIDin, bool flag)

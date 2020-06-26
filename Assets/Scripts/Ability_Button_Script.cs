@@ -102,7 +102,7 @@ public class Ability_Button_Script : MonoBehaviour, IPointerEnterHandler, IPoint
             this.gameObject.transform.Find("Ammo Cost").GetComponent<Text>().enabled = true;
             this.gameObject.transform.Find("Ammo Cost").GetComponent<Text>().text = "" + ammoCost;
             this.gameObject.transform.Find("Ammo Cost").GetComponent<Outline>().enabled = true;
-            if(ammoCost > Ammo_Meter_Script.getAmmoCount())
+            if(ammoCost > Player_Inventory_Script.getPlayersAmmo())
             {
                 this.gameObject.GetComponent<Button>().interactable = false;
                 this.gameObject.transform.Find("Ability Icon").GetComponent<Image>().color = Color.grey;

@@ -97,7 +97,7 @@ public class Ability_Database_Script : MonoBehaviour
 
     public static void cast(AbilityID abilityToCast, int abilityIndex, GameObject caster, GameObject targetGameObject)
     {
-        Ammo_Meter_Script.addAmmoCount(-(getAbilityAmmoCost(abilityToCast)));
+        Player_Inventory_Script.addPlayersAmmo(-(getAbilityAmmoCost(abilityToCast)));
         switch (abilityToCast)
         {
             case AbilityID.necromancer_ConversationRitual: instance.castNecromancerConversionRitual(caster, targetGameObject); break;

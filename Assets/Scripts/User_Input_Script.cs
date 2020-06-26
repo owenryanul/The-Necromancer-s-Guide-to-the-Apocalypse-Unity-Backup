@@ -43,6 +43,11 @@ public class User_Input_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
+    }
+
+    private void OnEnable()
+    {     
         selectionCircle = GameObject.FindGameObjectWithTag("Selection Circle");
         rosterVisable = false;
     }
@@ -85,11 +90,11 @@ public class User_Input_Script : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.F6))
         {
-            GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Enemy_Spawning_Script>().setHorde("Test Horde 1");
+            Enemy_Spawning_Script.setHorde("Test Horde 1");
         }
         else if (Input.GetKeyDown(KeyCode.F7))
         {
-            GameObject.FindGameObjectWithTag("Level Script Container").GetComponent<Enemy_Spawning_Script>().setHorde("Test Horde 2");
+            Enemy_Spawning_Script.setHorde("Test Horde 2");
         }
     }
 
@@ -184,7 +189,7 @@ public class User_Input_Script : MonoBehaviour
             if (currentAbilityToCast != AbilityID.none)
             {
                 //If player has enough ammo to cast ability
-                if (Ability_Database.getAbilityAmmoCost(currentAbilityToCast) <= Ammo_Meter_Script.getAmmoCount())
+                if (Ability_Database.getAbilityAmmoCost(currentAbilityToCast) <= Player_Inventory_Script.getPlayersAmmo())
                 {
                     if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.aimCast)
                     {
@@ -246,7 +251,7 @@ public class User_Input_Script : MonoBehaviour
     {
         
         Debug.Log("Aiming Summon Minion Dummy Response: " + inData.minionName);
-        if (inData.minionSummonCost < Dark_Energy_Meter_Script.getDarkEnergy())
+        if (inData.minionSummonCost < Player_Inventory_Script.getPlayersDarkEnergy())
         {
             currentlySelectedMinion = null;
             currentMouseCommand = MouseCommand.SummonMinion;

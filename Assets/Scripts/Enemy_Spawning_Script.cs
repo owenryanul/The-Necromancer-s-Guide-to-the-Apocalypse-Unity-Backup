@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEditor;
 
 public class Enemy_Spawning_Script : MonoBehaviour
 {
+    public static Enemy_Spawning_Script instance;
+
     [Header("SpawnRates")]
     private float currentSpawnCooldown;
 
-    /*[Header("Enemy Prefabs")]
-    public GameObject EnemyType1;*/
+    [Header("Button")]
+    public GameObject StartHordeButtonPrefab;
 
     private bool hordeIsSpawning;
+    private bool hordeIsReadyToSpawn;
     private Horde currentHorde;
     private int currentWaveCount;
     private Wave currentWave;
@@ -26,7 +31,9 @@ public class Enemy_Spawning_Script : MonoBehaviour
     {
         currentSpawnCooldown = 0;
         currentWaveCount = 0;
+        hordeIsReadyToSpawn = false;
         hordeIsSpawning = false;
+        instance = this;
     }
 
     // Update is called once per frame
@@ -45,6 +52,16 @@ public class Enemy_Spawning_Script : MonoBehaviour
                 currentSpawnCooldown = currentWave.spawnCooldown;
             }
         }
+        //if currently in battle scene and horde is loaded and start battle button does not exisit, create one.
+        else if (SceneManager.GetActiveScene().name == "Battle Test Rework Scene" && hordeIsReadyToSpawn && GameObject.FindGameObjectWithTag("Start Horde Button") == null) //TODO: Move this logic to a OnLoadScene method
+        {
+            Debug.LogWarning("Building Start horde button");
+            GameObject button = Instantiate(StartHordeButtonPrefab, GameObject.Find("UI Canvas").transform);
+            button.GetComponent<Button>().onClick.AddListener(() => startHorde());
+        }
+       // Debug.LogWarning("Is active scene: " + (SceneManager.GetActiveScene().name == "Battle Test Rework Scene"));
+        //Debug.LogWarning("Is ready to spawn: " + hordeIsReadyToSpawn);
+        //Debug.LogWarning("Button doesn't exists:  " + (GameObject.FindGameObjectWithTag("Start Horde Button") == null));
     }
 
     //Advances the current horde to the next wave if that wave is completed(has spawned the set number of enemies)
@@ -59,6 +76,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
             {
                 //End of horde
                 hordeIsSpawning = false;
+                hordeIsReadyToSpawn = false;
                 Debug.Log("Horde: " + currentHorde.name + " Finished.");
             }
             else
@@ -131,19 +149,19 @@ public class Enemy_Spawning_Script : MonoBehaviour
     }
 
     //Set the current horde to a horde with the matching name. Then starts the horde. Displays a warning in console if a matching horde wasn't found.
-    public void setHorde(string hordeName)
+    public static void setHorde(string hordeName)
     {
         bool hordeFound = false;
-        foreach(Horde ahorde in hordes)
+        foreach(Horde ahorde in instance.hordes)
         {
             if(string.Equals(ahorde.name, hordeName))
             {
                 hordeFound = true;
-                currentHorde = new Horde(ahorde); //pass ahorde by values
-                currentWaveCount = 0;
-                currentWave = currentHorde.waves[0]; //set current wave to the first wave in the horde
-                hordeIsSpawning = true; //start the horde spawning
-                Debug.Log("Starting horde " + hordeName + ".");
+                instance.currentHorde = new Horde(ahorde); //pass ahorde by values
+                instance.currentWaveCount = 0;
+                instance.currentWave = instance.currentHorde.waves[0]; //set current wave to the first wave in the horde
+                instance.hordeIsReadyToSpawn = true; //start the horde spawning
+                Debug.Log("Loaded horde " + hordeName + ".");
                 break;
             }
         }
@@ -152,6 +170,25 @@ public class Enemy_Spawning_Script : MonoBehaviour
         {
             Debug.LogWarning("Horde with name " + hordeName + ", not found");
         }
+    }
+
+    public static Horde findHorde(string inName)
+    {
+        foreach(Horde aHorde in instance.hordes)
+        {
+            if(aHorde.name == inName)
+            {
+                return aHorde;
+            }
+        }
+
+        return null;
+    }
+
+    public static void startHorde()
+    {
+        instance.hordeIsSpawning = true;
+        Destroy(GameObject.FindGameObjectWithTag("Start Horde Button"));
     }
 
     [System.Serializable]
@@ -170,6 +207,16 @@ public class Enemy_Spawning_Script : MonoBehaviour
                 this.waves.Add(new Wave(aWaveValues));
             }
             this.tags = hordeValues.tags;
+        }
+
+        public int getTotalSize()
+        {
+            int i = 0;
+            foreach(Wave aWave in this.waves)
+            {
+                i += aWave.numberOfEnemiesInWave;
+            }
+            return i;
         }
     }
 
