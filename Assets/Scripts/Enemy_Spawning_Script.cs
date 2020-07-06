@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -14,10 +15,12 @@ public class Enemy_Spawning_Script : MonoBehaviour
     private float currentSpawnCooldown;
 
     [Header("Button")]
-    public GameObject StartHordeButtonPrefab;
+    public GameObject startHordeButtonPrefab;
+    public GameObject finishBattleButtonPrefab;
 
     private bool hordeIsSpawning;
     private bool hordeIsReadyToSpawn;
+    private bool hordeHasSpawnedAllEnemies;
     private Horde currentHorde;
     private int currentWaveCount;
     private Wave currentWave;
@@ -29,16 +32,38 @@ public class Enemy_Spawning_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentSpawnCooldown = 0;
-        currentWaveCount = 0;
-        hordeIsReadyToSpawn = false;
-        hordeIsSpawning = false;
-        instance = this;
+        if (instance == null)
+        {
+            currentSpawnCooldown = 0;
+            currentWaveCount = 0;
+            hordeIsReadyToSpawn = false;
+            hordeIsSpawning = false;
+            hordeHasSpawnedAllEnemies = false;
+            instance = this;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F11))
+        {
+            Debug.Log("Json of Horde = " + currentHorde.toJson());
+            currentHorde.saveAsJson();
+            Debug.Log("Horde from Json = " + Horde.fromJson(currentHorde.toJson()).waves[0].enemyPools[1].enemyPrefab.name);
+        }
+
+        if(Input.GetKeyDown(KeyCode.F10))
+        {
+            string json = Horde.loadJsonFromFile("Test Horde 1");
+            if (json != null)
+            {
+                Horde horde = Horde.fromJson(json);
+                Debug.Log("2nd enemy type from first wave of Horde loaded = " + horde.waves[0].enemyPools[1].enemyPrefab.name);
+            }
+        }
+
+
         if (hordeIsSpawning)
         {
             updateWaves();
@@ -53,15 +78,24 @@ public class Enemy_Spawning_Script : MonoBehaviour
             }
         }
         //if currently in battle scene and horde is loaded and start battle button does not exisit, create one.
-        else if (SceneManager.GetActiveScene().name == "Battle Test Rework Scene" && hordeIsReadyToSpawn && GameObject.FindGameObjectWithTag("Start Horde Button") == null) //TODO: Move this logic to a OnLoadScene method
+        else if (SceneManager.GetActiveScene().name == "Battle Test Rework Scene" 
+                && hordeIsReadyToSpawn 
+                && GameObject.FindGameObjectWithTag("Start Horde Button") == null) //TODO: Move this logic to a OnLoadScene method
         {
             Debug.LogWarning("Building Start horde button");
-            GameObject button = Instantiate(StartHordeButtonPrefab, GameObject.Find("UI Canvas").transform);
+            GameObject button = Instantiate(startHordeButtonPrefab, GameObject.Find("UI Canvas").transform);
             button.GetComponent<Button>().onClick.AddListener(() => startHorde());
         }
-       // Debug.LogWarning("Is active scene: " + (SceneManager.GetActiveScene().name == "Battle Test Rework Scene"));
-        //Debug.LogWarning("Is ready to spawn: " + hordeIsReadyToSpawn);
-        //Debug.LogWarning("Button doesn't exists:  " + (GameObject.FindGameObjectWithTag("Start Horde Button") == null));
+        //if currently in battle scene and horde has spawned all enemies and there are no enemies left and the finish battle button does not exist, create one.
+        else if (SceneManager.GetActiveScene().name == "Battle Test Rework Scene" 
+                && hordeHasSpawnedAllEnemies 
+                && GameObject.FindGameObjectWithTag("Finish Battle Button") == null
+                && GameObject.FindGameObjectsWithTag("Enemy").Length < 1) 
+        {
+            Debug.LogWarning("Building Finish Battle button");
+            GameObject button = Instantiate(finishBattleButtonPrefab, GameObject.Find("UI Canvas").transform);
+            button.GetComponent<Button>().onClick.AddListener(() => returnToMap());
+        }
     }
 
     //Advances the current horde to the next wave if that wave is completed(has spawned the set number of enemies)
@@ -77,6 +111,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
                 //End of horde
                 hordeIsSpawning = false;
                 hordeIsReadyToSpawn = false;
+                hordeHasSpawnedAllEnemies = true;
                 Debug.Log("Horde: " + currentHorde.name + " Finished.");
             }
             else
@@ -191,6 +226,11 @@ public class Enemy_Spawning_Script : MonoBehaviour
         Destroy(GameObject.FindGameObjectWithTag("Start Horde Button"));
     }
 
+    public static void returnToMap()
+    {
+        SceneManager.LoadSceneAsync("Map Scene", LoadSceneMode.Single);
+    }
+
     [System.Serializable]
     public class Horde
     {
@@ -217,6 +257,71 @@ public class Enemy_Spawning_Script : MonoBehaviour
                 i += aWave.numberOfEnemiesInWave;
             }
             return i;
+        }
+
+        public string toJson()
+        {
+            string raw = JsonUtility.ToJson(this, true);
+            //Instance ids are replaced with Human-readable names when converting to json, to allow for easy of viewing/editing in external json files. 
+            raw = raw.Replace("\"instanceID\": 14950", "\"instanceID\": " + "\"ENEMY_Basic\"");
+            raw = raw.Replace("\"instanceID\": 14952", "\"instanceID\": " + "\"ENEMY_Berserk\"");
+            return raw;
+        }
+
+        public static Horde fromJson(string jsonIn)
+        {
+            string j = jsonIn;
+            //Human-readable names are replaced with their matching instanceID code on converting back from json. 
+            j = j.Replace("\"instanceID\": " + "\"ENEMY_Basic\"", "\"instanceID\": 14950");
+            j = j.Replace("\"instanceID\": " + "\"ENEMY_Berserk\"", "\"instanceID\": 14952" );
+            return JsonUtility.FromJson<Horde>(j);
+        }
+
+        public void saveAsJson()
+        {
+            string json = this.toJson();   
+
+            string path = Application.persistentDataPath + "/databases/hordes/";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            path += this.name.Replace(" ", "_") + ".json"; //Replaces any spaces in the horde name with _, to make it compatiable with file storage
+            if (!File.Exists(path))
+            {
+                File.Create(path);
+            }
+
+            Debug.Log("Opening writer to path: " + path);
+            StreamWriter writer = new StreamWriter(path, false);
+            writer.Write(json);
+            writer.Close();
+        }
+
+        public static string loadJsonFromFile(string fileNameWithoutExtension)
+        {
+            string path = Application.persistentDataPath + "/databases/hordes/";
+            if (!Directory.Exists(path))
+            {
+                Debug.LogWarning("Error: Directory: " + path + " not found.");
+                return null;
+            }
+
+            path += fileNameWithoutExtension.Replace(" ", "_") + ".json"; //Replace any spaces in the passed filename with _, as the save system converts all spaces  in the filename to _ when saving the file.
+
+            if(!File.Exists(path))
+            {
+                Debug.LogWarning("Error: File: " + path + " not found.");
+                return null;
+            }
+ 
+            StreamReader reader = new StreamReader(path);
+            string json = reader.ReadToEnd();
+            Debug.Log("Json retrieved from file: " + json);
+            reader.Close();
+
+            return json;
         }
     }
 

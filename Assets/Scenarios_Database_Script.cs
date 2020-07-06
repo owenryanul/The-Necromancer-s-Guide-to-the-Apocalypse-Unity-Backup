@@ -17,7 +17,7 @@ public class Scenarios_Database_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public static Scenario findScenario(string scenarioName)

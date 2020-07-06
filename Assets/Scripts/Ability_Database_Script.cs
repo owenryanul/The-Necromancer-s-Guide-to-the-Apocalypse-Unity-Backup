@@ -8,7 +8,10 @@ public class Ability_Database_Script : MonoBehaviour
 
     private void Start()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
 
     public enum AbilityType

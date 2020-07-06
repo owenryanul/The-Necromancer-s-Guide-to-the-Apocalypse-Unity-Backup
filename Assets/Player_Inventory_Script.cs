@@ -12,9 +12,12 @@ public class Player_Inventory_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        instance = this;
-        players_DarkEnergy = 100;
-        players_Ammo = 30;
+        if (instance == null)
+        {
+            instance = this;
+            players_DarkEnergy = 100;
+            players_Ammo = 30;
+        }
     }
 
     public static int getPlayersDarkEnergy()
