@@ -106,6 +106,7 @@
     <Compile Include="Assets\Scripts\User_Input_Script.cs" />
     <Compile Include="Assets\Scripts\Weapon_Database_Script.cs" />
     <None Include="Assets\TODO.txt.txt" />
+    <None Include="Assets\Prefabs\Enemies\Other Enemy Prefabs are in Resources folder.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Owen Ryan/Desktop/Projects/Unity Projects/Projects/The-Necromancer-s-Guide-to-the-Apocalypse-Unity/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

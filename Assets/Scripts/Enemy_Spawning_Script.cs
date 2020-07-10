@@ -48,9 +48,13 @@ public class Enemy_Spawning_Script : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F11))
         {
-            Debug.Log("Json of Horde = " + currentHorde.toJson());
-            currentHorde.saveAsJson();
-            Debug.Log("Horde from Json = " + Horde.fromJson(currentHorde.toJson()).waves[0].enemyPools[1].enemyPrefab.name);
+            Debug.LogWarning("Saving Hordes to json files.");
+            foreach (Horde aHorde in hordes)
+            {
+                //Debug.Log("Json of Horde = " + currentHorde.toJson());
+                aHorde.saveAsJson();
+                //Debug.Log("Horde from Json = " + Horde.fromJson(currentHorde.toJson()).waves[0].enemyPools[1].enemyPrefab.name);
+            }
         }
 
         if(Input.GetKeyDown(KeyCode.F10))
@@ -249,6 +253,17 @@ public class Enemy_Spawning_Script : MonoBehaviour
             this.tags = hordeValues.tags;
         }
 
+        public Horde(HordeJson jHordeValues)
+        {
+            this.name = jHordeValues.name;
+            this.waves = new List<Wave>();
+            foreach (WaveJson aWaveValues in jHordeValues.waves)
+            {
+                this.waves.Add(new Wave(aWaveValues));
+            }
+            this.tags = jHordeValues.tags;
+        }
+
         public int getTotalSize()
         {
             int i = 0;
@@ -261,25 +276,20 @@ public class Enemy_Spawning_Script : MonoBehaviour
 
         public string toJson()
         {
-            string raw = JsonUtility.ToJson(this, true);
-            //Instance ids are replaced with Human-readable names when converting to json, to allow for easy of viewing/editing in external json files. 
-            raw = raw.Replace("\"instanceID\": 14950", "\"instanceID\": " + "\"ENEMY_Basic\"");
-            raw = raw.Replace("\"instanceID\": 14952", "\"instanceID\": " + "\"ENEMY_Berserk\"");
+            string raw = JsonUtility.ToJson(new HordeJson(this), true);
             return raw;
         }
 
         public static Horde fromJson(string jsonIn)
         {
             string j = jsonIn;
-            //Human-readable names are replaced with their matching instanceID code on converting back from json. 
-            j = j.Replace("\"instanceID\": " + "\"ENEMY_Basic\"", "\"instanceID\": 14950");
-            j = j.Replace("\"instanceID\": " + "\"ENEMY_Berserk\"", "\"instanceID\": 14952" );
-            return JsonUtility.FromJson<Horde>(j);
+            HordeJson jHorde = JsonUtility.FromJson<HordeJson>(j);
+            return new Horde(jHorde);           
         }
 
         public void saveAsJson()
         {
-            string json = this.toJson();   
+            string json = this.toJson();
 
             string path = Application.persistentDataPath + "/databases/hordes/";
             if (!Directory.Exists(path))
@@ -290,13 +300,19 @@ public class Enemy_Spawning_Script : MonoBehaviour
             path += this.name.Replace(" ", "_") + ".json"; //Replaces any spaces in the horde name with _, to make it compatiable with file storage
             if (!File.Exists(path))
             {
-                File.Create(path);
+                //File.Create(path);
+                Debug.Log("Opening writer to path: " + path);
+                StreamWriter writer = File.AppendText(path);
+                writer.Write(json);
+                writer.Close();
             }
-
-            Debug.Log("Opening writer to path: " + path);
-            StreamWriter writer = new StreamWriter(path, false);
-            writer.Write(json);
-            writer.Close();
+            else
+            {
+                Debug.Log("Opening writer to path: " + path);
+                StreamWriter writer = new StreamWriter(path, false);
+                writer.Write(json);
+                writer.Close();
+            }
         }
 
         public static string loadJsonFromFile(string fileNameWithoutExtension)
@@ -310,12 +326,12 @@ public class Enemy_Spawning_Script : MonoBehaviour
 
             path += fileNameWithoutExtension.Replace(" ", "_") + ".json"; //Replace any spaces in the passed filename with _, as the save system converts all spaces  in the filename to _ when saving the file.
 
-            if(!File.Exists(path))
+            if (!File.Exists(path))
             {
                 Debug.LogWarning("Error: File: " + path + " not found.");
                 return null;
             }
- 
+
             StreamReader reader = new StreamReader(path);
             string json = reader.ReadToEnd();
             Debug.Log("Json retrieved from file: " + json);
@@ -344,6 +360,18 @@ public class Enemy_Spawning_Script : MonoBehaviour
                 this.enemyPools.Add(new EnemyPool(aPoolValues));
             }
         }
+
+        public Wave(WaveJson jWaveValues)
+        {
+            this.spawnCooldown = jWaveValues.spawnCooldown;
+            this.numberOfEnemiesInWave = jWaveValues.numberOfEnemiesInWave;
+            this.rollRemainderIntoNextWave = jWaveValues.rollRemainderIntoNextWave;
+            this.enemyPools = new List<EnemyPool>();
+            foreach (EnemyPoolJson aPoolValues in jWaveValues.enemyPools)
+            {
+                this.enemyPools.Add(new EnemyPool(aPoolValues));
+            }
+        }
     }
 
     [System.Serializable]
@@ -358,6 +386,75 @@ public class Enemy_Spawning_Script : MonoBehaviour
             this.quantity = poolValues.quantity;
             this.enemyPrefab = poolValues.enemyPrefab;
             this.spawnOnLeftSide = poolValues.spawnOnLeftSide;
+        }
+
+        public EnemyPool(EnemyPoolJson jPoolValues)
+        {
+            this.quantity = jPoolValues.quantity;
+            this.enemyPrefab = Resources.Load<GameObject>(jPoolValues.enemyPrefab);
+            this.spawnOnLeftSide = jPoolValues.spawnOnLeftSide;
+        }
+    }
+
+    //JSON-versions of the above 3 classes. Used for storing a horde as Json.
+    //KEY DIFFERENCES: EnemyPoolJson.prefab stores the prefab as a string. No other differences, everything else is a straight copy from the non-JSON objects.
+    //Used instead of JsonUtility.toJson for Hordes because prefabs are jsonified as instance ids by default. Using these we can store prefabs by their
+    //names/paths for easy of human-readablity
+    [System.Serializable]
+    public class HordeJson
+    {
+        public string name;
+        public List<WaveJson> waves;
+        public List<string> tags;
+
+        //Create a HordeJson from a Horde object
+        public HordeJson(Horde hordeToJson)
+        {
+            this.name = hordeToJson.name;
+            this.tags = hordeToJson.tags;
+            this.waves = new List<WaveJson>();
+            foreach(Wave aWaveToJson in hordeToJson.waves)
+            {
+                this.waves.Add(new WaveJson(aWaveToJson));
+            }
+        }
+
+    }
+
+    [System.Serializable]
+    public class WaveJson
+    {
+        public float spawnCooldown;
+        public int numberOfEnemiesInWave;
+        public bool rollRemainderIntoNextWave;
+        public List<EnemyPoolJson> enemyPools;
+
+        //Create a WaveJson from a Wave object
+        public WaveJson(Wave waveToJson)
+        {
+            this.spawnCooldown = waveToJson.spawnCooldown;
+            this.numberOfEnemiesInWave = waveToJson.numberOfEnemiesInWave;
+            this.rollRemainderIntoNextWave = waveToJson.rollRemainderIntoNextWave;
+            this.enemyPools = new List<EnemyPoolJson>();
+            foreach(EnemyPool poolToJson in waveToJson.enemyPools)
+            {
+                this.enemyPools.Add(new EnemyPoolJson(poolToJson));
+            }
+        }
+    }
+
+    [System.Serializable]
+    public class EnemyPoolJson
+    {
+        public int quantity;
+        public string enemyPrefab; //Json version of enemyPrefab stores name/path to prefab rather than instanceID
+        public bool spawnOnLeftSide;
+
+        public EnemyPoolJson(EnemyPool poolToJson)
+        {
+            this.quantity = poolToJson.quantity;
+            this.spawnOnLeftSide = poolToJson.spawnOnLeftSide;
+            this.enemyPrefab = "Prefabs/Enemies/" + poolToJson.enemyPrefab.name;
         }
     }
 }
