@@ -27,6 +27,7 @@ public class Map_Icon_Script : MonoBehaviour
 
     private void OnMouseDown()
     {
+        Debug.Log("Clicked on Map Icon: " + this.gameObject.name);
         GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>().setJournalScenario(this.scenarioName);
         GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>().showJournel();
     }

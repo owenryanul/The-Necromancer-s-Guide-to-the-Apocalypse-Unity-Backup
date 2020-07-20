@@ -11,7 +11,7 @@ using CosmeticID = Cosmetic_Database_Script.CosmeticID;
 public class Minion_Roster_Script : MonoBehaviour
 {
 
-    //public List<MinionEntry> rosterOfMinions;
+    public List<MinionEntry> rosterOfMinions;
     public GameObject rosterButtonPrefab;
     public GameObject UserInputContainer;
 
@@ -33,7 +33,7 @@ public class Minion_Roster_Script : MonoBehaviour
     // Run during the first frame update rather than before, to ensure that all databases have been instanced and static calls won't throw exceptions for being uninstanced yet.
     void StartAfterDatabases()
     {
-        DEBUG_dummyPopulateRosterWithPremadeMinions();
+        dummyPopulateRosterWithPremadeMinions();
         //loadMinonRosterFromSaveFile();
 
         generateRosterButtons();
@@ -55,7 +55,7 @@ public class Minion_Roster_Script : MonoBehaviour
     {
 
         int i = 0;
-        foreach (MinionEntry aEntry in Player_Inventory_Script.getMinions())
+        foreach (MinionEntry aEntry in rosterOfMinions)
         {
             GameObject content = GameObject.FindGameObjectWithTag("Minion Roster Content");
             float xPos = 34 + ((i % 7) * 100);
@@ -71,7 +71,7 @@ public class Minion_Roster_Script : MonoBehaviour
             aEntry.summonButton = button;
             i++;
         }
-        GameObject.FindGameObjectWithTag("Minion Roster Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0 ,120 * (1 + Mathf.FloorToInt(Player_Inventory_Script.getMinions().Count / 7)));
+        GameObject.FindGameObjectWithTag("Minion Roster Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0 ,120 * (1 + Mathf.FloorToInt(rosterOfMinions.Count / 7)));
     }
 
     private void clearRosterButtons()
@@ -128,7 +128,7 @@ public class Minion_Roster_Script : MonoBehaviour
 
     private void markRosterButtonsAsUnaffordable()
     {
-        foreach(MinionEntry aEntry in Player_Inventory_Script.getMinions())
+        foreach(MinionEntry aEntry in rosterOfMinions)
         {
             if(aEntry.minionSummonCost < Player_Inventory_Script.getPlayersDarkEnergy())
             {
@@ -143,9 +143,9 @@ public class Minion_Roster_Script : MonoBehaviour
         }
     }
 
-    private void DEBUG_dummyPopulateRosterWithPremadeMinions()
+    private void dummyPopulateRosterWithPremadeMinions()
     {
-        List<MinionEntry> rosterOfMinions = new List<MinionEntry>();
+        rosterOfMinions = new List<MinionEntry>();
         //              Name,    Icon,              Cost,   Speed,  Weapon1,        Weapon2,                Hp, Ability1,       Ability2,           Ability3                                    
         rosterOfMinions.Add(new MinionEntry("MIN-1", "Better Off Ted",  10, 1.0f, WeaponID.Revolver_Ranged, WeaponID.Scrap_Hammer_Melee, 5, AbilityID.fleetOfFoot, AbilityID.molotov, AbilityID.fleetOfFoot, CosmeticID.Red_Baseball_Cap, CosmeticID.None, CosmeticID.None));
         rosterOfMinions.Add(new MinionEntry("MIN-2", "Pipes",  10, 3.0f, WeaponID.Scrap_Hammer_Melee, WeaponID.Revolver_Ranged, 2, AbilityID.molotov, AbilityID.molotov, AbilityID.molotov, CosmeticID.None, CosmeticID.Blue_Shirt, CosmeticID.None));
@@ -157,7 +157,6 @@ public class Minion_Roster_Script : MonoBehaviour
         rosterOfMinions.Add(new MinionEntry("MIN-8", "Joey 6", 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.None, CosmeticID.None, CosmeticID.Crazy_Paint));
         rosterOfMinions.Add(new MinionEntry("MIN-9", "Joey 7", 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.None, CosmeticID.Blue_Shirt, CosmeticID.None));
         rosterOfMinions.Add(new MinionEntry("MIN-10", "Joey 8", 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fasterBullets, AbilityID.fasterBullets, CosmeticID.Red_Baseball_X_Cap, CosmeticID.Blue_Shirt, CosmeticID.None));
-        Player_Inventory_Script.setMinions(rosterOfMinions);
     }
 
     private void proxyAimSummon(MinionEntry inData)
@@ -167,7 +166,7 @@ public class Minion_Roster_Script : MonoBehaviour
 
     public void flagMinionAsSummoned(string minionIDin, bool flag)
     {
-        foreach(MinionEntry anEntry in Player_Inventory_Script.getMinions())
+        foreach(MinionEntry anEntry in rosterOfMinions)
         {
             if(anEntry.minionID == minionIDin)
             {
@@ -182,8 +181,8 @@ public class Minion_Roster_Script : MonoBehaviour
     {
         Debug.Log("inName : " + inName);
         clearRosterButtons();
-        MinionEntry newMinion = new MinionEntry("MIN-" + (Player_Inventory_Script.getMinions().Count + 2), inName, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fleetOfFoot, AbilityID.fleetOfFoot, CosmeticID.None, CosmeticID.None, CosmeticID.None);
-        Player_Inventory_Script.addMinion(newMinion);
+        MinionEntry newMinion = new MinionEntry("MIN-" + (rosterOfMinions.Count + 2), inName, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fleetOfFoot, AbilityID.fleetOfFoot, CosmeticID.None, CosmeticID.None, CosmeticID.None);
+        rosterOfMinions.Add(newMinion);
         generateRosterButtons();
     }
 
@@ -191,7 +190,7 @@ public class Minion_Roster_Script : MonoBehaviour
     {
         List<MinionSave> rosterToSave = new List<MinionSave>();
 
-        foreach (MinionEntry aEntry in Player_Inventory_Script.getMinions())
+        foreach (MinionEntry aEntry in rosterOfMinions)
         {
             rosterToSave.Add(new MinionSave(aEntry.minionID, aEntry.minionName, aEntry.minionSummonCost, aEntry.baseMovementSpeed, aEntry.minionMaxHp, aEntry.Weapon1ID, aEntry.Weapon2ID, aEntry.ability1ID, aEntry.ability2ID, aEntry.ability3ID, aEntry.hat, aEntry.torso, aEntry.mask));
         }
@@ -208,7 +207,7 @@ public class Minion_Roster_Script : MonoBehaviour
             newRoster.Add(newEntry);
         }
         clearRosterButtons();
-        Player_Inventory_Script.setMinions(newRoster);
+        this.rosterOfMinions = newRoster;
         generateRosterButtons();
     }
 

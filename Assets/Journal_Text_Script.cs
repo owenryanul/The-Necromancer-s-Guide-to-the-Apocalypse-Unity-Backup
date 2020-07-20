@@ -158,6 +158,7 @@ public class Journal_Text_Script : MonoBehaviour
     //example markup: [BUTTON](ScenarioName){sample text to display on button}
     private void createJournalButtons()
     {
+        Debug.Log("Text = " + leftText.text);
         //TODO: Add Error checking
 
         int numberOfButtonMarkups = leftText.text.Split(new string[] { "[BUTTON]" }, System.StringSplitOptions.None).Length - 1;
