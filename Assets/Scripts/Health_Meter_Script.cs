@@ -11,7 +11,6 @@ public class Health_Meter_Script : MonoBehaviour
     void Start()
     {
         this.healthMeterText = GameObject.FindGameObjectWithTag("Health Meter Text");
-        Debug.Log(this.healthMeterText.name);
     }
 
     // Update is called once per frame

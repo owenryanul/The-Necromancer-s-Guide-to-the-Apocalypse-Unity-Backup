@@ -173,14 +173,14 @@ public class Ability_Database_Script : MonoBehaviour
 
     private void castNecromancerConversionRitual(GameObject caster, GameObject targetEnemy)
     {
-        Debug.Log("Casting Conversion Ritual");
-        Debug.Log("Casting Conversion Ritual targeting " + targetEnemy.GetComponent<Enemy_AI_script>().name);
+        //Debug.Log("Casting Conversion Ritual");
+        //Debug.Log("Casting Conversion Ritual targeting " + targetEnemy.GetComponent<Enemy_AI_script>().name);
         targetEnemy.GetComponent<Enemy_AI_script>().setBeingConverted(true);
     }
 
     private void castMolotov(GameObject caster, int abilityIndex, GameObject targetGridSpace)
     {
-        Debug.Log("Throwing Molotov");
+        //Debug.Log("Throwing Molotov");
         GameObject molotov = Instantiate((GameObject)ABILITY_Throw_Molotov.getExtra("MolotovEffectPrefab"), targetGridSpace.transform.position, targetGridSpace.transform.rotation);
         molotov.GetComponent<Molotov_Effect_Script>().mySpace = targetGridSpace;
         caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_Throw_Molotov.cooldown);
@@ -188,28 +188,28 @@ public class Ability_Database_Script : MonoBehaviour
 
     private void castSprayAndPray(GameObject caster, int abilityIndex)
     {
-        Debug.Log("Casting Spray and Pray");
+        //Debug.Log("Casting Spray and Pray");
         caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().sprayAndPrayBuff);
         caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_SprayAndPray.cooldown);
     }
 
     private void castFasterBullets(GameObject caster, int abilityIndex)
     {
-        Debug.Log("Casting Faster Bullets");
+        //Debug.Log("Casting Faster Bullets");
         caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fasterBulletsBuff);
         caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_FasterBullets.cooldown);
     }
 
     private void castFleetOfFoot(GameObject caster, int abilityIndex)
     {
-        Debug.Log("Casting Fleet of Foot");
+        //Debug.Log("Casting Fleet of Foot");
         caster.GetComponent<Minion_AI_Script>().applyBuff(this.gameObject.GetComponent<Buff_Database_Script>().fleetOfFootBuff);
         //don't set cooldown because this is a passive
     }
 
     private void castFirstAid(GameObject caster, int abilityIndex, GameObject targetAlly)
     {
-        Debug.Log("Casting First Aid");
+        //Debug.Log("Casting First Aid");
         targetAlly.GetComponent<Minion_AI_Script>().currentHp = targetAlly.GetComponent<Minion_AI_Script>().MaxHp;
         GameObject FirstAidEffect = Instantiate((GameObject)ABILITY_First_Aid.getExtra("FirstAidEffectPrefab"), targetAlly.transform.position, targetAlly.transform.rotation);
         caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_First_Aid.cooldown);

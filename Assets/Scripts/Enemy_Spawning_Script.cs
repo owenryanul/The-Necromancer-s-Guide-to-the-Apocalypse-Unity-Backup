@@ -40,6 +40,8 @@ public class Enemy_Spawning_Script : MonoBehaviour
             hordeIsSpawning = false;
             hordeHasSpawnedAllEnemies = false;
             instance = this;
+
+            loadAllHordesFromFiles();
         }
     }
 
@@ -57,7 +59,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.F10))
+        /*if(Input.GetKeyDown(KeyCode.F10))
         {
             string json = Horde.loadJsonFromFile("Test Horde 1");
             if (json != null)
@@ -65,7 +67,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
                 Horde horde = Horde.fromJson(json);
                 Debug.Log("2nd enemy type from first wave of Horde loaded = " + horde.waves[0].enemyPools[1].enemyPrefab.name);
             }
-        }
+        }*/
 
 
         if (hordeIsSpawning)
@@ -77,7 +79,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
             {
                 spawnEnemyFromPool();
                 currentWave.numberOfEnemiesInWave--;
-                Debug.Log("Wave " + (currentWaveCount + 1) + " Number of spawns remaining: " + currentWave.numberOfEnemiesInWave);
+                //Debug.Log("Wave " + (currentWaveCount + 1) + " Number of spawns remaining: " + currentWave.numberOfEnemiesInWave);
                 currentSpawnCooldown = currentWave.spawnCooldown;
             }
         }
@@ -86,7 +88,6 @@ public class Enemy_Spawning_Script : MonoBehaviour
                 && hordeIsReadyToSpawn 
                 && GameObject.FindGameObjectWithTag("Start Horde Button") == null) //TODO: Move this logic to a OnLoadScene method
         {
-            Debug.LogWarning("Building Start horde button");
             GameObject button = Instantiate(startHordeButtonPrefab, GameObject.Find("UI Canvas").transform);
             button.GetComponent<Button>().onClick.AddListener(() => startHorde());
         }
@@ -96,7 +97,6 @@ public class Enemy_Spawning_Script : MonoBehaviour
                 && GameObject.FindGameObjectWithTag("Finish Battle Button") == null
                 && GameObject.FindGameObjectsWithTag("Enemy").Length < 1) 
         {
-            Debug.LogWarning("Building Finish Battle button");
             GameObject button = Instantiate(finishBattleButtonPrefab, GameObject.Find("UI Canvas").transform);
             button.GetComponent<Button>().onClick.AddListener(() => returnToMap());
         }
@@ -149,14 +149,14 @@ public class Enemy_Spawning_Script : MonoBehaviour
         }
 
         int i = Random.Range(1, poolSize);
-        Debug.Log("Spawning Enemy from pool with original i = " + i);
+        //Debug.Log("Spawning Enemy from pool with original i = " + i);
 
         foreach(EnemyPool apool in currentWave.enemyPools)
         {
             //if i falls inside this pool, spawn enemy from that pool, reduce size of pool and break loop.
             if(i <= apool.quantity)
             {
-                Debug.Log("Spawning Enemy from pool with i = " + i + " where pool quanity = " + apool.quantity);
+                //Debug.Log("Spawning Enemy from pool with i = " + i + " where pool quantity = " + apool.quantity);
                 spawnEnemy(apool.enemyPrefab, apool.spawnOnLeftSide);
                 apool.quantity--;
                 
@@ -164,7 +164,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
             }
             else //if i falls outside this pool, subtract the size of this pool from i. then move onto next pool
             {
-                Debug.Log("I exceeds pool quanity of: " + apool.quantity + ", new i = " + apool.quantity);
+                //Debug.Log("I exceeds pool quantity of: " + apool.quantity + ", new i = " + apool.quantity);
                 i -= apool.quantity;
             }
         }
@@ -184,7 +184,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
         }
         GameObject anEnemy = Instantiate(enemy, spawnPoint.transform.position, spawnPoint.transform.rotation);
         anEnemy.GetComponent<Enemy_AI_script>().nextSpace = spawnPoint;
-        Debug.Log("Enemy Spawned: " + enemy.name);
+        //Debug.Log("Enemy Spawned: " + enemy.name);
     }
 
     //Set the current horde to a horde with the matching name. Then starts the horde. Displays a warning in console if a matching horde wasn't found.
@@ -230,9 +230,21 @@ public class Enemy_Spawning_Script : MonoBehaviour
         Destroy(GameObject.FindGameObjectWithTag("Start Horde Button"));
     }
 
+    //Returns the player to the map screen
     public static void returnToMap()
     {
         SceneManager.LoadSceneAsync("Map Scene", LoadSceneMode.Single);
+    }
+
+    private void loadAllHordesFromFiles()
+    {
+        this.hordes = new List<Horde>();
+        DirectoryInfo di = new DirectoryInfo(Application.persistentDataPath + "/databases/hordes/");
+        foreach(FileInfo file in di.GetFiles("*.json"))
+        {
+            string json = Horde.loadJsonFromFile(file.Name);
+            this.hordes.Add(Horde.fromJson(json));
+        }
     }
 
     [System.Serializable]
@@ -315,7 +327,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
             }
         }
 
-        public static string loadJsonFromFile(string fileNameWithoutExtension)
+        public static string loadJsonFromFile(string fileNameWithExtension)
         {
             string path = Application.persistentDataPath + "/databases/hordes/";
             if (!Directory.Exists(path))
@@ -324,7 +336,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
                 return null;
             }
 
-            path += fileNameWithoutExtension.Replace(" ", "_") + ".json"; //Replace any spaces in the passed filename with _, as the save system converts all spaces  in the filename to _ when saving the file.
+            path += fileNameWithExtension.Replace(" ", "_"); //Replace any spaces in the passed filename with _, as the save system converts all spaces  in the filename to _ when saving the file.
 
             if (!File.Exists(path))
             {
@@ -334,7 +346,6 @@ public class Enemy_Spawning_Script : MonoBehaviour
 
             StreamReader reader = new StreamReader(path);
             string json = reader.ReadToEnd();
-            Debug.Log("Json retrieved from file: " + json);
             reader.Close();
 
             return json;

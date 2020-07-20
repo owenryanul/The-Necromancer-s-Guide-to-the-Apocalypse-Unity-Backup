@@ -20,6 +20,7 @@ public class Cosmetic_Database_Script : MonoBehaviour
         [Header("ID")]
         private CosmeticID cosmeticID;
         [Header("Visuals")]
+        public string name;
         public Sprite cosmeticSprite;
         [Header("Positioning")]
         public Vector3 offset;
@@ -31,9 +32,10 @@ public class Cosmetic_Database_Script : MonoBehaviour
         public Vector3 enemyOffset;
         public Vector3 enemyRotation;
 
-        public Cosmetic(CosmeticID IDin, Vector3 offsetIn, Vector3 rotationIn, Vector3 iconOffsetIn, Vector3 iconRotationIn, Vector3 enemyOffsetIn, Vector3 enemyRotationIn)
+        public Cosmetic(CosmeticID IDin, string nameIn, Vector3 offsetIn, Vector3 rotationIn, Vector3 iconOffsetIn, Vector3 iconRotationIn, Vector3 enemyOffsetIn, Vector3 enemyRotationIn)
         {
             this.cosmeticID = IDin;
+            this.name = nameIn;
             this.offset = offsetIn;
             this.rotation = rotationIn;
             this.iconOffset = iconOffsetIn;
@@ -76,8 +78,8 @@ public class Cosmetic_Database_Script : MonoBehaviour
      *      4. Add Projectiles in Inspector if necessary.
      */
 
-    public Cosmetic COSMETIC_Red_Baseball_Cap = new Cosmetic(CosmeticID.Red_Baseball_Cap, new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
-    public Cosmetic COSMETIC_Red_Baseball_X_Cap = new Cosmetic(CosmeticID.Red_Baseball_X_Cap, new Vector3(0, 0, 0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
-    public Cosmetic COSMETIC_Blue_Shirt = new Cosmetic(CosmeticID.Blue_Shirt, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
-    public Cosmetic COSMETIC_Crazy_Paint = new Cosmetic(CosmeticID.Crazy_Paint, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+    public Cosmetic COSMETIC_Red_Baseball_Cap = new Cosmetic(CosmeticID.Red_Baseball_Cap, "Red Baseball Cap", new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+    public Cosmetic COSMETIC_Red_Baseball_X_Cap = new Cosmetic(CosmeticID.Red_Baseball_X_Cap, "Baseball Cap X", new Vector3(0, 0, 0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+    public Cosmetic COSMETIC_Blue_Shirt = new Cosmetic(CosmeticID.Blue_Shirt, "Blue Shirt", new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
+    public Cosmetic COSMETIC_Crazy_Paint = new Cosmetic(CosmeticID.Crazy_Paint, "Crazy Face Paint", new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
 }

@@ -8,6 +8,7 @@ public class Player_Inventory_Script : MonoBehaviour
 
     int players_DarkEnergy;
     int players_Ammo;
+    List<Minion_Roster_Script.MinionEntry> minions;
 
     // Start is called before the first frame update
     void Start()
@@ -48,5 +49,20 @@ public class Player_Inventory_Script : MonoBehaviour
     public static void addPlayersAmmo(int ammoIn)
     {
         instance.players_Ammo += ammoIn;
+    }
+
+    public static List<Minion_Roster_Script.MinionEntry> getMinions()
+    {
+        return instance.minions;
+    }
+
+    public static void setMinions(List<Minion_Roster_Script.MinionEntry> minionsIn)
+    {
+        instance.minions = minionsIn;
+    }
+
+    public static void addMinion(Minion_Roster_Script.MinionEntry minionIn)
+    {
+        instance.minions.Add(minionIn);
     }
 }
