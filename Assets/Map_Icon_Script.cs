@@ -13,10 +13,12 @@ public class Map_Icon_Script : MonoBehaviour
     public Sprite highlightedIcon;
     public Sprite yellowHighlightedIcon;
 
+    private Inventory_UI_Script inventoryUI;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        inventoryUI = GameObject.FindGameObjectWithTag("Inventory UI").GetComponent<Inventory_UI_Script>();
     }
 
     // Update is called once per frame
@@ -27,8 +29,11 @@ public class Map_Icon_Script : MonoBehaviour
 
     private void OnMouseDown()
     {
-        GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>().setJournalScenario(this.scenarioName);
-        GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>().showJournel();
+        if (!inventoryUI.isInventoryVisible()) //stop player clicking map markers through the inventory screen
+        {
+            GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>().setJournalScenario(this.scenarioName);
+            GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>().showJournel();
+        }
     }
 
     private void OnMouseEnter()

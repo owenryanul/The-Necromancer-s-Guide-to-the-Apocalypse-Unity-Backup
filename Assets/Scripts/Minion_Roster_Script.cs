@@ -33,8 +33,9 @@ public class Minion_Roster_Script : MonoBehaviour
     // Run during the first frame update rather than before, to ensure that all databases have been instanced and static calls won't throw exceptions for being uninstanced yet.
     void StartAfterDatabases()
     {
-        DEBUG_dummyPopulateRosterWithPremadeMinions();
+        //DEBUG_dummyPopulateRosterWithPremadeMinions();
         //loadMinonRosterFromSaveFile();
+
 
         generateRosterButtons();
         hasRanOnce = true;

@@ -18,7 +18,7 @@ public class Cosmetic_Database_Script : MonoBehaviour
     public class Cosmetic
     {
         [Header("ID")]
-        private CosmeticID cosmeticID;
+        public CosmeticID cosmeticID;
         [Header("Visuals")]
         public string name;
         public Sprite cosmeticSprite;
@@ -50,10 +50,22 @@ public class Cosmetic_Database_Script : MonoBehaviour
         return instance.findCosmeticById(inCosmeticID);
     }
 
+    public static List<Cosmetic> findAllCosmetics()
+    {
+        List<Cosmetic> allCos = new List<Cosmetic>();
+        allCos.Add(instance.COSMETIC_None);
+        allCos.Add(instance.COSMETIC_Red_Baseball_Cap);
+        allCos.Add(instance.COSMETIC_Red_Baseball_X_Cap);
+        allCos.Add(instance.COSMETIC_Blue_Shirt);
+        allCos.Add(instance.COSMETIC_Crazy_Paint);
+        return allCos;
+    }
+
     public Cosmetic findCosmeticById(CosmeticID inCosmeticID)
     {
         switch (inCosmeticID)
         {
+            case CosmeticID.None: return COSMETIC_None;
             case CosmeticID.Red_Baseball_Cap: return COSMETIC_Red_Baseball_Cap;
             case CosmeticID.Red_Baseball_X_Cap: return COSMETIC_Red_Baseball_X_Cap;
             case CosmeticID.Blue_Shirt: return COSMETIC_Blue_Shirt;
@@ -78,6 +90,7 @@ public class Cosmetic_Database_Script : MonoBehaviour
      *      4. Add Projectiles in Inspector if necessary.
      */
 
+    public Cosmetic COSMETIC_None = new Cosmetic(CosmeticID.None, "None", new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
     public Cosmetic COSMETIC_Red_Baseball_Cap = new Cosmetic(CosmeticID.Red_Baseball_Cap, "Red Baseball Cap", new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
     public Cosmetic COSMETIC_Red_Baseball_X_Cap = new Cosmetic(CosmeticID.Red_Baseball_X_Cap, "Baseball Cap X", new Vector3(0, 0, 0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
     public Cosmetic COSMETIC_Blue_Shirt = new Cosmetic(CosmeticID.Blue_Shirt, "Blue Shirt", new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));

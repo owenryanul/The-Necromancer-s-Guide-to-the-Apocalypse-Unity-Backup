@@ -6,6 +6,7 @@ using MinionEntry = Minion_Roster_Script.MinionEntry;
 using WeaponID = Weapon_Database_Script.WeaponID;
 using AbilityID = Ability_Database_Script.AbilityID;
 using CosmeticID = Cosmetic_Database_Script.CosmeticID;
+using WeaponEntry = Player_Inventory_Script.WeaponEntry;
 
 public class Inventory_UI_Script : MonoBehaviour
 {
@@ -14,14 +15,18 @@ public class Inventory_UI_Script : MonoBehaviour
     public Sprite inventoryOpenedSprite;
 
     public GameObject rosterButtonPrefab;
+    public GameObject inventoryCosmeticButtonPrefab;
+    public GameObject inventoryWeaponButtonPrefab;
 
     private InventoryViewMode inventoryIsViewing;
 
+    private int loadSlotClicked;
+
     public enum InventoryViewMode
     {
-        minions,
-        items,
-        cosmetics
+        minions = 0,
+        items = 1,
+        cosmetics = 2
     }
 
     private MinionEntry currentlyViewedMinion;
@@ -33,14 +38,16 @@ public class Inventory_UI_Script : MonoBehaviour
         inventoryVisible = false;
         viewingCosmeticsLoadout = false;
         currentlyViewedMinion = null;
+        loadSlotClicked = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Insert))
+        if (Input.GetKeyDown(KeyCode.Insert))
         {
             DEBUG_dummyPopulateRosterWithPremadeMinions();
+            DEBUG_dummyPopulateWeaponInventory();
         }
     }
 
@@ -62,10 +69,23 @@ public class Inventory_UI_Script : MonoBehaviour
         Player_Inventory_Script.setMinions(rosterOfMinions);
     }
 
+    private void DEBUG_dummyPopulateWeaponInventory()
+    {
+        Debug.LogWarning("Populating inventory of weapons with weapons.");
+        List<WeaponEntry> weaponInventory = new List<WeaponEntry>();
+        //              Name,    Icon,              Cost,   Speed,  Weapon1,        Weapon2,                Hp, Ability1,       Ability2,           Ability3                                    
+        weaponInventory.Add(new WeaponEntry(WeaponID.Unarmed_Melee, -1));
+        weaponInventory.Add(new WeaponEntry(WeaponID.Revolver_Ranged, 2));
+        weaponInventory.Add(new WeaponEntry(WeaponID.Scrap_Hammer_Melee, 2));
+        weaponInventory.Add(new WeaponEntry(WeaponID.Thrown_bone,1));
+        Player_Inventory_Script.setPlayerWeapons(weaponInventory);
+    }
+
     public void showHideInventory(Button buttonClicked)
     {
         if (inventoryVisible)
         {
+            //hide inventory
             inventoryVisible = false;
             buttonClicked.image.sprite = inventoryClosedSprite;
             GameObject loadout = GameObject.FindGameObjectWithTag("Inventory UI");
@@ -74,10 +94,11 @@ public class Inventory_UI_Script : MonoBehaviour
         }
         else
         {
+            //show inventory
             inventoryVisible = true;
             buttonClicked.image.sprite = inventoryOpenedSprite;
             GameObject loadout = GameObject.FindGameObjectWithTag("Inventory UI"); //show loadout/inventory ui
-            setActiveForChildren(loadout, true, false); 
+            setActiveForChildren(loadout, true, false);
             GameObject viewer = GameObject.FindGameObjectWithTag("Minion Viewer"); //Hide Minion Viewer until a minion is selected
             setActiveForChildren(viewer, false, false);
             setInventoryView(InventoryViewMode.minions);
@@ -86,11 +107,13 @@ public class Inventory_UI_Script : MonoBehaviour
 
     public void setInventoryView(InventoryViewMode modeIn)
     {
-        this.inventoryIsViewing = modeIn;
+        this.inventoryIsViewing = (InventoryViewMode)modeIn;
         clearInventoryButtons();
-        switch(inventoryIsViewing)
+        switch (inventoryIsViewing)
         {
             case InventoryViewMode.minions: generateMinionInventoryButtons(); break;
+            case InventoryViewMode.items: generateWeaponInventoryButtons(); break;
+            case InventoryViewMode.cosmetics: generateCosmeticInventoryButtons(); break;
         }
     }
 
@@ -106,12 +129,115 @@ public class Inventory_UI_Script : MonoBehaviour
             setActiveForChildren(viewer, true);
             assembleMinionViewerPortrait(ref viewer, currentlyViewedMinion);
             viewer.transform.Find("Minion Name Field").gameObject.GetComponent<InputField>().text = currentlyViewedMinion.minionName;
-
+            GameObject.FindGameObjectWithTag("Minion Viewer HP Indicator").GetComponentInChildren<Text>().text = currentlyViewedMinion.minionMaxHp + " HP";
+            GameObject.FindGameObjectWithTag("Minion Viewer DE Indicator").GetComponentInChildren<Text>().text = currentlyViewedMinion.minionSummonCost + " DE";
             viewingCosmeticsLoadout = true; //set viewing to the opposite as it gets changed when switcher viewMode is called.
             switchViewerMode();//Set Viewer mode to mechanical loadout.
 
             Debug.Log("Viewing Minon in loadout: " + currentlyViewedMinion.minionName);
         }
+    }
+
+    public void OnClick_MinionRosterButton()
+    {
+        setInventoryView(InventoryViewMode.minions);
+    }
+
+    public void OnClick_CosmeticLoadoutSlot(int slotIn)
+    {
+        setInventoryView(InventoryViewMode.cosmetics);
+        this.loadSlotClicked = slotIn;
+    }
+
+    public void OnClick_WeaponLoadoutSlot(int slotIn)
+    {
+        setInventoryView(InventoryViewMode.items);
+        this.loadSlotClicked = slotIn;
+    }
+
+    public void OnNameChanged(InputField nameInputField)
+    {
+        currentlyViewedMinion.minionName = nameInputField.text;
+        Player_Inventory_Script.replaceMinion(currentlyViewedMinion.minionID, currentlyViewedMinion);
+        setInventoryView(InventoryViewMode.minions);
+    }
+
+    public void equipWeapon(WeaponEntry weapon)
+    {
+        Debug.Log("Weapon Equiped: " + Weapon_Database_Script.findWeapon(weapon.weaponID).name);
+        GameObject weaponLoadout = GameObject.FindGameObjectWithTag("Minion Viewer").transform.Find("Mechanical Loadout").gameObject;
+        
+        //Add the previously equiped weapon back into the user's inventory and set the minion's weapon to the new weapon
+        switch (loadSlotClicked)
+        {
+            case 1: Player_Inventory_Script.unequipWeapon(currentlyViewedMinion.Weapon1ID); currentlyViewedMinion.Weapon1ID = weapon.weaponID; break;
+            case 2: Player_Inventory_Script.unequipWeapon(currentlyViewedMinion.Weapon2ID); currentlyViewedMinion.Weapon2ID = weapon.weaponID; break;
+        }
+        Player_Inventory_Script.equipWeapon(weapon.weaponID);
+        Player_Inventory_Script.replaceMinion(currentlyViewedMinion.minionID, currentlyViewedMinion);
+        viewMinionInLoadout(Player_Inventory_Script.findMinion(currentlyViewedMinion.minionID)); //viewMinionInLoadout sets mode to mechanical
+
+        //Set Slot Button to new Cosmetic Icon
+        switch (loadSlotClicked)
+        {
+            case 1:
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().enabled = true;
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().sprite = Weapon_Database_Script.findWeapon(currentlyViewedMinion.Weapon1ID).icon;
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().SetNativeSize();
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database_Script.findWeapon(currentlyViewedMinion.Weapon1ID).name;
+                break;
+            case 2:
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().enabled = true;
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().sprite = Weapon_Database_Script.findWeapon(currentlyViewedMinion.Weapon2ID).icon;
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().SetNativeSize();
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database_Script.findWeapon(currentlyViewedMinion.Weapon2ID).name;
+                break;
+        }
+
+        setInventoryView(InventoryViewMode.items); //refresh the inventory view
+    }
+
+    public void equipCosmetic(Cosmetic_Database_Script.Cosmetic cosmetic)
+    {
+        Debug.Log("Cosmetic Equiped: " + cosmetic.name);
+        GameObject cosmeticLoadout = GameObject.FindGameObjectWithTag("Minion Viewer").transform.Find("Cosmetic Loadout").gameObject;
+        switch (loadSlotClicked)
+        {
+            case 1: currentlyViewedMinion.hat = cosmetic.cosmeticID; break;
+            case 2: currentlyViewedMinion.mask = cosmetic.cosmeticID; break;
+            case 3: currentlyViewedMinion.torso = cosmetic.cosmeticID; break;
+        }
+        Player_Inventory_Script.replaceMinion(currentlyViewedMinion.minionID, currentlyViewedMinion);
+        viewMinionInLoadout(Player_Inventory_Script.findMinion(currentlyViewedMinion.minionID));
+        switchViewerMode(); //viewMinionInLoadout sets mode to mechanical, so switch it back immediately
+
+        //Set Slot Button to new Cosmetic Icon
+        switch (loadSlotClicked)
+        {
+            case 1:
+                cosmeticLoadout.transform.Find("Cosmetic1").Find("Icon").gameObject.GetComponent<Image>().enabled = true;
+                cosmeticLoadout.transform.Find("Cosmetic1").Find("Icon").gameObject.GetComponent<Image>().sprite = Cosmetic_Database_Script.findCosmetic(currentlyViewedMinion.hat).cosmeticSprite;
+                cosmeticLoadout.transform.Find("Cosmetic1").Find("Icon").gameObject.GetComponent<Image>().SetNativeSize();
+                cosmeticLoadout.transform.Find("Cosmetic1").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Cosmetic_Database_Script.findCosmetic(currentlyViewedMinion.hat).name;
+                if (currentlyViewedMinion.hat == CosmeticID.None) { cosmeticLoadout.transform.Find("Cosmetic1").Find("Icon").gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0); }
+                break;
+            case 2:
+                cosmeticLoadout.transform.Find("Cosmetic2").Find("Icon").gameObject.GetComponent<Image>().enabled = true;
+                cosmeticLoadout.transform.Find("Cosmetic2").Find("Icon").gameObject.GetComponent<Image>().sprite = Cosmetic_Database_Script.findCosmetic(currentlyViewedMinion.mask).cosmeticSprite;
+                cosmeticLoadout.transform.Find("Cosmetic2").Find("Icon").gameObject.GetComponent<Image>().SetNativeSize();
+                cosmeticLoadout.transform.Find("Cosmetic2").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Cosmetic_Database_Script.findCosmetic(currentlyViewedMinion.mask).name;
+                if (currentlyViewedMinion.mask == CosmeticID.None) { cosmeticLoadout.transform.Find("Cosmetic2").Find("Icon").gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0); }
+                break;
+            case 3:
+                cosmeticLoadout.transform.Find("Cosmetic3").Find("Icon").gameObject.GetComponent<Image>().enabled = true;
+                cosmeticLoadout.transform.Find("Cosmetic3").Find("Icon").gameObject.GetComponent<Image>().sprite = Cosmetic_Database_Script.findCosmetic(currentlyViewedMinion.torso).cosmeticSprite;
+                cosmeticLoadout.transform.Find("Cosmetic3").Find("Icon").gameObject.GetComponent<Image>().SetNativeSize();
+                cosmeticLoadout.transform.Find("Cosmetic3").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Cosmetic_Database_Script.findCosmetic(currentlyViewedMinion.torso).name;
+                if (currentlyViewedMinion.torso == CosmeticID.None) { cosmeticLoadout.transform.Find("Cosmetic3").Find("Icon").gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0); }
+                break;
+        }
+
+        /*set icon for icon*/
     }
 
     //Is called by the switch loadout mode button onClick listener, as well as viewMinionInLoadout()
@@ -199,7 +325,7 @@ public class Inventory_UI_Script : MonoBehaviour
 
     private void setActiveForChildren(GameObject gameObjectIn, bool isActive, bool applyToParent = true)
     {
-        if(isActive && applyToParent)
+        if (isActive && applyToParent)
         {
             gameObjectIn.SetActive(true);
         }
@@ -208,8 +334,8 @@ public class Inventory_UI_Script : MonoBehaviour
         {
             setActiveForChildren(gameObjectIn.transform.GetChild(i).gameObject, isActive);
         }
-        
-        if(!isActive && applyToParent)
+
+        if (!isActive && applyToParent)
         {
             gameObjectIn.SetActive(false);
         }
@@ -234,6 +360,67 @@ public class Inventory_UI_Script : MonoBehaviour
             button.GetComponent<Button>().enabled = true;
             button.transform.GetChild(1).GetComponent<Image>().enabled = false;
             aEntry.summonButton = button;
+            i++;
+        }
+        GameObject.FindGameObjectWithTag("Minion Inventory Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 120 * (1 + Mathf.FloorToInt(Player_Inventory_Script.getMinions().Count / 7)));
+    }
+
+    private void generateWeaponInventoryButtons()
+    {
+        int i = 0;
+        foreach (WeaponEntry aEntry in Player_Inventory_Script.getPlayerWeapons())
+        {
+            GameObject content = GameObject.FindGameObjectWithTag("Minion Inventory Content");
+            float xPos = 34 + ((i % 7) * 100);
+            float yPos = -18 + (Mathf.FloorToInt(i / 7) * -100);
+
+            GameObject button = Instantiate(inventoryWeaponButtonPrefab, content.transform);
+            button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
+            //assembleMinionPortrait(ref button, aEntry);
+            button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Weapon_Database_Script.findWeapon(aEntry.weaponID).weaponSprite;
+            button.transform.GetChild(0).GetChild(0).GetComponent<Image>().SetNativeSize();
+            if (aEntry.owned == -1)
+            {
+                button.transform.Find("Equip Count Text").gameObject.GetComponent<Text>().text = "inf";
+            }
+            else
+            { 
+                button.transform.Find("Equip Count Text").gameObject.GetComponent<Text>().text = (aEntry.owned - aEntry.equiped) + " / " + aEntry.owned;
+            }
+            button.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database_Script.findWeapon(aEntry.weaponID).name;
+            button.GetComponent<Button>().onClick.AddListener(() => equipWeapon(aEntry));
+            if ((aEntry.owned == -1) || (aEntry.owned > aEntry.equiped))
+            {
+                button.GetComponent<Button>().enabled = true;
+            }
+            else
+            {
+                button.GetComponent<Button>().enabled = false;
+            }
+            i++;
+        }
+        GameObject.FindGameObjectWithTag("Minion Inventory Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 120 * (1 + Mathf.FloorToInt(Player_Inventory_Script.getMinions().Count / 7)));
+    }
+
+    private void generateCosmeticInventoryButtons()
+    {
+        int i = 0;
+        Debug.Log("badgers");
+        foreach (Cosmetic_Database_Script.Cosmetic aEntry in Cosmetic_Database_Script.findAllCosmetics())
+        {
+            Debug.Log("a badger :" + aEntry.name);
+            GameObject content = GameObject.FindGameObjectWithTag("Minion Inventory Content");
+            float xPos = 34 + ((i % 7) * 100);
+            float yPos = -18 + (Mathf.FloorToInt(i / 7) * -100);
+
+            GameObject button = Instantiate(inventoryCosmeticButtonPrefab, content.transform);
+            button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
+            //assembleMinionPortrait(ref button, aEntry);
+            button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = aEntry.cosmeticSprite;
+            button.transform.GetChild(0).GetChild(0).GetComponent<Image>().SetNativeSize();
+            button.GetComponent<Tooltip_Button_Script>().tooltip = aEntry.name;
+            button.GetComponent<Button>().onClick.AddListener(() => equipCosmetic(aEntry));
+            button.GetComponent<Button>().enabled = true;
             i++;
         }
         GameObject.FindGameObjectWithTag("Minion Inventory Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 120 * (1 + Mathf.FloorToInt(Player_Inventory_Script.getMinions().Count / 7)));
@@ -300,4 +487,9 @@ public class Inventory_UI_Script : MonoBehaviour
         }
     }
     //[End of Methods copied from Minion_Roster_Script]
+
+    public bool isInventoryVisible()
+    {
+        return this.inventoryVisible;
+    }
 }
