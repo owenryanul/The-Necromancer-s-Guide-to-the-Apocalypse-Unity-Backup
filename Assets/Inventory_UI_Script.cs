@@ -46,8 +46,15 @@ public class Inventory_UI_Script : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Insert))
         {
-            DEBUG_dummyPopulateRosterWithPremadeMinions();
-            DEBUG_dummyPopulateWeaponInventory();
+            Player_Inventory_Script.loadInventoryFromPlayerSaveFile(Player_Inventory_Script.getPlayerName());
+            //DEBUG_dummyPopulateRosterWithPremadeMinions();
+            //DEBUG_dummyPopulateWeaponInventory();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Home))
+        {
+            Debug.Log(Player_Inventory_Script.getPlayerWeapons()[0].weaponID);
+            Player_Inventory_Script.saveInventoryToFile();
         }
     }
 
@@ -145,14 +152,23 @@ public class Inventory_UI_Script : MonoBehaviour
 
     public void OnClick_CosmeticLoadoutSlot(int slotIn)
     {
-        setInventoryView(InventoryViewMode.cosmetics);
         this.loadSlotClicked = slotIn;
+        setInventoryView(InventoryViewMode.cosmetics);
     }
 
     public void OnClick_WeaponLoadoutSlot(int slotIn)
     {
-        setInventoryView(InventoryViewMode.items);
         this.loadSlotClicked = slotIn;
+        setInventoryView(InventoryViewMode.items);
+
+        WeaponID aWep = WeaponID.custom;
+        switch(slotIn)
+        {
+            case 1: aWep = currentlyViewedMinion.Weapon1ID; break;
+            case 2: aWep = currentlyViewedMinion.Weapon2ID; break;
+        }
+                
+        setInfoBoxText(Weapon_Database_Script.findWeapon(aWep).name + " (Equiped)", generateInfoboxBodyText(aWep));
     }
 
     public void OnNameChanged(InputField nameInputField)
@@ -388,6 +404,8 @@ public class Inventory_UI_Script : MonoBehaviour
                 button.transform.Find("Equip Count Text").gameObject.GetComponent<Text>().text = (aEntry.owned - aEntry.equiped) + " / " + aEntry.owned;
             }
             button.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database_Script.findWeapon(aEntry.weaponID).name;
+            button.GetComponent<InfoBox_Tooltip_Script>().titleText = Weapon_Database_Script.findWeapon(aEntry.weaponID).name;
+            button.GetComponent<InfoBox_Tooltip_Script>().descriptionText = generateInfoboxBodyText(aEntry.weaponID);
             button.GetComponent<Button>().onClick.AddListener(() => equipWeapon(aEntry));
             if ((aEntry.owned == -1) || (aEntry.owned > aEntry.equiped))
             {
@@ -408,20 +426,24 @@ public class Inventory_UI_Script : MonoBehaviour
         Debug.Log("badgers");
         foreach (Cosmetic_Database_Script.Cosmetic aEntry in Cosmetic_Database_Script.findAllCosmetics())
         {
-            Debug.Log("a badger :" + aEntry.name);
-            GameObject content = GameObject.FindGameObjectWithTag("Minion Inventory Content");
-            float xPos = 34 + ((i % 7) * 100);
-            float yPos = -18 + (Mathf.FloorToInt(i / 7) * -100);
+            //If cosmetic is equipable to the clicked loadout slot, or is equipable to all slots, add it to the Inventory.
+            if ((int)aEntry.slot == this.loadSlotClicked || aEntry.slot == Cosmetic_Database_Script.EquipSlot.all)
+            {
+                Debug.Log("a badger :" + aEntry.name);
+                GameObject content = GameObject.FindGameObjectWithTag("Minion Inventory Content");
+                float xPos = 34 + ((i % 7) * 100);
+                float yPos = -18 + (Mathf.FloorToInt(i / 7) * -100);
 
-            GameObject button = Instantiate(inventoryCosmeticButtonPrefab, content.transform);
-            button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
-            //assembleMinionPortrait(ref button, aEntry);
-            button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = aEntry.cosmeticSprite;
-            button.transform.GetChild(0).GetChild(0).GetComponent<Image>().SetNativeSize();
-            button.GetComponent<Tooltip_Button_Script>().tooltip = aEntry.name;
-            button.GetComponent<Button>().onClick.AddListener(() => equipCosmetic(aEntry));
-            button.GetComponent<Button>().enabled = true;
-            i++;
+                GameObject button = Instantiate(inventoryCosmeticButtonPrefab, content.transform);
+                button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
+                //assembleMinionPortrait(ref button, aEntry);
+                button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = aEntry.cosmeticSprite;
+                button.transform.GetChild(0).GetChild(0).GetComponent<Image>().SetNativeSize();
+                button.GetComponent<Tooltip_Button_Script>().tooltip = aEntry.name;
+                button.GetComponent<Button>().onClick.AddListener(() => equipCosmetic(aEntry));
+                button.GetComponent<Button>().enabled = true;
+                i++;
+            }
         }
         GameObject.FindGameObjectWithTag("Minion Inventory Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 120 * (1 + Mathf.FloorToInt(Player_Inventory_Script.getMinions().Count / 7)));
     }
@@ -487,6 +509,42 @@ public class Inventory_UI_Script : MonoBehaviour
         }
     }
     //[End of Methods copied from Minion_Roster_Script]
+
+    private void setInfoBoxText(string titleIn, string bodyIn)
+    {
+        Text title = GameObject.FindGameObjectWithTag("Inventory Infobox Title").GetComponent<Text>();
+        Text body = GameObject.FindGameObjectWithTag("Inventory Infobox Body").GetComponent<Text>();
+        title.text = titleIn;
+        body.text = bodyIn;
+    }
+
+    private string generateInfoboxBodyText(WeaponID inID)
+    {
+        Weapon_Database_Script.Weapon aWeapon = Weapon_Database_Script.findWeapon(inID);
+        string weaponInfo = "";
+        if (aWeapon.isMeleeWeapon)
+        {
+            weaponInfo += "Damage: " + aWeapon.meleeWeaponDamage;
+            weaponInfo += "\tRange: (Melee)" + aWeapon.weaponRange.Length;
+            weaponInfo += "\nAttack Speed: " + aWeapon.weaponAttackCooldown;
+            weaponInfo += "\tFlinch Chance: " + "TODO Implement this";
+        }
+        else
+        {
+            weaponInfo += "Damage: " + aWeapon.weaponProjectile.GetComponent<Projectile_Logic_Script>().projectileDamage;
+            weaponInfo += "\tRange: " + aWeapon.weaponRange.Length;
+            weaponInfo += "\nSpread: TODO display this";
+            weaponInfo += "\nAttack Speed: " + aWeapon.weaponAttackCooldown;
+            weaponInfo += "\tProjectile Speed: " + aWeapon.weaponProjectile.GetComponent<Projectile_Logic_Script>().speed;
+            weaponInfo += "\nFlinch Chance: " + "TODO Implement this";
+            weaponInfo += "\tPunch-through: " + "TODO Implement this";
+        }
+
+
+        weaponInfo += "\n\n" + aWeapon.description;
+
+        return weaponInfo;
+    }
 
     public bool isInventoryVisible()
     {

@@ -67,6 +67,7 @@
     <Compile Include="Assets\Custom Editors\EnemySpawningEditor.cs" />
     <Compile Include="Assets\Custom Editors\HordePropertyDrawer.cs" />
     <Compile Include="Assets\Enemy_AI_Berserker_Script.cs" />
+    <Compile Include="Assets\InfoBox_Tooltip_Script.cs" />
     <Compile Include="Assets\Inventory_UI_Script.cs" />
     <Compile Include="Assets\Journal_Text_Script.cs" />
     <Compile Include="Assets\Map_Camera_Script.cs" />

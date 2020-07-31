@@ -19,8 +19,10 @@ public class Weapon_Database_Script : MonoBehaviour
     {
         [Header("ID")]
         public WeaponID weaponID;
-        [Header("Visuals")]
+        [Header("Text Info")]
         public string name;
+        public string description;
+        [Header("Visuals")]
         public Sprite icon;
         public Sprite weaponSprite;
         public Vector3 weaponOffset;
@@ -37,14 +39,15 @@ public class Weapon_Database_Script : MonoBehaviour
         public int projectile_Damage = 1;
         public float projectile_Speed = 1.0f;
 
-        public Weapon(WeaponID weaponID, string nameIn, bool isMeleeWeaponIn, int meleeWeaponDamageIn, float weaponAttackCooldownIn, int[] weaponRangeIn)
+        public Weapon(WeaponID weaponID, string nameIn, bool isMeleeWeaponIn, int meleeWeaponDamageIn, float weaponAttackCooldownIn, int[] weaponRangeIn, string descriptionIn)
         {
             this.weaponID = weaponID;
             this.name = nameIn;
-            isMeleeWeapon = isMeleeWeaponIn;
-            meleeWeaponDamage = meleeWeaponDamageIn;
-            weaponAttackCooldown = weaponAttackCooldownIn;
-            weaponRange = weaponRangeIn;
+            this.description = descriptionIn;
+            this.isMeleeWeapon = isMeleeWeaponIn;
+            this.meleeWeaponDamage = meleeWeaponDamageIn;
+            this.weaponAttackCooldown = weaponAttackCooldownIn;
+            this.weaponRange = weaponRangeIn;
         }
     }
 
@@ -89,13 +92,13 @@ public class Weapon_Database_Script : MonoBehaviour
      *      4. Add Projectiles in Inspector if necessary.
      */
 
-    public Weapon WEAPON_thrown_bone = new Weapon(WeaponID.Thrown_bone, "Throwing Bone", false, 1, 3, new int[3] { 0, 0, 0 });
-    public Weapon WEAPON_Unarmed_Melee = new Weapon(WeaponID.Unarmed_Melee, "Unarmed Attack", true, 1, 0, new int[1] { 0 });
-    public Weapon WEAPON_Swift_Unarmed_Melee = new Weapon(WeaponID.Swift_Unarmed_Melee, "Swift Unarmed Attack", true, 1, 0, new int[1] { 0 });
-    public Weapon WEAPON_quick_thrown_bone = new Weapon(WeaponID.Quick_thrown_bone, "Rapid bone throwing", false, 1, 0.1f, new int[3] { 0, 0, 0 });
-    public Weapon WEAPON_scatter_thrown_bone = new Weapon(WeaponID.Scatter_thrown_bone, "Scatter throwing bones", false, 1, 0.1f, new int[3] { 0, 1, 2 });
-    public Weapon WEAPON_wide_unarmed_melee = new Weapon(WeaponID.Wide_Unarmed_Melee, "Wide swings Unarmed attacks", true, 1, 0.1f, new int[1] { 1 });
-    public Weapon WEAPON_scrap_hammer_melee = new Weapon(WeaponID.Scrap_Hammer_Melee, "Scrap Hammer", true, 4, 0.1f, new int[1] { 0 });
-    public Weapon WEAPON_revolver_ranged = new Weapon(WeaponID.Revolver_Ranged, "Revolver", false, 1, 1.0f, new int[3] { 0, 0, 0 });
+    public Weapon WEAPON_thrown_bone = new Weapon(WeaponID.Thrown_bone, "Throwing Bone", false, 1, 3, new int[3] { 0, 0, 0 }, " A weapon of last resort, your minion hurls a bone of unspecified type and origin at the on-coming foes. It's not one of their bones so its unclear where they're getting all these bones.");
+    public Weapon WEAPON_Unarmed_Melee = new Weapon(WeaponID.Unarmed_Melee, "Unarmed Attack", true, 1, 0, new int[1] { 0 }, " Fists were one of the first weapons man used, and so it is with skeletal thralls. Still there are far better ways to beat something to death.");
+    public Weapon WEAPON_Swift_Unarmed_Melee = new Weapon(WeaponID.Swift_Unarmed_Melee, "Swift Unarmed Attack", true, 1, 0, new int[1] { 0 }, "Flailing wildly at a target with your hands is mariginal more effective with skelatal claws than flesh hands, but not by much.");
+    public Weapon WEAPON_quick_thrown_bone = new Weapon(WeaponID.Quick_thrown_bone, "Rapid bone throwing", false, 1, 0.1f, new int[3] { 0, 0, 0 }, "Your thrall seems to have an awful lot of bones to throw. Strange.");
+    public Weapon WEAPON_scatter_thrown_bone = new Weapon(WeaponID.Scatter_thrown_bone, "Scatter throwing bones", false, 1, 0.1f, new int[3] { 0, 1, 2 }, "A few select skeleton's have master the art of the scattering bone toss. I'm told it's like throwing a boomarang, whatever a boomarang is?");
+    public Weapon WEAPON_wide_unarmed_melee = new Weapon(WeaponID.Wide_Unarmed_Melee, "Wide swings Unarmed attacks", true, 1, 0.1f, new int[1] { 1 }, "Flailing widely rather than wildly ensures that SEVERAL attackers are mildy inconvienced instead of just one.");
+    public Weapon WEAPON_scrap_hammer_melee = new Weapon(WeaponID.Scrap_Hammer_Melee, "Scrap Hammer", true, 4, 0.1f, new int[1] { 0 }, "A lump of scrap metal on the end of a stick. A crude but effective melee weapon.");
+    public Weapon WEAPON_revolver_ranged = new Weapon(WeaponID.Revolver_Ranged, "Revolver", false, 1, 1.0f, new int[3] { 0, 0, 0 }, "A short range fire arm. Exceedingly effective when applied to a necromancer's knee, as Andy insists on demostrating.");
 
 }
