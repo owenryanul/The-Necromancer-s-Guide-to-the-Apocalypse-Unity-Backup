@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Ability_Database_Script : MonoBehaviour
 {
@@ -176,6 +177,7 @@ public class Ability_Database_Script : MonoBehaviour
         //Debug.Log("Casting Conversion Ritual");
         //Debug.Log("Casting Conversion Ritual targeting " + targetEnemy.GetComponent<Enemy_AI_script>().name);
         targetEnemy.GetComponent<Enemy_AI_script>().setBeingConverted(true);
+        GameObject.FindGameObjectWithTag("Necromancer Ritual Button").GetComponent<Button>().interactable = false;
     }
 
     private void castMolotov(GameObject caster, int abilityIndex, GameObject targetGridSpace)

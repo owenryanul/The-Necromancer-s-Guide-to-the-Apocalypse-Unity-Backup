@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Ability_Database = Ability_Database_Script;
 
 public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
@@ -37,6 +38,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     public int energyRewardOnKill = 1;
     public int conversionProgressRequired = 10;
     protected bool beingConverted;
+    protected bool escapingBeingConverted;
     protected int conversionProgress;
     protected Vector3 conversionHoldingPoint;
 
@@ -55,6 +57,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         isMoving = false;
         isDying = false;
         beingConverted = false;
+        escapingBeingConverted = false;
         conversionHoldingPoint = new Vector3(14, 10, 0);
         this.gameObject.GetComponent<ParticleSystem>().Stop();
 
@@ -83,6 +86,10 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         if (this.beingConverted)
         {
             conversionUpdate();
+        }
+        else if(this.escapingBeingConverted)
+        {
+            escapingConversionUpdate();
         }
         else
         {
@@ -326,12 +333,44 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         {
             conversionComplete();
         }
+        else if(Enemy_Spawning_Script.hasHordeHasSpawnedAllEnemies() && GameObject.FindGameObjectsWithTag("Enemy").Length == 1)
+        {
+            conversionFailed();
+        }
 
+    }
+
+    protected void escapingConversionUpdate()
+    {
+        //Move the Enemy to the ritual's holding position.
+        //TODO: change X = 4 to be smarter rather than hard-coded.
+        Debug.Log("escaping Conversion to point: (3, " + tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace().GetComponent<Space_Script>().gridPosition.y + ")");
+        Vector3 ritualPos = Space_Script.findGridSpace(new Vector2(3 , tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace().GetComponent<Space_Script>().gridPosition.y)).transform.position;
+        float dragSpeed = 10.0f;
+        ritualPos.z = this.transform.position.z;
+        if (this.transform.position != ritualPos)
+        {
+            Vector3 v = (ritualPos - this.transform.position).normalized * dragSpeed * Time.deltaTime;
+            if ((ritualPos - this.transform.position).magnitude < v.magnitude)
+            {
+                this.transform.position = ritualPos;
+            }
+            else
+            {
+                this.transform.position += v;
+            }
+        }
+        else
+        {
+            this.nextSpace = Space_Script.findGridSpace(new Vector2(3, tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace().GetComponent<Space_Script>().gridPosition.y));
+            this.escapingBeingConverted = false;
+        }
     }
 
     protected void conversionComplete()
     {
         this.setBeingConverted(false);
+        GameObject.FindGameObjectWithTag("Necromancer Ritual Button").GetComponent<Button>().interactable = true;
         this.gameObject.GetComponent<ParticleSystem>().Stop();
         Instantiate(ritualCompleteParticleEmitter, this.transform.position, this.transform.rotation);
         MinionRoster.addNewMinion("Absolute Unit");
@@ -340,6 +379,18 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
             Destroy(aMote);
         }
         Destroy(this.gameObject);
+    }
+
+    protected void conversionFailed()
+    {
+        this.setBeingConverted(false);
+        this.escapingBeingConverted = true;
+        this.gameObject.GetComponent<ParticleSystem>().Stop();
+        GameObject.FindGameObjectWithTag("Necromancer Ritual Button").GetComponent<Button>().interactable = true;
+        foreach (GameObject aMote in GameObject.FindGameObjectsWithTag("Dark Energy Mote"))
+        {
+            Destroy(aMote);
+        }
     }
 
     public void setBeingConverted(bool inConverting)

@@ -34,15 +34,20 @@ public class Enemy_Spawning_Script : MonoBehaviour
     {
         if (instance == null)
         {
-            currentSpawnCooldown = 0;
-            currentWaveCount = 0;
-            hordeIsReadyToSpawn = false;
-            hordeIsSpawning = false;
-            hordeHasSpawnedAllEnemies = false;
             instance = this;
+            resetSpawnVariables();
 
             loadAllHordesFromFiles();
         }
+    }
+
+    private void resetSpawnVariables()
+    {
+        currentSpawnCooldown = 0;
+        currentWaveCount = 0;
+        hordeIsReadyToSpawn = false;
+        hordeIsSpawning = false;
+        hordeHasSpawnedAllEnemies = false;
     }
 
     // Update is called once per frame
@@ -233,7 +238,13 @@ public class Enemy_Spawning_Script : MonoBehaviour
     //Returns the player to the map screen
     public static void returnToMap()
     {
+        instance.resetSpawnVariables();
         SceneManager.LoadSceneAsync("Map Scene", LoadSceneMode.Single);
+    }
+
+    public static bool hasHordeHasSpawnedAllEnemies()
+    {
+        return instance.hordeHasSpawnedAllEnemies;
     }
 
     private void loadAllHordesFromFiles()
