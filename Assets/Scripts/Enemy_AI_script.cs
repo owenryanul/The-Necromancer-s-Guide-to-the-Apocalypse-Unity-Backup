@@ -373,7 +373,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         GameObject.FindGameObjectWithTag("Necromancer Ritual Button").GetComponent<Button>().interactable = true;
         this.gameObject.GetComponent<ParticleSystem>().Stop();
         Instantiate(ritualCompleteParticleEmitter, this.transform.position, this.transform.rotation);
-        MinionRoster.addNewMinion("Absolute Unit");
+        createNewMinionFromEnemy();
         foreach(GameObject aMote in GameObject.FindGameObjectsWithTag("Dark Energy Mote"))
         {
             Destroy(aMote);
@@ -391,6 +391,13 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
         {
             Destroy(aMote);
         }
+    }
+
+    //Note: Virtual denotes that this method should be overriden in derived classes
+    protected virtual void createNewMinionFromEnemy()
+    {
+        //MinionRoster.addNewMinion("Absolute Unit");
+        MinionRoster.addNewMinion(1, Weapon_Database_Script.WeaponID.Thrown_bone, Weapon_Database_Script.WeaponID.Unarmed_Melee, Ability_Database.AbilityID.molotov, Ability_Database.AbilityID.sprayAndPray, Ability_Database.findRandomAbilityWithTag("general").id);
     }
 
     public void setBeingConverted(bool inConverting)

@@ -6,6 +6,7 @@ using System.Linq;
 using WeaponID = Weapon_Database_Script.WeaponID;
 using AbilityID = Ability_Database_Script.AbilityID;
 using CosmeticID = Cosmetic_Database_Script.CosmeticID;
+using System.IO;
 
 
 public class Minion_Roster_Script : MonoBehaviour
@@ -33,9 +34,9 @@ public class Minion_Roster_Script : MonoBehaviour
     // Run during the first frame update rather than before, to ensure that all databases have been instanced and static calls won't throw exceptions for being uninstanced yet.
     void StartAfterDatabases()
     {
+        Debug.Log("Is this method still used?");
         //DEBUG_dummyPopulateRosterWithPremadeMinions();
         //loadMinonRosterFromSaveFile();
-
 
         generateRosterButtons();
         hasRanOnce = true;
@@ -179,6 +180,16 @@ public class Minion_Roster_Script : MonoBehaviour
         }
     }
 
+    public static void flagAllMinionsAsSummoned(bool flag)
+    {
+        foreach (MinionEntry anEntry in Player_Inventory_Script.getMinions())
+        {
+            anEntry.isSummoned = flag;
+            anEntry.summonButton.GetComponent<Button>().enabled = !flag;
+            anEntry.summonButton.transform.GetChild(1).GetComponent<Image>().enabled = flag;
+        }
+    }
+
     public void addNewMinion(string inName)
     {
         Debug.Log("inName : " + inName);
@@ -186,6 +197,51 @@ public class Minion_Roster_Script : MonoBehaviour
         MinionEntry newMinion = new MinionEntry("MIN-" + (Player_Inventory_Script.getMinions().Count + 2), inName, 5, 1.0f, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, 1, AbilityID.molotov, AbilityID.fleetOfFoot, AbilityID.fleetOfFoot, CosmeticID.None, CosmeticID.None, CosmeticID.None);
         Player_Inventory_Script.addMinion(newMinion);
         generateRosterButtons();
+    }
+
+    public void addNewMinion(int hp, WeaponID weapon1, WeaponID weapon2, AbilityID ability1, AbilityID ability2, AbilityID ability3, CosmeticID hat = CosmeticID.None, CosmeticID shirt = CosmeticID.None, CosmeticID mask = CosmeticID.None)
+    {
+        string name = generateRandomMinionName();
+        Debug.Log("inName : " + name);
+        clearRosterButtons();
+        MinionEntry newMinion = new MinionEntry("MIN-" + (Player_Inventory_Script.getMinions().Count + 2), name, 5, 1.0f, weapon1, weapon2, hp, ability1, ability2, ability3, hat, shirt, mask);
+        Player_Inventory_Script.addMinion(newMinion);
+        generateRosterButtons();
+    }
+
+    private string generateRandomMinionName()
+    {
+        string path = Application.persistentDataPath + "/databases/names/names.json";
+
+        if (!File.Exists(path))
+        {
+            Debug.LogWarning("Error: File: " + path + " not found.");
+            return "I AM ERROR, no seriously check generateRandomMinionName()";
+        }
+
+        StreamReader reader = new StreamReader(path);
+        string json = reader.ReadToEnd();
+        reader.Close();
+
+        RandomNameList randomNameLists = JsonUtility.FromJson<RandomNameList>(json);
+
+        int a = (int)(Random.value * 2) + 1;
+        Debug.Log("Bork: " + a);
+        switch(a)
+        {
+            case 1:
+                int b = (int)(Random.value * randomNameLists.standAloneNames.Count);
+                Debug.Log("Bork: " + b);
+                return randomNameLists.standAloneNames[b];
+            case 2:
+                int c = (int)(Random.value * randomNameLists.firstNames.Count);
+                string fullName = randomNameLists.firstNames[c];
+                int d = (int)(Random.value * randomNameLists.firstNames.Count);
+                fullName += " " + randomNameLists.lastNames[d];
+                Debug.Log("Bork: " + c + " " + d);
+                return fullName;
+            default: return "This name should never be generated";
+        }
     }
 
     public RosterSave convertRosterToSaveFile()
@@ -250,5 +306,13 @@ public class Minion_Roster_Script : MonoBehaviour
             torso = torsoin;
             isSummoned = false;
         }
+    }
+
+    [System.Serializable]
+    public class RandomNameList
+    {
+        public List<string> standAloneNames;
+        public List<string> firstNames;
+        public List<string> lastNames;
     }
 }

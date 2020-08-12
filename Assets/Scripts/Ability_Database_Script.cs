@@ -52,6 +52,9 @@ public class Ability_Database_Script : MonoBehaviour
 
         [TextArea(2,10)]
         public string abilityToolTip;
+
+        [Header("Tags")]
+        public List<string> tags;
         [Header("Ability Specfic Data")]
         public List<AbilityExtra> extras; //Used by some abilties for extra data, e.g. molotov's effects prefab
 
@@ -62,6 +65,7 @@ public class Ability_Database_Script : MonoBehaviour
             this.cooldown = cooldownIn;
             this.ammoCost = 0;
             this.extras = new List<AbilityExtra>();
+            this.tags = new List<string>();
         }
 
         public Ability(AbilityID inID, AbilityType castTypeIn, float cooldownIn, string[] keys)
@@ -75,6 +79,7 @@ public class Ability_Database_Script : MonoBehaviour
             {
                 this.extras.Add(new AbilityExtra(aKey));
             }
+            this.tags = new List<string>();
         }
 
         public Object getExtra(string keyIn)
@@ -151,6 +156,26 @@ public class Ability_Database_Script : MonoBehaviour
             default: return ABILITY_NONE;
         }
 
+    }
+
+    public static Ability findRandomAbilityWithTag(string tag)
+    {
+        List<Ability> abilitiesWithTag = new List<Ability>();
+        addAbilityWithTag(ref abilitiesWithTag, instance.ABILITY_Throw_Molotov, tag);
+        addAbilityWithTag(ref abilitiesWithTag, instance.ABILITY_SprayAndPray, tag);
+        addAbilityWithTag(ref abilitiesWithTag, instance.ABILITY_FasterBullets, tag);
+        addAbilityWithTag(ref abilitiesWithTag, instance.ABILITY_Fleet_Of_Foot, tag);
+        addAbilityWithTag(ref abilitiesWithTag, instance.ABILITY_First_Aid, tag);
+
+        return abilitiesWithTag[(int)(Random.value * abilitiesWithTag.Count)];
+    }
+
+    private static void addAbilityWithTag(ref List<Ability> matchingAbilities, Ability anAbility, string tag)
+    {
+        if(anAbility.tags.Contains(tag))
+        {
+            matchingAbilities.Add(anAbility);
+        }
     }
 
     /*To Add New Ability:
