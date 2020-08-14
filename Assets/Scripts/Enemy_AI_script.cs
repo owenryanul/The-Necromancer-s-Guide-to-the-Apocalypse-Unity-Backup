@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Ability_Database = Ability_Database_Script;
+using AbilityID = Ability_Database_Script.AbilityID;
+using WeaponID = Weapon_Database_Script.WeaponID;
 
 public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 {
@@ -340,10 +342,10 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
 
     }
 
+    //Replaces the update logic with logic that moves the minion away from the ritual point and to a space in the necromancer's row.
     protected void escapingConversionUpdate()
     {
-        //Move the Enemy to the ritual's holding position.
-        //TODO: change X = 4 to be smarter rather than hard-coded.
+        //TODO: change X = 4 to be smart-calculated rather than hard-coded.
         Debug.Log("escaping Conversion to point: (3, " + tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace().GetComponent<Space_Script>().gridPosition.y + ")");
         Vector3 ritualPos = Space_Script.findGridSpace(new Vector2(3 , tryingToKill.GetComponent<Minion_AI_Script>().getTargetSpace().GetComponent<Space_Script>().gridPosition.y)).transform.position;
         float dragSpeed = 10.0f;
@@ -397,18 +399,21 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     protected virtual void createNewMinionFromEnemy()
     {
         //MinionRoster.addNewMinion("Absolute Unit");
-        MinionRoster.addNewMinion(1, Weapon_Database_Script.WeaponID.Thrown_bone, Weapon_Database_Script.WeaponID.Unarmed_Melee, Ability_Database.AbilityID.molotov, Ability_Database.AbilityID.sprayAndPray, Ability_Database.findRandomAbilityWithTag("general").id);
+        MinionRoster.addNewMinion(1, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, AbilityID.molotov, AbilityID.sprayAndPray, Ability_Database.findRandomAbilityWithTag("general").id);
     }
 
+    //Called by Ability_Database.castNecromancerConversionRitual() when conversion ability is ast on this enemy
     public void setBeingConverted(bool inConverting)
     {
         this.beingConverted = inConverting;
         conversionProgress = 0;
         this.rigAnimator.SetBool("IsConverting", inConverting);
+        this.gameObject.GetComponent<BoxCollider2D>().enabled = !inConverting; //disable/enable collision on enemy.
         if (inConverting)
         {
             this.rigAnimator.SetTrigger("StartConverting"); //trigger the transition animation
             this.gameObject.GetComponent<ParticleSystem>().Play();
+            
         }
     }
 

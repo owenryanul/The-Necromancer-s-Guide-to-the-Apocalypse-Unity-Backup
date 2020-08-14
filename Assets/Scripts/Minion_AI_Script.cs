@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using AbilityID = Ability_Database_Script.AbilityID;
 using Ability_Database = Ability_Database_Script;
+using Weapon = Weapon_Database_Script.Weapon;
 using WeaponID = Weapon_Database_Script.WeaponID;
 using Weapon_Database = Weapon_Database_Script;
 using Buffs = Buff_Database_Script;
@@ -552,7 +553,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         }
     }
 
-    private void switchAttackStatsToWeapon(Weapon_Database_Script.Weapon weaponIn)
+    private void switchAttackStatsToWeapon(Weapon weaponIn)
     {
         this.isMeleeAttack = weaponIn.isMeleeWeapon;
         this.meleeDamage = weaponIn.meleeWeaponDamage;
@@ -563,7 +564,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         this.attackRange = weaponIn.weaponRange;
     }
 
-    private void switchWeaponVisualsToWeapon(Weapon_Database_Script.Weapon weaponIn)
+    private void switchWeaponVisualsToWeapon(Weapon weaponIn)
     {
         GameObject weaponSprite = this.transform.Find(weaponSprite_Path).gameObject;
         if (weaponIn.weaponSprite == null)
@@ -647,15 +648,15 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         try
         {
 
-            if (Ability_Database.getAbilityType(getAbilityIDforSlot(1)) == Ability_Database_Script.AbilityType.passive)
+            if (Ability_Database.getAbilityType(getAbilityIDforSlot(1)) == Ability_Database.AbilityType.passive)
             {
                 Ability_Database.cast(getAbilityIDforSlot(1), 1, this.gameObject, null);
             }
-            if (Ability_Database.getAbilityType(getAbilityIDforSlot(2)) == Ability_Database_Script.AbilityType.passive)
+            if (Ability_Database.getAbilityType(getAbilityIDforSlot(2)) == Ability_Database.AbilityType.passive)
             {
                 Ability_Database.cast(getAbilityIDforSlot(2), 2, this.gameObject, null);
             }
-            if (Ability_Database.getAbilityType(getAbilityIDforSlot(3)) == Ability_Database_Script.AbilityType.passive)
+            if (Ability_Database.getAbilityType(getAbilityIDforSlot(3)) == Ability_Database.AbilityType.passive)
             {
                 Ability_Database.cast(getAbilityIDforSlot(3), 3, this.gameObject, null);
             }

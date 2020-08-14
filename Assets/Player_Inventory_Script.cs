@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using WeaponID = Weapon_Database_Script.WeaponID;
+using MinionEntry = Minion_Roster_Script.MinionEntry;
 
 public class Player_Inventory_Script : MonoBehaviour
 {
@@ -10,7 +12,7 @@ public class Player_Inventory_Script : MonoBehaviour
     string playerName;
     int players_DarkEnergy;
     int players_Ammo;
-    List<Minion_Roster_Script.MinionEntry> minions;
+    List<MinionEntry> minions;
     List<WeaponEntry> weapons;
 
     // Start is called before the first frame update
@@ -90,9 +92,9 @@ public class Player_Inventory_Script : MonoBehaviour
         instance.weapons = weaponIDIn;
     }
 
-    public static Minion_Roster_Script.MinionEntry findMinion(string minionId)
+    public static MinionEntry findMinion(string minionId)
     {
-        foreach(Minion_Roster_Script.MinionEntry aEntry in instance.minions)
+        foreach(MinionEntry aEntry in instance.minions)
         {
             if(aEntry.minionID == minionId)
             {
@@ -103,7 +105,7 @@ public class Player_Inventory_Script : MonoBehaviour
         return null;
     }
 
-    public static void replaceMinion(string minionToReplaceID, Minion_Roster_Script.MinionEntry replacementMinion)
+    public static void replaceMinion(string minionToReplaceID, MinionEntry replacementMinion)
     {
         for(int i = 0; i < instance.minions.Count; i++)
         {
@@ -117,7 +119,7 @@ public class Player_Inventory_Script : MonoBehaviour
     }
 
     //Add the weapon to the player's inventory, increasing the quanity if they already own one of the weapon, or adding a brand new weapon entry to the list if they did not already possess it.
-    public static void addWeapon(Weapon_Database_Script.WeaponID weaponIDin)
+    public static void addWeapon(WeaponID weaponIDin)
     {
         foreach(WeaponEntry aEntry in instance.weapons)
         {
@@ -132,7 +134,7 @@ public class Player_Inventory_Script : MonoBehaviour
     }
 
     //Increases the number of this weapon that are counted as equiped.
-    public static void equipWeapon(Weapon_Database_Script.WeaponID weaponIDin)
+    public static void equipWeapon(WeaponID weaponIDin)
     {
         foreach (WeaponEntry aEntry in instance.weapons)
         {
@@ -145,7 +147,7 @@ public class Player_Inventory_Script : MonoBehaviour
     }
 
     //Reduces the number of this weapon that are counted as equiped.
-    public static void unequipWeapon(Weapon_Database_Script.WeaponID weaponIDin)
+    public static void unequipWeapon(WeaponID weaponIDin)
     {
         foreach (WeaponEntry aEntry in instance.weapons)
         {
@@ -183,11 +185,11 @@ public class Player_Inventory_Script : MonoBehaviour
     [System.Serializable]
     public class WeaponEntry
     {
-        public Weapon_Database_Script.WeaponID weaponID;
+        public WeaponID weaponID;
         public int owned;
         public int equiped;
 
-        public WeaponEntry(Weapon_Database_Script.WeaponID weaponIDin, int ownedin)
+        public WeaponEntry(WeaponID weaponIDin, int ownedin)
         {
             weaponID = weaponIDin;
             owned = ownedin;
@@ -200,7 +202,7 @@ public class Player_Inventory_Script : MonoBehaviour
         public string playerName;
         public int players_DarkEnergy;
         public int players_Ammo;
-        public List<Minion_Roster_Script.MinionEntry> minions;
+        public List<MinionEntry> minions;
         public List<WeaponEntry> weapons;
 
         public InventoryJson(InventoryJson inventoryJsonIn)
@@ -212,7 +214,7 @@ public class Player_Inventory_Script : MonoBehaviour
             weapons = inventoryJsonIn.weapons;
         }
 
-        public InventoryJson(string inPlayerName, int inDarkEnergy, int inAmmo, List<Minion_Roster_Script.MinionEntry> inMinions, List<WeaponEntry> inWeapons)
+        public InventoryJson(string inPlayerName, int inDarkEnergy, int inAmmo, List<MinionEntry> inMinions, List<WeaponEntry> inWeapons)
         {
             playerName = inPlayerName;
             players_DarkEnergy = inDarkEnergy;

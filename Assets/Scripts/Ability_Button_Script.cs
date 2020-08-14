@@ -83,7 +83,7 @@ public class Ability_Button_Script : MonoBehaviour, IPointerEnterHandler, IPoint
 
     private void showPassiveBorderIfAppropriate()
     {
-        if(Ability_Database.getAbilityType(User_Input_Script.currentlySelectedMinion.GetComponent<Minion_AI_Script>().getAbilityIDforSlot(abilitySlot)) == Ability_Database_Script.AbilityType.passive)
+        if(Ability_Database.getAbilityType(User_Input_Script.currentlySelectedMinion.GetComponent<Minion_AI_Script>().getAbilityIDforSlot(abilitySlot)) == Ability_Database.AbilityType.passive)
         {
             this.gameObject.transform.Find("Passive Fill").GetComponent<Image>().enabled = true;
         }

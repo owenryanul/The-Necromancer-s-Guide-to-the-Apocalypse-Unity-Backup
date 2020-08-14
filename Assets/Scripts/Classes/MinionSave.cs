@@ -5,7 +5,6 @@ using UnityEditor;
 using WeaponID = Weapon_Database_Script.WeaponID;
 using AbilityID = Ability_Database_Script.AbilityID;
 using CosmeticID = Cosmetic_Database_Script.CosmeticID;
-using MinionEntry = Minion_Roster_Script.MinionEntry;
 
 [System.Serializable]
 public class MinionSave

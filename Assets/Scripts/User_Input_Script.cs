@@ -191,28 +191,28 @@ public class User_Input_Script : MonoBehaviour
                 //If player has enough ammo to cast ability
                 if (Ability_Database.getAbilityAmmoCost(currentAbilityToCast) <= Player_Inventory_Script.getPlayersAmmo())
                 {
-                    if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.aimCast)
+                    if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database.AbilityType.aimCast)
                     {
                         currentMouseCommand = MouseCommand.CastAbilityOnSpace;
                         selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
                         //Space_Script will handle the OnMouseDown portion of aiming from here
                     }
-                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.instantCast)
+                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database.AbilityType.instantCast)
                     {
                         currentMouseCommand = MouseCommand.SelectOrMove;
                         Ability_Database.cast(currentAbilityToCast, currentAbilityIndex, currentlySelectedMinion, null);
                     }
-                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.passive)
+                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database.AbilityType.passive)
                     {
                         currentMouseCommand = MouseCommand.SelectOrMove;
                     }
-                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.targetEnemyCast)
+                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database.AbilityType.targetEnemyCast)
                     {
                         currentMouseCommand = MouseCommand.CastAbilityOnEnemy;
                         selectionCircle.GetComponent<SpriteRenderer>().enabled = true;
                         //Enemy_AI_Script will handle the OnMouseDown portion of aiming from here
                     }
-                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database_Script.AbilityType.targetAllyCast)
+                    else if (Ability_Database.getAbilityType(currentAbilityToCast) == Ability_Database.AbilityType.targetAllyCast)
                     {
                         currentMouseCommand = MouseCommand.CastAbilityOnAlly;
                         selectionCircle.GetComponent<SpriteRenderer>().enabled = true;

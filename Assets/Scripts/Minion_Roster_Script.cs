@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
+using Weapon_Database = Weapon_Database_Script;
 using WeaponID = Weapon_Database_Script.WeaponID;
+using Weapon = Weapon_Database_Script.Weapon;
 using AbilityID = Ability_Database_Script.AbilityID;
 using CosmeticID = Cosmetic_Database_Script.CosmeticID;
 using System.IO;
@@ -94,7 +95,7 @@ public class Minion_Roster_Script : MonoBehaviour
         addWeaponToPortrait(aEntry.Weapon1ID, button.transform.GetChild(0).GetChild(0).Find("Weapon Gear").GetComponent<Image>());
     }
 
-    private void addCosmeticToPortrait(Cosmetic_Database_Script.CosmeticID aCos, Image cosImage)
+    private void addCosmeticToPortrait(CosmeticID aCos, Image cosImage)
     {
         if (aCos != CosmeticID.None)
         {
@@ -111,12 +112,12 @@ public class Minion_Roster_Script : MonoBehaviour
         }
     }
 
-    private void addWeaponToPortrait(Weapon_Database_Script.WeaponID aWep, Image cosImage)
+    private void addWeaponToPortrait(WeaponID aWep, Image cosImage)
     {
-        if(Weapon_Database_Script.findWeapon(aWep).weaponSprite != null)
+        if(Weapon_Database.findWeapon(aWep).weaponSprite != null)
         {
             cosImage.enabled = true;
-            Weapon_Database_Script.Weapon wep = Weapon_Database_Script.findWeapon(aWep);
+            Weapon wep = Weapon_Database.findWeapon(aWep);
             cosImage.sprite = wep.weaponSprite;
             cosImage.SetNativeSize();
             cosImage.rectTransform.localPosition = wep.weaponPortraitOffset;
