@@ -13,9 +13,19 @@ public class Map_Icon_Script : MonoBehaviour
     public Sprite highlightedIcon;
     public Sprite yellowHighlightedIcon;
 
+    [Header("State")]
+    public MapNodeState currentState;
+    public enum MapNodeState
+    {
+        unvisited,
+        visited,
+        current,
+        overrun
+    }
+
     [Header("Linked Nodes")]
     public GameObject mapLinePrefab;
-    public List<GameObject> LinkedMapIcons;
+    public List<GameObject> linkedMapIcons;
     private bool hasDrawnLinks;
 
     private Inventory_UI_Script inventoryUI;
@@ -36,7 +46,7 @@ public class Map_Icon_Script : MonoBehaviour
 
     private void drawLineToLinkedNodes()
     {
-        foreach(GameObject aNode in LinkedMapIcons)
+        foreach(GameObject aNode in linkedMapIcons)
         {
             if(aNode.GetComponent<Map_Icon_Script>() == null)
             {
@@ -53,15 +63,27 @@ public class Map_Icon_Script : MonoBehaviour
         this.hasDrawnLinks = true;
     }
 
-
-
+    //Returns true if at least one of the map nodes linked to this map node is the node that the player currently occupies
+    private bool isLinkedToPlayersCurrentNode()
+    {
+        foreach(GameObject aNode in this.linkedMapIcons)
+        {
+            if(aNode.GetComponent<Map_Icon_Script>().currentState == MapNodeState.current)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void OnMouseDown()
     {
-        if (!inventoryUI.isInventoryVisible()) //stop player clicking map markers through the inventory screen
+        if (!inventoryUI.isInventoryVisible() && this.currentState != MapNodeState.current) //stop player clicking map markers through the inventory screen
         {
-            GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>().setJournalScenario(this.scenarioName);
-            GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>().showJournel();
+            if (isLinkedToPlayersCurrentNode())
+            {
+                GameObject.FindGameObjectWithTag("Player Map Marker").GetComponent<Player_Map_Marker>().moveToNewMapNode(this.gameObject);
+            }
         }
     }
 

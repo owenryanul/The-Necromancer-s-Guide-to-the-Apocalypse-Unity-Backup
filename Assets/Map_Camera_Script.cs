@@ -7,6 +7,7 @@ public class Map_Camera_Script : MonoBehaviour
 
     public float scrollAtEdgeBuffer;
     public float scrollSpeed;
+    public bool lockedToPlayerMarker;
 
     // Start is called before the first frame update
     void Start()
@@ -17,31 +18,40 @@ public class Map_Camera_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 targetPos = Camera.main.transform.position;
-        if (Input.mousePosition.x >= Screen.width - scrollAtEdgeBuffer)
+        if (lockedToPlayerMarker)
         {
-            // Move the camera
-            targetPos += Vector3.right * Time.deltaTime * scrollSpeed;
+            Vector3 camPos = GameObject.FindGameObjectWithTag("Player Map Marker").transform.position;
+            camPos.z = this.gameObject.transform.position.z;
+            Camera.main.transform.position = camPos;
         }
-        if (Input.mousePosition.x <= 0 + scrollAtEdgeBuffer)
+        else
         {
-            // Move the camera
-            targetPos -= Vector3.right * Time.deltaTime * scrollSpeed;
-        }
-        if (Input.mousePosition.y >= Screen.height - scrollAtEdgeBuffer)
-        {
-            // Move the camera
-            targetPos += Vector3.up * Time.deltaTime * scrollSpeed;
-        }
-        if (Input.mousePosition.y <= 0 + scrollAtEdgeBuffer)
-        {
-            // Move the camera
-            targetPos -= Vector3.up * Time.deltaTime * scrollSpeed;
-        }
+            Vector3 targetPos = Camera.main.transform.position;
+            if (Input.mousePosition.x >= Screen.width - scrollAtEdgeBuffer)
+            {
+                // Move the camera
+                targetPos += Vector3.right * Time.deltaTime * scrollSpeed;
+            }
+            if (Input.mousePosition.x <= 0 + scrollAtEdgeBuffer)
+            {
+                // Move the camera
+                targetPos -= Vector3.right * Time.deltaTime * scrollSpeed;
+            }
+            if (Input.mousePosition.y >= Screen.height - scrollAtEdgeBuffer)
+            {
+                // Move the camera
+                targetPos += Vector3.up * Time.deltaTime * scrollSpeed;
+            }
+            if (Input.mousePosition.y <= 0 + scrollAtEdgeBuffer)
+            {
+                // Move the camera
+                targetPos -= Vector3.up * Time.deltaTime * scrollSpeed;
+            }
 
-        targetPos = limitToMapBounds(targetPos);
+            targetPos = limitToMapBounds(targetPos);
 
-        Camera.main.transform.position = targetPos;
+            Camera.main.transform.position = targetPos;
+        }
 
     }
 

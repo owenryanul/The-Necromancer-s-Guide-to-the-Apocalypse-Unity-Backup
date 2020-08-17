@@ -74,6 +74,7 @@
     <Compile Include="Assets\Map_Icon_Script.cs" />
     <Compile Include="Assets\Minion_Cosmetic_Script.cs" />
     <Compile Include="Assets\Player_Inventory_Script.cs" />
+    <Compile Include="Assets\Player_Map_Marker.cs" />
     <Compile Include="Assets\Scenarios_Database_Script.cs" />
     <Compile Include="Assets\Script_Container_Scene_To_Scene_Persistance_Script.cs" />
     <Compile Include="Assets\Scripts\Ability_Button_Script.cs" />
