@@ -240,6 +240,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
     {
         instance.resetSpawnVariables();
         Minion_Roster_Script.flagAllMinionsAsSummoned(false); //mark all minions as unsummoned
+        Stat_Tracking_Script.addBattlesWonStat();
         SceneManager.LoadSceneAsync("Map Scene", LoadSceneMode.Single);
     }
 

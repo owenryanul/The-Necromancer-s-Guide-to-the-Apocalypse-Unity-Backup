@@ -67,9 +67,11 @@
     <Compile Include="Assets\Custom Editors\EnemySpawningEditor.cs" />
     <Compile Include="Assets\Custom Editors\HordePropertyDrawer.cs" />
     <Compile Include="Assets\Enemy_AI_Berserker_Script.cs" />
+    <Compile Include="Assets\GameOverUI_Script.cs" />
     <Compile Include="Assets\InfoBox_Tooltip_Script.cs" />
     <Compile Include="Assets\Inventory_UI_Script.cs" />
     <Compile Include="Assets\Journal_Text_Script.cs" />
+    <Compile Include="Assets\MainMenu_UI_Script.cs" />
     <Compile Include="Assets\Map_Camera_Script.cs" />
     <Compile Include="Assets\Map_Icon_Script.cs" />
     <Compile Include="Assets\Minion_Cosmetic_Script.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="Assets\Scripts\Tooltip_Script.cs" />
     <Compile Include="Assets\Scripts\User_Input_Script.cs" />
     <Compile Include="Assets\Scripts\Weapon_Database_Script.cs" />
+    <Compile Include="Assets\Stat_Tracking_Script.cs" />
     <None Include="Assets\TODO.txt.txt" />
     <None Include="Assets\Prefabs\Enemies\Other Enemy Prefabs are in Resources folder.txt" />
     <Reference Include="Unity.Timeline.Editor">

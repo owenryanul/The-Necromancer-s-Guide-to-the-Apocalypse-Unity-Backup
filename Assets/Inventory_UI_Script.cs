@@ -55,7 +55,14 @@ public class Inventory_UI_Script : MonoBehaviour
             //DEBUG_dummyPopulateWeaponInventory();
         }
 
-        if(Input.GetKeyDown(KeyCode.Home))
+        if (Input.GetKeyDown(KeyCode.Delete))
+        {
+            Player_Inventory_Script.loadInventoryFromPlayerSaveFile("testPlayerAboutToDieSavePleaseReplace");
+            //DEBUG_dummyPopulateRosterWithPremadeMinions();
+            //DEBUG_dummyPopulateWeaponInventory();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Home))
         {
             Debug.Log(Player_Inventory_Script.getPlayerWeapons()[0].weaponID);
             Player_Inventory_Script.saveInventoryToFile();

@@ -9,6 +9,8 @@ public class Player_Inventory_Script : MonoBehaviour
 {
     private static Player_Inventory_Script instance;
 
+    public int startingDarkEnergy = 100;
+
     string playerName;
     int players_DarkEnergy;
     int players_Ammo;
@@ -22,7 +24,7 @@ public class Player_Inventory_Script : MonoBehaviour
         {
             instance = this;
             playerName = "testPlayerProfilePleaseReplace";
-            players_DarkEnergy = 100;
+            players_DarkEnergy = startingDarkEnergy;
             players_Ammo = 30;
         }
     }

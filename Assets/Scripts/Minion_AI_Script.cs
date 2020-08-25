@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using AbilityID = Ability_Database_Script.AbilityID;
 using Ability_Database = Ability_Database_Script;
 using Weapon = Weapon_Database_Script.Weapon;
@@ -16,6 +17,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
     public string name = "Unnamed Minion";
     public string minionID;
     public int cost;
+    public bool isNecromancer = false;
 
     [Header("Movement")]
     public GameObject mySpace;
@@ -74,6 +76,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
 
         targetSpace = this.mySpace;
         rigAnimator = this.gameObject.GetComponentInChildren<Animator>();
+        rigAnimator.SetBool("IsNecromancer", this.isNecromancer);
         currentHp = MaxHp;
         isMoving = false;
         isDying = false;
@@ -770,13 +773,34 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         rigAnimator.SetTrigger("DoDie");
         this.gameObject.GetComponent<Collider2D>().enabled = false;
         this.isDying = true;
-        //Flag this minion's entry in the roster as not summoned, so that it's summoning button is re-enable and it may be resummoned.
-        GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>().flagMinionAsSummoned(this.minionID, false);
+        if (!this.isNecromancer)
+        {
+            //Flag this minion's entry in the roster as not summoned, so that it's summoning button is re-enable and it may be resummoned.
+            GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>().flagMinionAsSummoned(this.minionID, false);
+        }
+        else
+        {
+            //If it was the necromancer that died, kill all other minions
+            foreach(GameObject aMinion in GameObject.FindGameObjectsWithTag("Minion"))
+            {
+                Debug.Log("Ah, I'm hit");
+                aMinion.GetComponent<Minion_AI_Script>().onHitByAttack(999);
+            }
+        }
     }
 
     public void onDeathAnimationFinished()
     {
-        Destroy(this.gameObject);
+        if (this.isNecromancer) //if the minion that died is a necromancer
+        {
+            //Trigger Game Over
+            Debug.LogWarning("Game Over");
+            SceneManager.LoadScene("Game Over Scene");
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 
 }

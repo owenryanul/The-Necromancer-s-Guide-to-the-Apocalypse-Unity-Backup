@@ -61,5 +61,6 @@ public class Player_Map_Marker : MonoBehaviour
         this.targetNode = newNode;
         Camera.main.GetComponent<Map_Camera_Script>().lockedToPlayerMarker = true;
         isMoving = true;
+        Stat_Tracking_Script.addEncountersClearedStat();
     }
 }
