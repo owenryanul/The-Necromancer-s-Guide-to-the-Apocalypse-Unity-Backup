@@ -1,0 +1,4 @@
+{
+    "name": "Scenario_Test_3_a",
+    "journelText": "Success! My stragey had worked and the being was pleased.\n[EFFECT](ADD_AMMO){10}\n[EFFECT](ADD_AMMO){20}"
+}

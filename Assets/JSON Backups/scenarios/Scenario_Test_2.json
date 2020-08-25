@@ -1,0 +1,4 @@
+{
+    "name": "Scenario_Test_2",
+    "journelText": "I have encountered a most strange being today. It appears to be a small rodent, dragging a slice of bread covered in cheese and some kind of red sause. As I watched, it drawed the strange foodstuff onto what my trall informed me was a landmine. [PAGE BREAK] For a moment I ruminated on how I should proceed.\n\nFinally, I made a decided to:\n[BUTTON](Scenario_Test_2_a){I strode forward and snatched up the rodent so as to drain the life from it.}\n\n[BUTTON](Scenario_Test_2_b){I instructed my thrall to shoo the rodent away and retrieve the landmine.}"
+}
