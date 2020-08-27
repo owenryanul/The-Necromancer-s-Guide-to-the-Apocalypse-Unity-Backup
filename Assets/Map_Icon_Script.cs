@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Map_Icon_Script : MonoBehaviour
 {
+    [Header("ID")]
+    public string nodeID;
+
     [Header("Scenario")]
     [Tooltip("Prefix a hordeName with BATTLE_ to mark this button as triggering a battle")]
     public string scenarioName;
@@ -25,7 +28,7 @@ public class Map_Icon_Script : MonoBehaviour
 
     [Header("Linked Nodes")]
     public GameObject mapLinePrefab;
-    public List<GameObject> linkedMapIcons;
+    public List<string> linkedMapIconIDs;
     private bool hasDrawnLinks;
 
     private Inventory_UI_Script inventoryUI;
@@ -46,13 +49,13 @@ public class Map_Icon_Script : MonoBehaviour
 
     private void drawLineToLinkedNodes()
     {
-        foreach(GameObject aNode in linkedMapIcons)
+        foreach(GameObject aNode in GameObject.FindGameObjectsWithTag("Map Node"))
         {
             if(aNode.GetComponent<Map_Icon_Script>() == null)
             {
                 Debug.LogError("Map_Icon_Script.linkedMapIcons contains a non-MapIcon game object.");
             }
-            else if (!aNode.GetComponent<Map_Icon_Script>().hasDrawnLinks)
+            else if (!aNode.GetComponent<Map_Icon_Script>().hasDrawnLinks && this.linkedMapIconIDs.Contains(aNode.GetComponent<Map_Icon_Script>().nodeID))
             {
                 GameObject line = Instantiate(mapLinePrefab);
                 line.GetComponent<LineRenderer>().SetPosition(0, this.transform.position);
@@ -66,11 +69,11 @@ public class Map_Icon_Script : MonoBehaviour
     //Returns true if at least one of the map nodes linked to this map node is the node that the player currently occupies
     private bool isLinkedToPlayersCurrentNode()
     {
-        foreach(GameObject aNode in this.linkedMapIcons)
+        foreach(GameObject aNode in GameObject.FindGameObjectsWithTag("Map Node"))
         {
             if(aNode.GetComponent<Map_Icon_Script>().currentState == MapNodeState.current)
             {
-                return true;
+                return linkedMapIconIDs.Contains(aNode.GetComponent<Map_Icon_Script>().nodeID);
             }
         }
         return false;

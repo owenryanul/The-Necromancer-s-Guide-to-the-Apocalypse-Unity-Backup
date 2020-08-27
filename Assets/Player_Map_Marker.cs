@@ -15,7 +15,7 @@ public class Player_Map_Marker : MonoBehaviour
     {
         speed = 5.0f;
         currentNodeOffset = new Vector3(-0.4f, -0.4f, 0);
-        isMoving = true;
+        isMoving = false;
     }
 
     // Update is called once per frame
@@ -62,5 +62,12 @@ public class Player_Map_Marker : MonoBehaviour
         Camera.main.GetComponent<Map_Camera_Script>().lockedToPlayerMarker = true;
         isMoving = true;
         Stat_Tracking_Script.addEncountersClearedStat();
+    }
+
+    public void setCurrentMapNode(GameObject node)
+    {
+        this.targetNode = node;
+        currentNodeOffset = new Vector3(-0.4f, -0.4f, 0);
+        this.transform.position = targetNode.transform.position + currentNodeOffset;
     }
 }

@@ -74,6 +74,7 @@
     <Compile Include="Assets\MainMenu_UI_Script.cs" />
     <Compile Include="Assets\Map_Camera_Script.cs" />
     <Compile Include="Assets\Map_Icon_Script.cs" />
+    <Compile Include="Assets\Map_State_Storage_Script.cs" />
     <Compile Include="Assets\Minion_Cosmetic_Script.cs" />
     <Compile Include="Assets\Player_Inventory_Script.cs" />
     <Compile Include="Assets\Player_Map_Marker.cs" />

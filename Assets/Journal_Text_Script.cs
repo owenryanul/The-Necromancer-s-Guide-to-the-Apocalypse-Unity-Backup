@@ -373,6 +373,7 @@ public class Journal_Text_Script : MonoBehaviour
     public void goToBattleScene()
     {
         Debug.LogWarning("Loading Battle Scene with horde: " + currentBattleName);
+        Map_State_Storage_Script.instance.saveMapState();
         Enemy_Spawning_Script.setHorde(currentBattleName);
         SceneManager.LoadSceneAsync("Battle Test Rework Scene", LoadSceneMode.Single);
     }
