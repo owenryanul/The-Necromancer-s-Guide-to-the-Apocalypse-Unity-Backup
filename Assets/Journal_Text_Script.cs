@@ -113,6 +113,7 @@ public class Journal_Text_Script : MonoBehaviour
         if (leftText.text != "Badger\n")
         {
             createJournalButtons();
+            createExitButtons();
         }
     }
 
@@ -213,6 +214,55 @@ public class Journal_Text_Script : MonoBehaviour
         }
     }
 
+    //Replaces [EXIT BUTTON] markup with a button.
+    //example markup: [EXIT BUTTON]
+    private void createExitButtons()
+    {
+        //TODO: Add Error checking
+
+        int numberOfButtonMarkups = leftText.text.Split(new string[] { "[EXIT BUTTON]" }, System.StringSplitOptions.None).Length - 1;
+        for (int i = 0; i < numberOfButtonMarkups; i++)
+        {
+            //Parse Markup to collect: index of markup, name of the scenario the button leads to, text on the button. 
+            int startOfButtonMarkup = leftText.text.IndexOf("[EXIT BUTTON]");
+            int endOfButtonMarkup = leftText.text.IndexOf("[EXIT BUTTON]") + 12;
+
+            string buttonText = "Move On";
+
+            //Build Button
+            GameObject button = Instantiate(pageButtonPrefab, leftText.gameObject.transform);
+            button.transform.localPosition = getCharPositionOnScreen(leftText, startOfButtonMarkup);
+            button.GetComponentInChildren<Text>().text = buttonText;
+            button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
+
+            //Remove Markup Text, so next iteration gets the next markup
+            Debug.Log("Stuffs = " + leftText.text.Substring(startOfButtonMarkup, (endOfButtonMarkup + 1) - startOfButtonMarkup));
+            leftText.text = leftText.text.Remove(startOfButtonMarkup, (endOfButtonMarkup + 1) - startOfButtonMarkup);
+            leftText.text = leftText.text.Insert(startOfButtonMarkup, buttonMarkupReplacementText);
+        }
+
+        numberOfButtonMarkups = rightText.text.Split(new string[] { "[EXIT BUTTON]" }, System.StringSplitOptions.None).Length - 1;
+        for (int i = 0; i < numberOfButtonMarkups; i++)
+        {
+            //Parse Markup to collect: index of markup, name of the scenario the button leads to, text on the button. 
+            int startOfButtonMarkup = rightText.text.IndexOf("[EXIT BUTTON]");
+            int endOfButtonMarkup = rightText.text.IndexOf("[EXIT BUTTON]") + 12;
+
+            string buttonText = "Move On";
+
+            //Build Button
+            GameObject button = Instantiate(pageButtonPrefab, rightText.gameObject.transform);
+            button.transform.localPosition = getCharPositionOnScreen(rightText, startOfButtonMarkup);
+            button.GetComponentInChildren<Text>().text = buttonText;
+            button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
+
+            //Remove Markup Text, so next iteration gets the next markup
+            Debug.Log("Stuffs = " + rightText.text.Substring(startOfButtonMarkup, (endOfButtonMarkup + 1) - startOfButtonMarkup));
+            rightText.text = rightText.text.Remove(startOfButtonMarkup, (endOfButtonMarkup + 1) - startOfButtonMarkup);
+            rightText.text = rightText.text.Insert(startOfButtonMarkup, buttonMarkupReplacementText);
+        }
+    }
+
     private void deleteJournalButtons()
     {
         List<GameObject> buttonsToRemove = new List<GameObject>();
@@ -287,7 +337,7 @@ public class Journal_Text_Script : MonoBehaviour
             //  29   67, 67, 61
 
 
-            Debug.LogError("Out of text bound");
+            Debug.LogError("Out of text bound: indexOfTextQuad: " + indexOfTextQuad + " exceeds textGen.VertexCount: " + textGen.vertexCount);
             return new Vector3(0, 0, 0); //Should really return Null, but can't
         }
     }

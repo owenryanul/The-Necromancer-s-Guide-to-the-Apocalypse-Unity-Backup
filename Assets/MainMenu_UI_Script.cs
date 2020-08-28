@@ -17,9 +17,11 @@ public class MainMenu_UI_Script : MonoBehaviour
         
     }
 
+    //OnClick Listener for the NewGame Button. Starts a new game.
     public void newGame()
     {
         Player_Inventory_Script.loadInventoryFromPlayerSaveFile(Player_Inventory_Script.getPlayerName());
+        Map_State_Storage_Script.flagMapForRegeneration();
         SceneManager.LoadSceneAsync("Map Scene", LoadSceneMode.Single);
     }
 }

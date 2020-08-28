@@ -47,6 +47,7 @@ public class Map_Icon_Script : MonoBehaviour
 
     }
 
+    //Draw a line on the map that connects nodes that can be moved to from this node
     private void drawLineToLinkedNodes()
     {
         foreach(GameObject aNode in GameObject.FindGameObjectsWithTag("Map Node"))
@@ -79,8 +80,10 @@ public class Map_Icon_Script : MonoBehaviour
         return false;
     }
 
+    //On clicking on this node.
     private void OnMouseDown()
     {
+        this.gameObject.GetComponent<SpriteRenderer>().sprite = icon; //UnHighlights the map icon when the node is clicked on.
         if (!inventoryUI.isInventoryVisible() && this.currentState != MapNodeState.current) //stop player clicking map markers through the inventory screen
         {
             if (isLinkedToPlayersCurrentNode())
@@ -90,16 +93,25 @@ public class Map_Icon_Script : MonoBehaviour
         }
     }
 
+    //Highlight the map icon when hovered over, if it's a node that can be moved to.
     private void OnMouseEnter()
     {
-        this.gameObject.GetComponent<SpriteRenderer>().sprite = highlightedIcon;
+        if (isLinkedToPlayersCurrentNode())
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = highlightedIcon;
+        }
     }
 
+    //UnHighlights the map icon when the mouse is moved away, if it's a node that can be moved to.
     private void OnMouseExit()
     {
-        this.gameObject.GetComponent<SpriteRenderer>().sprite = icon;
+        if (isLinkedToPlayersCurrentNode())
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = icon;
+        }
     }
 
+    //returns true if this node has already drawn lines on the map to it's connected nodes. Used by other node's drawLineToLinkedNodes() to avoid drawing redundent lines
     public bool getHasDrawnLinks()
     {
         return this.hasDrawnLinks;
