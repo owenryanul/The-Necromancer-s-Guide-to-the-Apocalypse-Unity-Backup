@@ -517,6 +517,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         if (this.gameObject.CompareTag("Necromancer"))
         {
             Player_Inventory_Script.addPlayersDarkEnergy(-inDamage);
+            Enemy_Spawning_Script.addBattleStat_NecromancerDamageTaken(inDamage);
             if (Player_Inventory_Script.getPlayersDarkEnergy() <= 0)
             {
                 die();

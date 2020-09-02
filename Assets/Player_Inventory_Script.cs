@@ -81,6 +81,7 @@ public class Player_Inventory_Script : MonoBehaviour
 
     public static void addMinion(Minion_Roster_Script.MinionEntry minionIn)
     {
+        Enemy_Spawning_Script.addToBattleStat_NameMinions(minionIn.minionName + "(" + minionIn.ability1ID + ", " + minionIn.ability2ID + ", " + minionIn.ability3ID + ")");
         instance.minions.Add(minionIn);
     }
 

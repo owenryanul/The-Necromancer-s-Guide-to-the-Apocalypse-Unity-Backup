@@ -73,6 +73,11 @@ public class Map_State_Storage_Script : MonoBehaviour
                 GameObject.FindGameObjectWithTag("Player Map Marker").GetComponent<Player_Map_Marker>().setCurrentMapNode(aNode);
             }
         }
+
+        Journal_Text_Script journalScript = GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>();
+        journalScript.setUIReferencesOnStart(); //make sure the ui variables are instaniated as start() seems to be running too late to do it
+        journalScript.loadPostBattleScreen();
+        journalScript.showJournel();
     }
 
     //Called by setting resetMapState to true when starting a new game.

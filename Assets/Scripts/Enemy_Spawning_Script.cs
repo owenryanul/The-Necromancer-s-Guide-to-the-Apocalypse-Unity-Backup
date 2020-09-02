@@ -25,6 +25,15 @@ public class Enemy_Spawning_Script : MonoBehaviour
     private int currentWaveCount;
     private Wave currentWave;
 
+    [Header("Post Battle variables")]
+    private string currentPostBattleScenarioName;
+    private int battleStat_Kills;
+    private int battleStat_EnergySpent;
+    private int battleStat_EnergyEarned;
+    private int battleStat_AmmoSpent;
+    private int battleStat_NecromancerDamageTaken;
+    private List<string> battleStat_newMinions;
+
     [Header("Hordes")]
     [SerializeField]
     public List<Horde> hordes;
@@ -36,6 +45,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
         {
             instance = this;
             resetSpawnVariables();
+            resetBattleStatVariables();
 
             loadAllHordesFromFiles();
         }
@@ -48,6 +58,16 @@ public class Enemy_Spawning_Script : MonoBehaviour
         hordeIsReadyToSpawn = false;
         hordeIsSpawning = false;
         hordeHasSpawnedAllEnemies = false;
+    }
+
+    public static void resetBattleStatVariables()
+    {
+        instance.battleStat_Kills = 0;
+        instance.battleStat_EnergySpent = 0;
+        instance.battleStat_EnergyEarned = 0;
+        instance.battleStat_AmmoSpent = 0;
+        instance.battleStat_NecromancerDamageTaken = 0;
+        instance.battleStat_newMinions = new List<string>();
     }
 
     // Update is called once per frame
@@ -258,6 +278,81 @@ public class Enemy_Spawning_Script : MonoBehaviour
             string json = Horde.loadJsonFromFile(file.Name);
             this.hordes.Add(Horde.fromJson(json));
         }
+    }
+
+    public static string getCurrentPostBattleScenarioName()
+    {
+        return instance.currentPostBattleScenarioName;
+    }
+
+    public static void setCurrentPostBattleScenarioName(string inScenarioName)
+    {
+        instance.currentPostBattleScenarioName = inScenarioName;
+    }
+
+    public static int getBattleStat_EnergyEarned()
+    {
+        return instance.battleStat_EnergyEarned;
+    }
+
+    public static void addBattleStat_EnergyEarned(int inStat)
+    {
+        instance.battleStat_EnergyEarned += inStat;
+    }
+
+    public static int getBattleStat_EnergySpent()
+    {
+        return instance.battleStat_EnergySpent;
+    }
+
+    public static void addBattleStat_EnergySpent(int inStat)
+    {
+        instance.battleStat_EnergySpent += inStat;
+    }
+
+    public static int getBattleStat_AmmoSpent()
+    {
+        return instance.battleStat_AmmoSpent;
+    }
+
+    public static void addBattleStat_AmmoSpent(int inStat)
+    {
+        instance.battleStat_AmmoSpent += inStat;
+    }
+
+    public static int getBattleStat_Kills()
+    {
+        return instance.battleStat_Kills;
+    }
+
+    public static void addBattleStat_Kills(int inStat)
+    {
+        instance.battleStat_Kills += inStat;
+    }
+
+    public static int getBattleStat_NecromancerDamageTaken()
+    {
+        return instance.battleStat_NecromancerDamageTaken;
+    }
+
+    public static void addBattleStat_NecromancerDamageTaken(int inStat)
+    {
+        instance.battleStat_NecromancerDamageTaken += inStat;
+    }
+
+    public static List<string> getBattleStat_NewMinions()
+    {
+        return instance.battleStat_newMinions;
+    }
+
+    public static void clearBattleStat_NewMinions()
+    {
+        instance.battleStat_newMinions = new List<string>();
+    }
+
+    public static void addToBattleStat_NameMinions(string minionText)
+    {
+        instance.battleStat_newMinions.Add(minionText);
     }
 
     [System.Serializable]

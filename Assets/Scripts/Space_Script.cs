@@ -91,6 +91,7 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
         summonedMinion.GetComponent<Minion_Cosmetic_Script>().Mask = minionToSummonData.mask;
 
         Player_Inventory_Script.addPlayersDarkEnergy(-minionToSummonData.minionSummonCost);
+        Enemy_Spawning_Script.addBattleStat_EnergySpent(minionToSummonData.minionSummonCost);
         //Mark the MinionEntry in the roster as summoned, disabling the button so it can't be summoned again. On death a minion will flag the entry as unSummoned.
         GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<Minion_Roster_Script>().flagMinionAsSummoned(minionToSummonData.minionID, true);
     }

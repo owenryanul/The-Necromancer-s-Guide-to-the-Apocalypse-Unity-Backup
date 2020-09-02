@@ -15,6 +15,9 @@ public class Journal_Text_Script : MonoBehaviour
     [TextArea]
     [Tooltip("Use [SIZE] to mark placement of horde size and [COMPOSITION] to mark where to place the composition")]
     public string preBattleText;
+    [TextArea]
+    [Tooltip("Use [SIZE] to mark placement of horde size and [COMPOSITION] to mark where to place the composition")]
+    public string postBattleText;
 
     private string[] journalPages;
     private int pageNumber;
@@ -30,20 +33,34 @@ public class Journal_Text_Script : MonoBehaviour
     private Button toBattleButton;
     private string currentBattleName;
 
+    private Button leaveBattleSummaryButton;
+
     private string buttonMarkupReplacementText = ""; //TODO: Design a more elegant solution to this.
 
     // Start is called before the first frame update
     void Start()
     {
         journalPages = new string[] { };
-        leftText = this.gameObject.transform.Find("Left Page Text").GetComponent<Text>();
-        rightText = this.gameObject.transform.Find("Right Page Text").GetComponent<Text>();
-        previousButton = this.gameObject.transform.Find("Previous Page Button").GetComponent<Button>();
-        nextButton = this.gameObject.transform.Find("Next Page Button").GetComponent<Button>();
-        closeJournalButton = this.gameObject.transform.Find("Close Button").GetComponent<Button>();
-        toBattleButton = this.gameObject.transform.Find("To Battle Button").GetComponent<Button>();
+        setUIReferencesOnStart();
         this.setJournalText(journalText);
         updateText();
+    }
+
+    //Setup all the variables to elements of the UI if they are not already. Called from OnStart and also from Map_State_Storage_Script.loadMapState() 
+    public void setUIReferencesOnStart()
+    {
+        if (leftText == null)
+        {
+            leftText = this.gameObject.transform.Find("Left Page Text").GetComponent<Text>();
+            rightText = this.gameObject.transform.Find("Right Page Text").GetComponent<Text>();
+            previousButton = this.gameObject.transform.Find("Previous Page Button").GetComponent<Button>();
+            nextButton = this.gameObject.transform.Find("Next Page Button").GetComponent<Button>();
+            closeJournalButton = this.gameObject.transform.Find("Close Button").GetComponent<Button>();
+            toBattleButton = this.gameObject.transform.Find("To Battle Button").GetComponent<Button>();
+            Debug.Log(" " + toBattleButton.name);
+            leaveBattleSummaryButton = this.gameObject.transform.Find("Summary Exit Button").GetComponent<Button>();
+            Debug.Log(" " + leaveBattleSummaryButton.name);
+        }
     }
 
     // Update is called once per frame
@@ -64,14 +81,22 @@ public class Journal_Text_Script : MonoBehaviour
     //Called from Map_Icon_Script and from JournalButton's OnCLick()(created in this.createJournalButtons). 
     public void setJournalScenario(string scenarioName)
     {
+        leaveBattleSummaryButton.gameObject.SetActive(false);
+        leaveBattleSummaryButton.onClick.RemoveAllListeners();
+
         if (scenarioName.StartsWith("BATTLE_"))
         {
             loadBattleScreen(scenarioName.Substring(7));
+        }
+        else if (scenarioName.StartsWith("POST_BATTLE_SCREEN"))
+        {
+            loadPostBattleScreen();
         }
         else //else load the scenario text
         {
             this.journalText = Scenarios_Database_Script.findScenario(scenarioName).journelText;
             this.journalText = processEffectsMarkup(this.journalText);
+            this.journalText = moveExitButtonMarkupToEndOfText(this.journalText);
             this.journalPages = this.journalText.Split(new string[] { "[PAGE BREAK]" }, System.StringSplitOptions.None);
         }
         pageNumber = 0;
@@ -151,7 +176,21 @@ public class Journal_Text_Script : MonoBehaviour
             text = text.Remove(startOfMarkup, (endOfAmount + 1) - startOfMarkup);
             text += ("\n" + record);
         }
-        Debug.Log("Super Stuffs " + text);
+
+        Debug.Log("Effects Markup successfully converted to text: " + text);
+        return text;
+    }
+
+    //Moves the exit button markup so that it is always at the end of the text.
+    private string moveExitButtonMarkupToEndOfText(string journalTextin)
+    {
+        string text = journalTextin;
+        if (text.Contains("[EXIT BUTTON]"))
+        {
+            text = text.Replace("[EXIT BUTTON]", "");
+            text += "\n[EXIT BUTTON]";
+            Debug.Log("Moved [EXIT BUTTON] Markup to end of text. " + text);
+        }
         return text;
     }
 
@@ -313,6 +352,7 @@ public class Journal_Text_Script : MonoBehaviour
         int newLine = text.Substring(0, charIndex).Split('\n').Length - 1; // new lines in rich text do not produce vertixes, so this is not necessary
         int whiteSpace = text.Substring(0, charIndex).Split(' ').Length - 1; // likewise white space in rich text does not produce vertixes.
         int indexOfTextQuad = charIndex * 4; //(charIndex * 4) + (newLine * 4) - 4;
+        Debug.LogWarning("Bounds Detected: indexOfTextQuad: " + indexOfTextQuad + " and textGen.VertexCount: " + textGen.vertexCount);
         if (indexOfTextQuad < textGen.vertexCount)
         {
             Debug.Log("Verts = " + textGen.verts[indexOfTextQuad].position + " + " + textGen.verts[indexOfTextQuad + 1].position + " + " + textGen.verts[indexOfTextQuad + 2].position + " + " + textGen.verts[indexOfTextQuad + 3].position + " + ");
@@ -354,12 +394,22 @@ public class Journal_Text_Script : MonoBehaviour
         this.updateText();
     }
 
-    //Loads the battle screen a populates it with details(number of enemies and composition) about the horde with the matching hordeName.
+    //Loads the battle screen and populates it with details(number of enemies and composition) about the horde with the matching hordeName.
+    //Battle Encounter Names use the format: BATTLE_hordeName[_]postBattleScenarioName, while this method receives hordeName[_]postBattleScenarioName
     //Also loads the "To Battle" button that will take the user to the battle scene.
-    public void loadBattleScreen(string hordeName)
+    public void loadBattleScreen(string hordeName_postBattleScenario)
     {
         this.journalPages = this.journalText.Split(new string[] { "[PAGE BREAK]" }, System.StringSplitOptions.None);
+        string hordeName = hordeName_postBattleScenario.Split(new string[1]{ "[_]" }, System.StringSplitOptions.None)[0];
+        string postScenarioName = "";
+        if (hordeName_postBattleScenario.Contains("[_]"))
+        {
+            postScenarioName = hordeName_postBattleScenario.Split(new string[1] { "[_]" }, System.StringSplitOptions.None)[1];
+        }
+        
         Enemy_Spawning_Script.Horde horde = Enemy_Spawning_Script.findHorde(hordeName);
+        Enemy_Spawning_Script.setCurrentPostBattleScenarioName(postScenarioName);
+        Enemy_Spawning_Script.resetBattleStatVariables();
         string battleText = this.preBattleText;
         battleText = battleText.Replace("[SIZE]", "" + horde.getTotalSize());
 
@@ -379,6 +429,45 @@ public class Journal_Text_Script : MonoBehaviour
         this.setJournalText(battleText);
         currentBattleName = hordeName;
         toBattleButton.gameObject.SetActive(true);
+    }
+
+    //Loads the post battle screen and populates it with details about the previous battle.
+    //Also loads the button that will take the user to the scenario that was set to occur after the battle.
+    public void loadPostBattleScreen()
+    {
+        this.journalPages = this.journalText.Split(new string[] { "[PAGE BREAK]" }, System.StringSplitOptions.None);
+        string battleText = this.postBattleText;
+        string postBattleScenarioName = Enemy_Spawning_Script.getCurrentPostBattleScenarioName();
+        battleText = battleText.Replace("[KILLS]", "Enemies Slain: " + Enemy_Spawning_Script.getBattleStat_Kills());
+        battleText = battleText.Replace("[ENERGY SPENT]", "Energy Spent: " + Enemy_Spawning_Script.getBattleStat_EnergySpent());
+        battleText = battleText.Replace("[ENERGY GAINED]", "Energy Gained: " + Enemy_Spawning_Script.getBattleStat_EnergyEarned());
+        battleText = battleText.Replace("[AMMO SPENT]", "Ammo Expended: " + Enemy_Spawning_Script.getBattleStat_AmmoSpent());
+        battleText = battleText.Replace("[DAMAGE TAKEN]", "Necromancer Damage Taken: " + Enemy_Spawning_Script.getBattleStat_NecromancerDamageTaken());
+
+        string minionText = "";
+        if (Enemy_Spawning_Script.getBattleStat_NewMinions().Count > 0)
+        {
+            minionText = "New Minions: ";
+            foreach(string aMinion in Enemy_Spawning_Script.getBattleStat_NewMinions())
+            {
+                minionText += "\n" + aMinion;
+            }
+            
+        }
+        battleText = battleText.Replace("[MINIONS GAINED]", minionText);
+
+        this.setJournalText(battleText);
+        leaveBattleSummaryButton.gameObject.SetActive(true);
+        if (postBattleScenarioName == "")
+        {
+            leaveBattleSummaryButton.onClick.AddListener(() => hideJournel());
+        }
+        else
+        {
+            leaveBattleSummaryButton.onClick.AddListener(() => setJournalScenario(postBattleScenarioName));
+        }
+        //currentBattleName = hordeName;
+        //toBattleButton.gameObject.SetActive(true);
     }
 
     public void showJournel()
@@ -402,6 +491,8 @@ public class Journal_Text_Script : MonoBehaviour
         nextButton.gameObject.SetActive(false);
         closeJournalButton.gameObject.SetActive(false);
         toBattleButton.gameObject.SetActive(false);
+        leaveBattleSummaryButton.gameObject.SetActive(false);
+        leaveBattleSummaryButton.onClick.RemoveAllListeners();
 
         foreach (Transform journalInTextButton in rightText.transform)
         {

@@ -68,6 +68,7 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
         if (noEnemyBeingConverted)
         {
             Player_Inventory_Script.addPlayersDarkEnergy(darkEnergyIn);
+            Enemy_Spawning_Script.addBattleStat_EnergyEarned(darkEnergyIn);
         }
     }
 }

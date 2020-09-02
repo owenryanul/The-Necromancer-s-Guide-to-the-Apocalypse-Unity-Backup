@@ -460,6 +460,7 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     public void die()
     {
         Dark_Energy_Meter_Script.addDarkEnergyOnEnemySlain(this.energyRewardOnKill, this.gameObject);
+        Enemy_Spawning_Script.addBattleStat_Kills(1);
         isDying = true;
         rigAnimator.SetBool("IsDying", isDying);
         this.gameObject.GetComponent<Collider2D>().enabled = false;
