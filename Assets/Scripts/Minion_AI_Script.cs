@@ -796,6 +796,7 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         {
             //Trigger Game Over
             Debug.LogWarning("Game Over");
+            Enemy_Spawning_Script.resetSpawnVariables();
             SceneManager.LoadScene("Game Over Scene");
         }
         else

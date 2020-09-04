@@ -46,18 +46,17 @@ public class Enemy_Spawning_Script : MonoBehaviour
             instance = this;
             resetSpawnVariables();
             resetBattleStatVariables();
-
             loadAllHordesFromFiles();
         }
     }
 
-    private void resetSpawnVariables()
+    public static void resetSpawnVariables()
     {
-        currentSpawnCooldown = 0;
-        currentWaveCount = 0;
-        hordeIsReadyToSpawn = false;
-        hordeIsSpawning = false;
-        hordeHasSpawnedAllEnemies = false;
+        instance.currentSpawnCooldown = 0;
+        instance.currentWaveCount = 0;
+        instance.hordeIsReadyToSpawn = false;
+        instance.hordeIsSpawning = false;
+        instance.hordeHasSpawnedAllEnemies = false;
     }
 
     public static void resetBattleStatVariables()
@@ -258,7 +257,7 @@ public class Enemy_Spawning_Script : MonoBehaviour
     //Returns the player to the map screen
     public static void returnToMap()
     {
-        instance.resetSpawnVariables();
+        resetSpawnVariables();
         Minion_Roster_Script.flagAllMinionsAsSummoned(false); //mark all minions as unsummoned
         Stat_Tracking_Script.addBattlesWonStat();
         SceneManager.LoadSceneAsync("Map Scene", LoadSceneMode.Single);
