@@ -10,6 +10,9 @@ public class Map_State_Storage_Script : MonoBehaviour
     public List<MapNodeSaveState> nodeSaveData;
     private bool resetSaveState;
 
+    public GameObject mapNode_Building;
+    public GameObject mapNode_Crypt;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,11 +22,6 @@ public class Map_State_Storage_Script : MonoBehaviour
             instance.resetSaveState = false;
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
-    }
-
-    void Update()
-    {
-        //SceneManager.sceneLoaded += OnSceneLoaded;  
     }
 
     //OnSceneLoaded Listener. When the Map Scene is loaded it will try will trigger either map state loading or map generation depending ont eh state of the resetSaveState flag.
@@ -47,12 +45,16 @@ public class Map_State_Storage_Script : MonoBehaviour
     //Save the current state of the map
     public void saveMapState()
     {
+        Debug.Log("Saving Map State");
         nodeSaveData = new List<MapNodeSaveState>();
         GameObject[] nodes = GameObject.FindGameObjectsWithTag("Map Node");
         foreach(GameObject aNode in nodes)
         {
             MapNodeSaveState save = new MapNodeSaveState();
+            save.nodePosition = aNode.transform.position;
+            save.nodeIcon = aNode.GetComponent<Map_Icon_Script>().icon;
             save.mapNodeID = aNode.GetComponent<Map_Icon_Script>().nodeID;
+            save.scenarioName = aNode.GetComponent<Map_Icon_Script>().scenarioName;
             save.currentState = aNode.GetComponent<Map_Icon_Script>().currentState;
             save.linkedNodeIDs = aNode.GetComponent<Map_Icon_Script>().linkedMapIconIDs;
             nodeSaveData.Add(save);
@@ -62,17 +64,27 @@ public class Map_State_Storage_Script : MonoBehaviour
     //Load the previously saved state of the map and apply it to the map
     public void loadMapState()
     {
-        Debug.Log("Loading Map State");
+        foreach (GameObject anOldNode in GameObject.FindGameObjectsWithTag("Map Node"))
+        {
+            Destroy(anOldNode);
+        }
+
+        Debug.Log("Loading Map State " + nodeSaveData.Count);
         foreach(MapNodeSaveState aSave in nodeSaveData)
         {
-            GameObject aNode = findNodeByID(aSave.mapNodeID);
+            //GameObject aNode = findNodeByID(aSave.mapNodeID);
+            GameObject aNode = instaniateNodeFromSaveState(aSave);
+            aNode.GetComponent<Map_Icon_Script>().nodeID = aSave.mapNodeID;
+            aNode.GetComponent<Map_Icon_Script>().scenarioName = aSave.scenarioName;
             aNode.GetComponent<Map_Icon_Script>().currentState = aSave.currentState;
             aNode.GetComponent<Map_Icon_Script>().linkedMapIconIDs = aSave.linkedNodeIDs;
-            if(aSave.currentState == Map_Icon_Script.MapNodeState.current)
+
+            if (aSave.currentState == Map_Icon_Script.MapNodeState.current)
             {
                 GameObject.FindGameObjectWithTag("Player Map Marker").GetComponent<Player_Map_Marker>().setCurrentMapNode(aNode);
             }
         }
+        drawAllNodeLinkLines();
 
         Journal_Text_Script journalScript = GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>();
         journalScript.setUIReferencesOnStart(); //make sure the ui variables are instaniated as start() seems to be running too late to do it
@@ -84,6 +96,7 @@ public class Map_State_Storage_Script : MonoBehaviour
     public void generateMap()
     {
         Debug.Log("Generating Map");
+        generatePreAlphaMap();
         //Add map generation code here.
     }
 
@@ -93,11 +106,46 @@ public class Map_State_Storage_Script : MonoBehaviour
         instance.resetSaveState = true;
     }
 
+    private void generatePreAlphaMap()
+    {
+        foreach(GameObject anOldNode in GameObject.FindGameObjectsWithTag("Map Node"))
+        {
+            Destroy(anOldNode);
+        }
+
+        int IDindex = 0;
+        GameObject node1 = createMapNode(mapNode_Crypt, new Vector3(0, 0, 0), "Scenario_Test_Crypt", ref IDindex, Map_Icon_Script.MapNodeState.current);
+        GameObject node2 = createMapNode(mapNode_Building, new Vector3(3, 0, 0), "Scenario_Test_3", ref IDindex);
+        GameObject node3 = createMapNode(mapNode_Building, new Vector3(6, 3, 0), "BATTLE_No Battle[_]Scenario_PostBattle_Test", ref IDindex);
+        linkNodes(node1, node2);
+        linkNodes(node2, node3);
+        drawAllNodeLinkLines();
+
+        GameObject.FindGameObjectWithTag("Player Map Marker").GetComponent<Player_Map_Marker>().setCurrentMapNode(node1);
+    }
+
+    private void linkNodes(GameObject node1, GameObject node2)
+    {
+        node1.GetComponent<Map_Icon_Script>().linkedMapIconIDs.Add(node2.GetComponent<Map_Icon_Script>().nodeID);
+        node2.GetComponent<Map_Icon_Script>().linkedMapIconIDs.Add(node1.GetComponent<Map_Icon_Script>().nodeID);
+    }
+
+    private GameObject createMapNode(GameObject prefab, Vector3 position, string scenarioName, ref int IDindex, Map_Icon_Script.MapNodeState state = Map_Icon_Script.MapNodeState.unvisited)
+    {
+        GameObject newNode = Instantiate(prefab, position, prefab.transform.rotation);
+        newNode.GetComponent<Map_Icon_Script>().nodeID = "MapNode_" + IDindex;
+        newNode.GetComponent<Map_Icon_Script>().scenarioName = scenarioName;
+        newNode.GetComponent<Map_Icon_Script>().currentState = state;
+        IDindex++;
+        return newNode;
+    }
+
     //Returns a Map marker Node with the matching NodeID assigned to it
     public GameObject findNodeByID(string aID)
     {
         foreach(GameObject aNode in GameObject.FindGameObjectsWithTag("Map Node"))
         {
+            Debug.Log("Finding Node by id:" + aID + " a nodeID: " + aNode.GetComponent<Map_Icon_Script>().nodeID);
             if(aNode.GetComponent<Map_Icon_Script>().nodeID == aID)
             {
                 return aNode;
@@ -106,10 +154,41 @@ public class Map_State_Storage_Script : MonoBehaviour
         return null;
     }
 
+    //Takes a Node save data and instaniates it as an object by using the prefab that matches the icon stored in the save data.
+    private GameObject instaniateNodeFromSaveState(MapNodeSaveState aSave)
+    {
+        if (aSave.nodeIcon == mapNode_Building.GetComponent<Map_Icon_Script>().icon)
+        {
+            return Instantiate(mapNode_Building, aSave.nodePosition, mapNode_Building.transform.rotation);
+        }
+        else if (aSave.nodeIcon == mapNode_Crypt.GetComponent<Map_Icon_Script>().icon)
+        {
+            return Instantiate(mapNode_Crypt, aSave.nodePosition, mapNode_Crypt.transform.rotation);
+        }
+        else
+        {
+            //Default instanciate as Crypt Node(indicating that something is wrong as there should really only be one crypt node)
+            return Instantiate(mapNode_Crypt, aSave.nodePosition, mapNode_Crypt.transform.rotation);
+        }
+    }
+
+    private void drawAllNodeLinkLines()
+    {
+        foreach(GameObject aNode in GameObject.FindGameObjectsWithTag("Map Node"))
+        {
+            aNode.GetComponent<Map_Icon_Script>().drawLineToLinkedNodes();
+        }
+    }
+
     //Save data for a Map Marker. This class is used for storing the data on a map node when switching to and from the map scene.
+    //Note: InstatiateNodeFromSave() is used to create Node Objects from the save instead of storing a copy of the original gameObject as storing a
+    //  game object as a variable in MapNodeSaveState would only store a reference to the original rather than a copy.
     public class MapNodeSaveState
     {
+        public Vector3 nodePosition;
+        public Sprite nodeIcon;
         public string mapNodeID; //the id string of the map node
+        public string scenarioName;
         public List<string> linkedNodeIDs; //the ID of map nodes connected to this node
         public Map_Icon_Script.MapNodeState currentState; //the current state of the map node (current/unvisited/visited)
     }

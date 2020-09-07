@@ -72,6 +72,13 @@ public class Weapon_Database_Script : MonoBehaviour
         }
     }
 
+    public static WeaponID parseWeaponID(string inString)
+    {
+        WeaponID id = (WeaponID)System.Enum.Parse(typeof(WeaponID), inString, true);
+        Debug.LogWarning("Weapon ID" + id);
+        return id;
+    }
+
     public enum WeaponID
     {
         custom, //custom is a unique Weapon ID used for prototyping.

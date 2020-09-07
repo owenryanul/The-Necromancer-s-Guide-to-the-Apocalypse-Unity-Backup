@@ -38,7 +38,7 @@ public class Map_Icon_Script : MonoBehaviour
     {
         inventoryUI = GameObject.FindGameObjectWithTag("Inventory UI").GetComponent<Inventory_UI_Script>();
         hasDrawnLinks = false;
-        drawLineToLinkedNodes();
+        //drawLineToLinkedNodes();
     }
 
     // Update is called once per frame
@@ -48,7 +48,7 @@ public class Map_Icon_Script : MonoBehaviour
     }
 
     //Draw a line on the map that connects nodes that can be moved to from this node
-    private void drawLineToLinkedNodes()
+    public void drawLineToLinkedNodes()
     {
         foreach(GameObject aNode in GameObject.FindGameObjectsWithTag("Map Node"))
         {

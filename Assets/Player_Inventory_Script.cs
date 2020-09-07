@@ -85,16 +85,6 @@ public class Player_Inventory_Script : MonoBehaviour
         instance.minions.Add(minionIn);
     }
 
-    public static List<WeaponEntry> getPlayerWeapons()
-    {
-        return instance.weapons;
-    }
-
-    public static void setPlayerWeapons(List<WeaponEntry> weaponIDIn)
-    {
-        instance.weapons = weaponIDIn;
-    }
-
     public static MinionEntry findMinion(string minionId)
     {
         foreach(MinionEntry aEntry in instance.minions)
@@ -119,6 +109,16 @@ public class Player_Inventory_Script : MonoBehaviour
             }
         }
         Debug.LogError("Warning no minion found in user's inventory with minionID = " + minionToReplaceID);
+    }
+
+    public static List<WeaponEntry> getPlayerWeapons()
+    {
+        return instance.weapons;
+    }
+
+    public static void setPlayerWeapons(List<WeaponEntry> weaponIDIn)
+    {
+        instance.weapons = weaponIDIn;
     }
 
     //Add the weapon to the player's inventory, increasing the quanity if they already own one of the weapon, or adding a brand new weapon entry to the list if they did not already possess it.

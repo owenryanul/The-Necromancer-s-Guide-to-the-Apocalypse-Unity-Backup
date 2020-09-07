@@ -538,7 +538,7 @@ public class Inventory_UI_Script : MonoBehaviour
             weaponInfo += "Damage: " + aWeapon.meleeWeaponDamage;
             weaponInfo += "\tRange: (Melee)" + aWeapon.weaponRange.Length;
             weaponInfo += "\nAttack Speed: " + aWeapon.weaponAttackCooldown;
-            weaponInfo += "\tFlinch Chance: " + "TODO Implement this";
+            weaponInfo += "\tFlinch Chance: " + "WIP";
         }
         else
         {
@@ -546,9 +546,9 @@ public class Inventory_UI_Script : MonoBehaviour
             weaponInfo += "\tRange: " + aWeapon.weaponRange.Length;
             weaponInfo += "\nSpread: TODO display this";
             weaponInfo += "\nAttack Speed: " + aWeapon.weaponAttackCooldown;
-            weaponInfo += "\tProjectile Speed: " + aWeapon.weaponProjectile.GetComponent<Projectile_Logic_Script>().speed;
-            weaponInfo += "\nFlinch Chance: " + "TODO Implement this";
-            weaponInfo += "\tPunch-through: " + "TODO Implement this";
+            weaponInfo += "\nProjectile Speed: " + aWeapon.weaponProjectile.GetComponent<Projectile_Logic_Script>().speed;
+            weaponInfo += "\nFlinch Chance: " + "WIP";
+            weaponInfo += "\tPunch-through: " + "WIP";
         }
 
 

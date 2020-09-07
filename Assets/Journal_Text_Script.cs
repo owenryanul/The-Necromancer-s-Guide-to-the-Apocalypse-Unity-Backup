@@ -144,7 +144,7 @@ public class Journal_Text_Script : MonoBehaviour
 
     //Process markup for the effects of a scenario on the player's resources, this changes the users resources 
     //and compiles all of the effects into a list at the end of a the scenario text.
-    //Uses the markup [EFFECT](Keyword){amount}: e.g. [EFFECT](ADD_AMMO){12}
+    //Uses the markup [EFFECT](Keyword){amount/weapeonID}: e.g. [EFFECT](ADD_AMMO){12} 
     private string processEffectsMarkup(string journalTextin)
     {
         string text = journalTextin;
@@ -152,6 +152,7 @@ public class Journal_Text_Script : MonoBehaviour
         {
             text += "[PAGE BREAK] Effects:\n";
         }
+
         while(text.Contains("[EFFECT]"))
         {
             int startOfMarkup = text.IndexOf("[EFFECT]");
@@ -163,18 +164,18 @@ public class Journal_Text_Script : MonoBehaviour
             string effect = text.Substring(startOfKeyword + 1, endOfKeyword - (startOfKeyword + 1));
             string amountString = text.Substring(startOfAmount + 1, endOfAmount - (startOfAmount + 1));
             Debug.Log("amountString = " + amountString);
-            int amount = int.Parse(amountString);
             string record = "";
             switch(effect)
             {
-                case "ADD_AMMO": Player_Inventory_Script.addPlayersAmmo(amount); record = ("Gained " + amount + " Ammo"); break;
-                case "SUB_AMMO": Player_Inventory_Script.addPlayersAmmo(-amount); record = ("Lost " + amount + " Ammo"); break;
-                case "ADD_ENERGY": Player_Inventory_Script.addPlayersDarkEnergy(amount); record = ("Gained " + amount + " Dark Energy"); break;
-                case "SUB_ENERGY": Player_Inventory_Script.addPlayersDarkEnergy(-amount); record = ("Lost " + amount + " Dark Energy"); break;
+                case "ADD_AMMO": Player_Inventory_Script.addPlayersAmmo(int.Parse(amountString)); record = ("Gained " + amountString + " Ammo"); break;
+                case "SUB_AMMO": Player_Inventory_Script.addPlayersAmmo(-int.Parse(amountString)); record = ("Lost " + amountString + " Ammo"); break;
+                case "ADD_ENERGY": Player_Inventory_Script.addPlayersDarkEnergy(int.Parse(amountString)); record = ("Gained " + amountString + " Dark Energy"); break;
+                case "SUB_ENERGY": Player_Inventory_Script.addPlayersDarkEnergy(-int.Parse(amountString)); record = ("Lost " + amountString + " Dark Energy"); break;
+                case "ADD_WEAPON": Weapon_Database_Script.WeaponID foundWeaponID = Weapon_Database_Script.parseWeaponID(amountString); Player_Inventory_Script.addWeapon(foundWeaponID); record = ("Found weapon: " + Weapon_Database_Script.findWeapon(foundWeaponID).name); break; 
                 default: Debug.LogWarning("Effects markup keyword: " + effect + " not recognised. Check your journal markup for the current scenario."); break;
             }
             text = text.Remove(startOfMarkup, (endOfAmount + 1) - startOfMarkup);
-            text += ("\n" + record);
+            text += ("\n" + record); //append effect text to end of entry.
         }
 
         Debug.Log("Effects Markup successfully converted to text: " + text);
