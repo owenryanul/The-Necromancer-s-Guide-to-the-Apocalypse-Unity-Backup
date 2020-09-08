@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Enemy_Spawning_Script), true)]
+[CustomEditor(typeof(Enemy_Spawning_And_Horde_Manager_Script), true)]
 [CanEditMultipleObjects]
 public class EnemySpawningEditor : Editor
 {

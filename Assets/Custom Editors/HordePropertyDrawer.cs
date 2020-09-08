@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(Enemy_Spawning_Script.Horde))]
+[CustomPropertyDrawer(typeof(Enemy_Spawning_And_Horde_Manager_Script.Horde))]
 public class HordePropertyDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect pos, SerializedProperty prop, GUIContent label)
