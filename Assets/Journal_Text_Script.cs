@@ -35,7 +35,7 @@ public class Journal_Text_Script : MonoBehaviour
 
     private Button leaveBattleSummaryButton;
 
-    private string buttonMarkupReplacementText = ""; //TODO: Design a more elegant solution to this.
+    private string buttonMarkupReplacementText = "\n"; //TODO: Design a more elegant solution to this.
 
     // Start is called before the first frame update
     void Start()
@@ -96,7 +96,7 @@ public class Journal_Text_Script : MonoBehaviour
         {
             this.journalText = Scenarios_Database_Script.findScenario(scenarioName).journelText;
             this.journalText = processEffectsMarkup(this.journalText);
-            this.journalText = moveExitButtonMarkupToEndOfText(this.journalText);
+            this.journalText = moveExitButtonMarkupToEndOfText(this.journalText); //Note: this is to circumvent the seemingly arcane and random reasons that cause findCharPositionOnScreen() to fail when parsing [EXIT_BUTTON] markup.
             this.journalPages = this.journalText.Split(new string[] { "[PAGE BREAK]" }, System.StringSplitOptions.None);
         }
         pageNumber = 0;
@@ -186,11 +186,11 @@ public class Journal_Text_Script : MonoBehaviour
     private string moveExitButtonMarkupToEndOfText(string journalTextin)
     {
         string text = journalTextin;
-        if (text.Contains("[EXIT BUTTON]"))
+        if (text.Contains("[EXIT_BUTTON]"))
         {
-            text = text.Replace("[EXIT BUTTON]", "");
-            text += "\n[EXIT BUTTON]";
-            Debug.Log("Moved [EXIT BUTTON] Markup to end of text. " + text);
+            text = text.Replace("[EXIT_BUTTON]", "");
+            text += "\n[EXIT_BUTTON]";
+            Debug.Log("Moved [EXIT_BUTTON] Markup to end of text. " + text);
         }
         return text;
     }
@@ -254,24 +254,24 @@ public class Journal_Text_Script : MonoBehaviour
         }
     }
 
-    //Replaces [EXIT BUTTON] markup with a button.
-    //example markup: [EXIT BUTTON]
+    //Replaces [EXIT_BUTTON] markup with a button.
+    //example markup: [EXIT_BUTTON]
     private void createExitButtons()
     {
         //TODO: Add Error checking
 
-        int numberOfButtonMarkups = leftText.text.Split(new string[] { "[EXIT BUTTON]" }, System.StringSplitOptions.None).Length - 1;
+        int numberOfButtonMarkups = leftText.text.Split(new string[] { "[EXIT_BUTTON]" }, System.StringSplitOptions.None).Length - 1;
         for (int i = 0; i < numberOfButtonMarkups; i++)
         {
             //Parse Markup to collect: index of markup, name of the scenario the button leads to, text on the button. 
-            int startOfButtonMarkup = leftText.text.IndexOf("[EXIT BUTTON]");
-            int endOfButtonMarkup = leftText.text.IndexOf("[EXIT BUTTON]") + 12;
+            int startOfButtonMarkup = leftText.text.IndexOf("[EXIT_BUTTON]");
+            int endOfButtonMarkup = leftText.text.IndexOf("[EXIT_BUTTON]") + 12;
 
             string buttonText = "Move On";
 
             //Build Button
             GameObject button = Instantiate(pageButtonPrefab, leftText.gameObject.transform);
-            button.transform.localPosition = getCharPositionOnScreen(leftText, startOfButtonMarkup);
+            button.transform.localPosition = getCharPositionOnScreen(leftText, startOfButtonMarkup - 1); // -1 because: No logical reason but getCharPositionOnScreen errors out without -1, but only for [EXIT_BUTTON] and only under certain conditions. 
             button.GetComponentInChildren<Text>().text = buttonText;
             button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
 
@@ -281,18 +281,18 @@ public class Journal_Text_Script : MonoBehaviour
             leftText.text = leftText.text.Insert(startOfButtonMarkup, buttonMarkupReplacementText);
         }
 
-        numberOfButtonMarkups = rightText.text.Split(new string[] { "[EXIT BUTTON]" }, System.StringSplitOptions.None).Length - 1;
+        numberOfButtonMarkups = rightText.text.Split(new string[] { "[EXIT_BUTTON]" }, System.StringSplitOptions.None).Length - 1;
         for (int i = 0; i < numberOfButtonMarkups; i++)
         {
             //Parse Markup to collect: index of markup, name of the scenario the button leads to, text on the button. 
-            int startOfButtonMarkup = rightText.text.IndexOf("[EXIT BUTTON]");
-            int endOfButtonMarkup = rightText.text.IndexOf("[EXIT BUTTON]") + 12;
+            int startOfButtonMarkup = rightText.text.IndexOf("[EXIT_BUTTON]");
+            int endOfButtonMarkup = rightText.text.IndexOf("[EXIT_BUTTON]") + 12;
 
             string buttonText = "Move On";
 
             //Build Button
             GameObject button = Instantiate(pageButtonPrefab, rightText.gameObject.transform);
-            button.transform.localPosition = getCharPositionOnScreen(rightText, startOfButtonMarkup);
+            button.transform.localPosition = getCharPositionOnScreen(rightText, startOfButtonMarkup - 1); // -1 because: No logical reason but getCharPositionOnScreen errors out without -1, but only for [EXIT_BUTTON] and only under certain conditions. 
             button.GetComponentInChildren<Text>().text = buttonText;
             button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
 
@@ -333,7 +333,7 @@ public class Journal_Text_Script : MonoBehaviour
     private Vector3 getCharPositionOnScreen(Text textComp, int charIndex)
     {
         string text = textComp.text.ToString();
-        Debug.Log("getting char position of " + text[charIndex] + " at index " + charIndex);
+        Debug.Log("getting char position of " + text[charIndex] + " at index " + charIndex + "\n within text: " + text);
 
         if (charIndex >= text.Length)
         {
@@ -352,7 +352,7 @@ public class Journal_Text_Script : MonoBehaviour
 
         int newLine = text.Substring(0, charIndex).Split('\n').Length - 1; // new lines in rich text do not produce vertixes, so this is not necessary
         int whiteSpace = text.Substring(0, charIndex).Split(' ').Length - 1; // likewise white space in rich text does not produce vertixes.
-        int indexOfTextQuad = charIndex * 4; //(charIndex * 4) + (newLine * 4) - 4;
+        int indexOfTextQuad = (charIndex - 1) * 4; //(charIndex * 4) + (newLine * 4) - 4;
         Debug.LogWarning("Bounds Detected: indexOfTextQuad: " + indexOfTextQuad + " and textGen.VertexCount: " + textGen.vertexCount);
         if (indexOfTextQuad < textGen.vertexCount)
         {

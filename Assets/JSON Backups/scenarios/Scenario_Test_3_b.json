@@ -1,4 +1,4 @@
 {
     "name": "Scenario_Test_3_b",
-    "journelText": "Failure! The beings was not pleased with my response and departed.\n\n[PAGE BREAK] I found myself quite drained afterwards. So much so I must continue on the next page.\n\n[EFFECT](SUB_ENERGY){10}"
+    "journelText": "Failure! The beings was not pleased with my response and departed.\n\n[PAGE BREAK] I found myself quite drained afterwards. So much so I must continue on the next page.\n\n[EFFECT](SUB_ENERGY){10}[EXIT_BUTTON]"
 }

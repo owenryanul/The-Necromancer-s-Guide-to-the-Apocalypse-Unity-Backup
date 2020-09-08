@@ -69,7 +69,7 @@ public class Map_State_Storage_Script : MonoBehaviour
             Destroy(anOldNode);
         }
 
-        Debug.Log("Loading Map State " + nodeSaveData.Count);
+        Debug.Log("Loading Map State ");
         foreach(MapNodeSaveState aSave in nodeSaveData)
         {
             //GameObject aNode = findNodeByID(aSave.mapNodeID);
@@ -84,8 +84,10 @@ public class Map_State_Storage_Script : MonoBehaviour
                 GameObject.FindGameObjectWithTag("Player Map Marker").GetComponent<Player_Map_Marker>().setCurrentMapNode(aNode);
             }
         }
+
         drawAllNodeLinkLines();
 
+        //Display the post battle screen
         Journal_Text_Script journalScript = GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>();
         journalScript.setUIReferencesOnStart(); //make sure the ui variables are instaniated as start() seems to be running too late to do it
         journalScript.loadPostBattleScreen();
@@ -117,19 +119,24 @@ public class Map_State_Storage_Script : MonoBehaviour
         GameObject node1 = createMapNode(mapNode_Crypt, new Vector3(0, 0, 0), "Scenario_Test_Crypt", ref IDindex, Map_Icon_Script.MapNodeState.current);
         GameObject node2 = createMapNode(mapNode_Building, new Vector3(3, 0, 0), "Scenario_Test_3", ref IDindex);
         GameObject node3 = createMapNode(mapNode_Building, new Vector3(6, 3, 0), "BATTLE_No Battle[_]Scenario_PostBattle_Test", ref IDindex);
+        GameObject node4 = createMapNode(mapNode_Building, new Vector3(6, -3, 0), "Scenario_Test_Exit", ref IDindex);
         linkNodes(node1, node2);
         linkNodes(node2, node3);
+        linkNodes(node2, node4);
+        linkNodes(node3, node4);
         drawAllNodeLinkLines();
 
         GameObject.FindGameObjectWithTag("Player Map Marker").GetComponent<Player_Map_Marker>().setCurrentMapNode(node1);
     }
 
+    //Marks 2 nodes as being linked to each other on the map. Nodes that are linked will have a line drawn between them and can be moved between.
     private void linkNodes(GameObject node1, GameObject node2)
     {
         node1.GetComponent<Map_Icon_Script>().linkedMapIconIDs.Add(node2.GetComponent<Map_Icon_Script>().nodeID);
         node2.GetComponent<Map_Icon_Script>().linkedMapIconIDs.Add(node1.GetComponent<Map_Icon_Script>().nodeID);
     }
 
+    //Create a map node and assign all the necessary variables to it's Map_Icon_Script component.
     private GameObject createMapNode(GameObject prefab, Vector3 position, string scenarioName, ref int IDindex, Map_Icon_Script.MapNodeState state = Map_Icon_Script.MapNodeState.unvisited)
     {
         GameObject newNode = Instantiate(prefab, position, prefab.transform.rotation);
@@ -172,6 +179,7 @@ public class Map_State_Storage_Script : MonoBehaviour
         }
     }
 
+    //Calls drawLineToLinkedNodes on all Map Nodes
     private void drawAllNodeLinkLines()
     {
         foreach(GameObject aNode in GameObject.FindGameObjectsWithTag("Map Node"))
