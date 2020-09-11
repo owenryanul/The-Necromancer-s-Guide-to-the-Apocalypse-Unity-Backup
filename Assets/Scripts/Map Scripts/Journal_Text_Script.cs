@@ -271,7 +271,7 @@ public class Journal_Text_Script : MonoBehaviour
 
             //Build Button
             GameObject button = Instantiate(pageButtonPrefab, leftText.gameObject.transform);
-            button.transform.localPosition = getCharPositionOnScreen(leftText, startOfButtonMarkup - 1); // -1 because: No logical reason but getCharPositionOnScreen errors out without -1, but only for [EXIT_BUTTON] and only under certain conditions. 
+            button.transform.localPosition = getCharPositionOnScreen(leftText, startOfButtonMarkup - 1, true); // -1 because: No logical reason but getCharPositionOnScreen errors out without -1, but only for [EXIT_BUTTON] and only under certain conditions. 
             button.GetComponentInChildren<Text>().text = buttonText;
             button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
 
@@ -292,7 +292,7 @@ public class Journal_Text_Script : MonoBehaviour
 
             //Build Button
             GameObject button = Instantiate(pageButtonPrefab, rightText.gameObject.transform);
-            button.transform.localPosition = getCharPositionOnScreen(rightText, startOfButtonMarkup - 1); // -1 because: No logical reason but getCharPositionOnScreen errors out without -1, but only for [EXIT_BUTTON] and only under certain conditions. 
+            button.transform.localPosition = getCharPositionOnScreen(rightText, startOfButtonMarkup - 1, true); // -1 because: No logical reason but getCharPositionOnScreen errors out without -1, but only for [EXIT_BUTTON] and only under certain conditions. 
             button.GetComponentInChildren<Text>().text = buttonText;
             button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
 
@@ -330,7 +330,7 @@ public class Journal_Text_Script : MonoBehaviour
 
 
     //Returns the local-position of the character at character index in the text.
-    private Vector3 getCharPositionOnScreen(Text textComp, int charIndex)
+    private Vector3 getCharPositionOnScreen(Text textComp, int charIndex, bool isExitButton = false)
     {
         string text = textComp.text.ToString();
         Debug.Log("getting char position of " + text[charIndex] + " at index " + charIndex + "\n within text: " + text);
@@ -352,7 +352,14 @@ public class Journal_Text_Script : MonoBehaviour
 
         int newLine = text.Substring(0, charIndex).Split('\n').Length - 1; // new lines in rich text do not produce vertixes, so this is not necessary
         int whiteSpace = text.Substring(0, charIndex).Split(' ').Length - 1; // likewise white space in rich text does not produce vertixes.
-        int indexOfTextQuad = (charIndex - 1) * 4; //(charIndex * 4) + (newLine * 4) - 4;
+         //Question: But loading the new lines from a .json, do newlines produce vertexs there?
+         //Answer: YES! But it only seems to be affecting exitbutton markup for some reason.
+
+        int indexOfTextQuad = ((charIndex - 1) * 4);
+        if (isExitButton)
+        {
+            indexOfTextQuad = ((charIndex - 1) * 4) - (whiteSpace * 4) - (newLine * 4); //Secondary Note: Will need to remove trailing /n's at the bottom of text as without a character after them to grab onto, the line breaks will actually push the button up the text
+        }
         Debug.LogWarning("Bounds Detected: indexOfTextQuad: " + indexOfTextQuad + " and textGen.VertexCount: " + textGen.vertexCount);
         if (indexOfTextQuad < textGen.vertexCount)
         {

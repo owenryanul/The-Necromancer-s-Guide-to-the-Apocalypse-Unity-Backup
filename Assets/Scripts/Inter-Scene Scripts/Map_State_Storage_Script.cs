@@ -117,6 +117,37 @@ public class Map_State_Storage_Script : MonoBehaviour
 
         int IDindex = 0;
         GameObject node1 = createMapNode(mapNode_Crypt, new Vector3(0, 0, 0), "Scenario_Test_Crypt", ref IDindex, Map_Icon_Script.MapNodeState.current);
+        GameObject node2 = createMapNode(mapNode_Building, new Vector3(2, 0, 0), "Scenario_PreAlpha_Intro", ref IDindex);
+        GameObject node3 = createMapNode(mapNode_Building, new Vector3(4, 0, 0), "Scenario_PreAlpha_MapTutorial", ref IDindex);
+        GameObject node4 = createMapNode(mapNode_Building, new Vector3(6, 0, 0), "Scenario_PreAlpha_BattleTutorial", ref IDindex);
+        GameObject node5 = createMapNode(mapNode_Building, new Vector3(8, 3, 0), "Scenario_PreAlpha_Minefield", ref IDindex);
+        GameObject node6 = createMapNode(mapNode_Building, new Vector3(8, -3, 0), "Scenario_PreAlpha_BuildingHorde", ref IDindex);
+        GameObject node7 = createMapNode(mapNode_Building, new Vector3(10, 3, 0), "Scenario_PreAlpha_FortifiedHouse", ref IDindex);
+        GameObject node8 = createMapNode(mapNode_Building, new Vector3(10, -3, 0), "Scenario_PreAlpha_HighwayHorde", ref IDindex);
+
+        linkNodes(node1, node2);
+        linkNodes(node2, node3);
+        linkNodes(node3, node4);
+        linkNodes(node4, node5);
+        linkNodes(node4, node6);
+        linkNodes(node5, node6);
+        linkNodes(node5, node7);
+        linkNodes(node6, node8);
+        linkNodes(node7, node8);
+        drawAllNodeLinkLines();
+
+        GameObject.FindGameObjectWithTag("Player Map Marker").GetComponent<Player_Map_Marker>().setCurrentMapNode(node1);
+    }
+
+    private void generateTestMap()
+    {
+        foreach (GameObject anOldNode in GameObject.FindGameObjectsWithTag("Map Node"))
+        {
+            Destroy(anOldNode);
+        }
+
+        int IDindex = 0;
+        GameObject node1 = createMapNode(mapNode_Crypt, new Vector3(0, 0, 0), "Scenario_Test_Crypt", ref IDindex, Map_Icon_Script.MapNodeState.current);
         GameObject node2 = createMapNode(mapNode_Building, new Vector3(3, 0, 0), "Scenario_Test_3", ref IDindex);
         GameObject node3 = createMapNode(mapNode_Building, new Vector3(6, 3, 0), "BATTLE_No Battle[_]Scenario_PostBattle_Test", ref IDindex);
         GameObject node4 = createMapNode(mapNode_Building, new Vector3(6, -3, 0), "Scenario_Test_Exit", ref IDindex);
