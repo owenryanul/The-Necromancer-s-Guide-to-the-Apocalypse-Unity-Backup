@@ -96,7 +96,7 @@ public class Journal_Text_Script : MonoBehaviour
         {
             this.journalText = Scenarios_Database_Script.findScenario(scenarioName).journelText;
             this.journalText = processEffectsMarkup(this.journalText);
-            this.journalText = moveExitButtonMarkupToEndOfText(this.journalText); //Note: this is to circumvent the seemingly arcane and random reasons that cause findCharPositionOnScreen() to fail when parsing [EXIT_BUTTON] markup.
+            //this.journalText = moveExitButtonMarkupToEndOfText(this.journalText); //Note: this is to circumvent the seemingly arcane and random reasons that cause findCharPositionOnScreen() to fail when parsing [EXIT_BUTTON] markup.
             this.journalPages = this.journalText.Split(new string[] { "[PAGE BREAK]" }, System.StringSplitOptions.None);
         }
         pageNumber = 0;
@@ -135,11 +135,11 @@ public class Journal_Text_Script : MonoBehaviour
             previousButton.enabled = true;
         }
 
-        if (leftText.text != "Badger\n")
-        {
+        //if (leftText.text != "Badger\n")
+        //{
             createJournalButtons();
-            createExitButtons();
-        }
+            //createExitButtons();
+        //}
     }
 
     //Process markup for the effects of a scenario on the player's resources, this changes the users resources 
@@ -189,7 +189,7 @@ public class Journal_Text_Script : MonoBehaviour
         if (text.Contains("[EXIT_BUTTON]"))
         {
             text = text.Replace("[EXIT_BUTTON]", "");
-            text += "\n[EXIT_BUTTON]";
+            text += "\n\n[EXIT_BUTTON]";
             Debug.Log("Moved [EXIT_BUTTON] Markup to end of text. " + text);
         }
         return text;
@@ -207,7 +207,7 @@ public class Journal_Text_Script : MonoBehaviour
             //Parse Markup to collect: index of markup, name of the scenario the button leads to, text on the button. 
             int startOfButtonMarkup = leftText.text.IndexOf("[BUTTON]");
             int endOfButtonMarkup = leftText.text.IndexOf("[BUTTON]") + 7;
-            int startOfScenarioName = leftText.text.IndexOf("(");
+            int startOfScenarioName = leftText.text.IndexOf("(", endOfButtonMarkup);
             int endOfScenarioName = leftText.text.IndexOf(")", startOfScenarioName);
             string scenarioName = leftText.text.Substring(startOfScenarioName + 1, endOfScenarioName - (startOfScenarioName + 1));
             int startOfButtonText = leftText.text.IndexOf("{", endOfScenarioName);
@@ -217,9 +217,17 @@ public class Journal_Text_Script : MonoBehaviour
 
             //Build Button
             GameObject button = Instantiate(pageButtonPrefab, leftText.gameObject.transform);
-            button.transform.localPosition = getCharPositionOnScreen(leftText, startOfButtonMarkup);
+            button.transform.localPosition = getCharPositionOnScreen(leftText, startOfButtonMarkup, true);
             button.GetComponentInChildren<Text>().text = buttonText;
-            button.GetComponent<Button>().onClick.AddListener(() => setJournalScenario(scenarioName));
+            if (scenarioName == "EXIT")
+            {
+                //Exit Button
+                button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
+            }
+            else
+            {
+                button.GetComponent<Button>().onClick.AddListener(() => setJournalScenario(scenarioName));
+            }
 
             //Remove Markup Text, so next iteration gets the next markup
             Debug.Log("Stuffs = " + leftText.text.Substring(startOfButtonMarkup, (endOfButtonText + 1) - startOfButtonMarkup));
@@ -233,7 +241,7 @@ public class Journal_Text_Script : MonoBehaviour
             //Parse Markup to collect: index of markup, name of the scenario the button leads to, text on the button.
             int startOfButtonMarkup = rightText.text.IndexOf("[BUTTON]");
             int endOfButtonMarkup = rightText.text.IndexOf("[BUTTON]") + 7;
-            int startOfScenarioName = rightText.text.IndexOf("(");
+            int startOfScenarioName = rightText.text.IndexOf("(", endOfButtonMarkup);
             int endOfScenarioName = rightText.text.IndexOf(")", startOfScenarioName);
             string scenarioName = rightText.text.Substring(startOfScenarioName + 1, endOfScenarioName - (startOfScenarioName + 1));
             int startOfButtonText = rightText.text.IndexOf("{", endOfScenarioName);
@@ -243,9 +251,17 @@ public class Journal_Text_Script : MonoBehaviour
 
             //Build Button
             GameObject button = Instantiate(pageButtonPrefab, rightText.gameObject.transform);
-            button.transform.localPosition = getCharPositionOnScreen(rightText, startOfButtonMarkup);
+            button.transform.localPosition = getCharPositionOnScreen(rightText, startOfButtonMarkup, true);
             button.GetComponentInChildren<Text>().text = buttonText;
-            button.GetComponent<Button>().onClick.AddListener(() => setJournalScenario(scenarioName));
+            if (scenarioName == "EXIT")
+            {
+                //Exit Button
+                button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
+            }
+            else
+            {
+                button.GetComponent<Button>().onClick.AddListener(() => setJournalScenario(scenarioName));
+            }
 
             //Remove Markup Text, so next iteration gets the next markup
             Debug.Log("Stuffs = " + rightText.text.Substring(startOfButtonMarkup, (endOfButtonText + 1) - startOfButtonMarkup));
@@ -341,6 +357,9 @@ public class Journal_Text_Script : MonoBehaviour
             return new Vector3(0, 0, 0); //Should really return Null, but can't
         }
 
+        text = text.Substring(0, charIndex + 1);
+        Debug.Log("Finding local character position on screen of the character at the end of : " + text);
+
         //Recreate text in a textGenerator
         TextGenerator textGen = new TextGenerator(text.Length);
         Vector2 extents = textComp.gameObject.GetComponent<RectTransform>().rect.size;
@@ -349,45 +368,21 @@ public class Journal_Text_Script : MonoBehaviour
         Debug.Log(text.Replace(" ", "").Replace("\n", "").Length + " chars (excluding whitespace and line breaks) with number of Vertexes = " + textGen.verts.Count);
         Debug.Log("First Vertex = " + textGen.verts[0].position);
 
+        //Get the average position of the 4 vertices that make up the letter
+        int indexOfLastCharVerts = (textGen.vertexCount - 1) - 3;
+        Debug.Log("Verts = " + textGen.verts[indexOfLastCharVerts].position + " + " + textGen.verts[indexOfLastCharVerts + 1].position + " + " + textGen.verts[indexOfLastCharVerts + 2].position + " + " + textGen.verts[indexOfLastCharVerts + 3].position);
+        Vector3 avgPos = (textGen.verts[indexOfLastCharVerts].position +
+                textGen.verts[indexOfLastCharVerts + 1].position +
+                textGen.verts[indexOfLastCharVerts + 2].position +
+                textGen.verts[indexOfLastCharVerts + 3].position) / 4.0f;
 
-        int newLine = text.Substring(0, charIndex).Split('\n').Length - 1; // new lines in rich text do not produce vertixes, so this is not necessary
-        int whiteSpace = text.Substring(0, charIndex).Split(' ').Length - 1; // likewise white space in rich text does not produce vertixes.
-         //Question: But loading the new lines from a .json, do newlines produce vertexs there?
-         //Answer: YES! But it only seems to be affecting exitbutton markup for some reason.
+        //Line breaks cause inconsistent shift to the right, lock the button to the left side(not an ideal solution)
+        avgPos = new Vector3(16.5f, avgPos.y);
+        //avgPos = new Vector3(avgPos.x, avgPos.y);
 
-        int indexOfTextQuad = ((charIndex - 1) * 4);
-        if (isExitButton)
-        {
-            indexOfTextQuad = ((charIndex - 1) * 4) - (whiteSpace * 4) - (newLine * 4); //Secondary Note: Will need to remove trailing /n's at the bottom of text as without a character after them to grab onto, the line breaks will actually push the button up the text
-        }
-        Debug.LogWarning("Bounds Detected: indexOfTextQuad: " + indexOfTextQuad + " and textGen.VertexCount: " + textGen.vertexCount);
-        if (indexOfTextQuad < textGen.vertexCount)
-        {
-            Debug.Log("Verts = " + textGen.verts[indexOfTextQuad].position + " + " + textGen.verts[indexOfTextQuad + 1].position + " + " + textGen.verts[indexOfTextQuad + 2].position + " + " + textGen.verts[indexOfTextQuad + 3].position + " + ");
-            
-            //Get the average position of the 4 vertices that make up the letter
-            Vector3 avgPos = (textGen.verts[indexOfTextQuad].position +
-                textGen.verts[indexOfTextQuad + 1].position +
-                textGen.verts[indexOfTextQuad + 2].position +
-                textGen.verts[indexOfTextQuad + 3].position) / 4.0f;
-
-            //Line breaks cause inconsistent shift to the right, lock the button to the left side(not an ideal solution)
-            avgPos = new Vector3(16.5f, avgPos.y);
-            //avgPos = new Vector3(avgPos.x, avgPos.y);
-
-            Debug.Log("avgPos of char, post bounds adjustment = " + avgPos);
-            //return textComp.transform.TransformPoint(avgPos);
-            return avgPos;
-        }
-        else
-        {
-            //5, 34, 101, 168, 229
-            //  29   67, 67, 61
-
-
-            Debug.LogError("Out of text bound: indexOfTextQuad: " + indexOfTextQuad + " exceeds textGen.VertexCount: " + textGen.vertexCount);
-            return new Vector3(0, 0, 0); //Should really return Null, but can't
-        }
+        Debug.Log("avgPos of char, post bounds adjustment = " + avgPos);
+        //return textComp.transform.TransformPoint(avgPos);
+        return avgPos;
     }
 
     public void nextPage()

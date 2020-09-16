@@ -121,9 +121,9 @@ public class Map_State_Storage_Script : MonoBehaviour
         GameObject node3 = createMapNode(mapNode_Building, new Vector3(4, 0, 0), "Scenario_PreAlpha_MapTutorial", ref IDindex);
         GameObject node4 = createMapNode(mapNode_Building, new Vector3(6, 0, 0), "Scenario_PreAlpha_BattleTutorial", ref IDindex);
         GameObject node5 = createMapNode(mapNode_Building, new Vector3(8, 3, 0), "Scenario_PreAlpha_Minefield", ref IDindex);
-        GameObject node6 = createMapNode(mapNode_Building, new Vector3(8, -3, 0), "Scenario_PreAlpha_BuildingHorde", ref IDindex);
+        GameObject node6 = createMapNode(mapNode_Building, new Vector3(8, -3, 0), "Scenario_PreAlpha_BuildingBattle", ref IDindex);
         GameObject node7 = createMapNode(mapNode_Building, new Vector3(10, 3, 0), "Scenario_PreAlpha_FortifiedHouse", ref IDindex);
-        GameObject node8 = createMapNode(mapNode_Building, new Vector3(10, -3, 0), "Scenario_PreAlpha_HighwayHorde", ref IDindex);
+        GameObject node8 = createMapNode(mapNode_Building, new Vector3(10, -3, 0), "Scenario_PreAlpha_Highway", ref IDindex);
 
         linkNodes(node1, node2);
         linkNodes(node2, node3);

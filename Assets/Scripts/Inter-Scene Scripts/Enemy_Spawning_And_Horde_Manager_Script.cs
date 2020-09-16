@@ -245,6 +245,7 @@ public class Enemy_Spawning_And_Horde_Manager_Script : MonoBehaviour
             }
         }
 
+        Debug.LogError("Could not find horde in database with name = " + inName);
         return null;
     }
 
