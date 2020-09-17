@@ -1,0 +1,12 @@
+/* To Add New Buff:
+     *      1. Add buff below.
+     *      2. Add BuffID to BuffID enum
+     *      3. Define the stats of the Buff in the inspector
+     */
+
+    /* To Add new Stats that a buff may effect:
+     *      1. Add the value to the Stats section above.
+     *      2. Add a buffOperator field for the stat.
+     *      3. Set the buffOperator field to unused in the buff constructor
+     *      4. Add appliance of this stat to Minion_Movement_Script.applyBuffToStat()
+     */

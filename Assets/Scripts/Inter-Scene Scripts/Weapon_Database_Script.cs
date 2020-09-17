@@ -58,7 +58,7 @@ public class Weapon_Database_Script : MonoBehaviour
 
     public Weapon findWeaponById(WeaponID inWeaponID)
     {
-        switch(inWeaponID)
+        switch (inWeaponID)
         {
             case WeaponID.Thrown_bone: return WEAPON_thrown_bone;
             case WeaponID.Unarmed_Melee: return WEAPON_Unarmed_Melee;
@@ -68,6 +68,7 @@ public class Weapon_Database_Script : MonoBehaviour
             case WeaponID.Wide_Unarmed_Melee: return WEAPON_wide_unarmed_melee;
             case WeaponID.Scrap_Hammer_Melee: return WEAPON_scrap_hammer_melee;
             case WeaponID.Revolver_Ranged: return WEAPON_revolver_ranged;
+            case WeaponID.Ranged_Shotgun: return WEAPON_Ranged_Shotgun;
             default: return null;
         }
     }
@@ -89,14 +90,18 @@ public class Weapon_Database_Script : MonoBehaviour
         Scatter_thrown_bone,
         Wide_Unarmed_Melee,
         Scrap_Hammer_Melee,
-        Revolver_Ranged
+        Revolver_Ranged,
+        Ranged_Shotgun
     }
-    
+
     /*  To Add New Weapon:
      *      1. Add Weapon Object below.
      *      2. Add WeaponID to WeaponID enum
      *      3. Add Weapon to findWeapon() method
      *      4. Add Projectiles in Inspector if necessary.
+     *      
+     *      Note: Weapons don't use a json database system as the sprites and projectile gameobject each weapon requires will be too
+     *      complicated to store as JSON.
      */
 
     public Weapon WEAPON_thrown_bone = new Weapon(WeaponID.Thrown_bone, "Throwing Bone", false, 1, 3, new int[3] { 0, 0, 0 }, " A weapon of last resort, your minion hurls a bone of unspecified type and origin at the on-coming foes. It's not one of their bones so its unclear where they're getting all these bones.");
@@ -107,5 +112,5 @@ public class Weapon_Database_Script : MonoBehaviour
     public Weapon WEAPON_wide_unarmed_melee = new Weapon(WeaponID.Wide_Unarmed_Melee, "Wide swings Unarmed attacks", true, 1, 0.1f, new int[1] { 1 }, "Flailing widely rather than wildly ensures that SEVERAL attackers are mildy inconvienced instead of just one.");
     public Weapon WEAPON_scrap_hammer_melee = new Weapon(WeaponID.Scrap_Hammer_Melee, "Scrap Hammer", true, 4, 0.1f, new int[1] { 0 }, "A lump of scrap metal on the end of a stick. A crude but effective melee weapon.");
     public Weapon WEAPON_revolver_ranged = new Weapon(WeaponID.Revolver_Ranged, "Revolver", false, 1, 1.0f, new int[3] { 0, 0, 0 }, "A short range fire arm. Exceedingly effective when applied to a necromancer's knee, as Andy insists on demostrating.");
-
+    public Weapon WEAPON_Ranged_Shotgun = new Weapon(WeaponID.Ranged_Shotgun, "Shotgun", false, 0, 1.0f, new int[2] { 1, 1 }, "A staple of the modern undead slayer, I am told, this thundering boom stick can strike targets in adjacent rows as well as its own.");
 }

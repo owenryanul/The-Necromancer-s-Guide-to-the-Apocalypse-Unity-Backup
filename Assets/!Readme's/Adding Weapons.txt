@@ -1,0 +1,14 @@
+To Add New Weapon:
+	 *		1. Add WeaponID to WeaponID enum in WeaponDatabase Script.
+     *      2. Add Public Weapon Object inside of the WeaponDatabase Script.
+     *      3. Add Weapon to findWeapon() method in WeaponDatabase Script.
+	 *		4. Tweak stats in inspector of WeaponDatabase.
+     *      5. Add Projectiles in Inspector of the WeaponDatabase if necessary.
+	 *		6. Tweak Projectile stats in the Weapon entry in the inspector of the WeaponDatabase.
+	 *		7. Set sprites in Weapon entry in Inspector of the WeaponDatabase.
+	 *		8. Set sprite offsets for equiped weapon and weapon portraits in the Weapon entry in the inspector of the WeaponDatabase.
+	 *		8. Apply WeaponDatabase Override to save changes across all instances of Level Script Container.
+     *      
+     *      Note: Weapons don't use a json database system as the sprites and projectile gameobject each weapon requires will be too
+     *      complicated to store as JSON.
+     */

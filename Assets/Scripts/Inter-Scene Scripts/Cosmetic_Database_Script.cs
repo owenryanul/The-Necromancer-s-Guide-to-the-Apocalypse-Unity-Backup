@@ -94,12 +94,15 @@ public class Cosmetic_Database_Script : MonoBehaviour
         Crazy_Paint
     }
 
-    /*  To Add New Weapon:
-     *      1. Add Weapon Object below.
-     *      2. Add WeaponID to WeaponID enum
-     *      3. Add Weapon to findWeapon() method
-     *      4. Add Projectiles in Inspector if necessary.
-     */
+    /*  To Add New Cosmetic:
+    *      1. Add Public Cosmetic Object in CosmeticDatabase script.
+    *      2. Add CosmeticID to CosmeticID enum in CosmeticDatabase script.
+    *       3. Add Cosmetic to findCosmetic() method in CosmeticDatabase script.
+    *      4. Set offsets in Cosmetic entry in inspector for CosmeticDatabase.
+    *
+    *      Note: Cosemtics don't use a json database system as the sprites that each cosmetic requires will be too
+    *      complicated to store as JSON.
+    */
 
     public Cosmetic COSMETIC_None = new Cosmetic(CosmeticID.None, "None", EquipSlot.all, new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));
     public Cosmetic COSMETIC_Red_Baseball_Cap = new Cosmetic(CosmeticID.Red_Baseball_Cap, "Red Baseball Cap", EquipSlot.hat, new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, 0));

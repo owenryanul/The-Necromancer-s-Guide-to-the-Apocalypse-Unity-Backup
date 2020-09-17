@@ -1,0 +1,9 @@
+    /*  To Add New Cosmetic:
+     *      1. Add Public Cosmetic Object in CosmeticDatabase script.
+     *      2. Add CosmeticID to CosmeticID enum in CosmeticDatabase script.
+     *      3. Add Cosmetic to findCosmetic() method in CosmeticDatabase script.
+     *      4. Set offsets in Cosmetic entry in inspector for CosmeticDatabase.
+	 *
+	 *      Note: Cosemtics don't use a json database system as the sprites that each cosmetic requires will be too
+     *      complicated to store as JSON.
+     */

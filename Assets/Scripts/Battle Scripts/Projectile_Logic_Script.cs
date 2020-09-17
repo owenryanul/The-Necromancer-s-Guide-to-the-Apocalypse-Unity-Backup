@@ -13,18 +13,22 @@ public class Projectile_Logic_Script : MonoBehaviour
     [Header("Movement")]
     public GameObject mySpace;
     private GameObject targetSpace;
-    public float speed = 1.0f;
+    [HideInInspector]
+    public float speed = 1.0f; //Speed will be set from the weapon in weapon database, this is a placeholder value
 
-    [Header("Damage")]
-    public int projectileDamage = 1;
+    //[Header("Damage")]
+    [HideInInspector]
+    public int projectileDamage = 1; //damage will be set from the weapon in weaponDatabase, this is a placeholder value
 
     [Header("Effects")]
     public ProjectileAnimation projectileAnimation;
     public GameObject deathParticles;
     public enum ProjectileAnimation
     {
+        none = 0,
         thrown_bullet = 1,
-        pistol1_bullet = 2
+        pistol1_bullet = 2,
+        shotgun1_bullet = 3
     }
 
     [Header("Scatter Projectile")]

@@ -112,8 +112,12 @@
     <Compile Include="Assets\Scripts\Map Scripts\Scenarios_Database_Script.cs" />
     <Compile Include="Assets\Scripts\Menu Scene Scripts\GameOverUI_Script.cs" />
     <Compile Include="Assets\Scripts\Menu Scene Scripts\MainMenu_UI_Script.cs" />
-    <None Include="Assets\TODO.txt.txt" />
+    <None Include="Assets\!Readme's\Adding Buff.txt" />
+    <None Include="Assets\!Readme's\TODO.txt.txt" />
     <None Include="Assets\Prefabs\Enemies\Other Enemy Prefabs are in Resources folder.txt" />
+    <None Include="Assets\!Readme's\Adding Cosmetics.txt" />
+    <None Include="Assets\!Readme's\Adding Ability.txt" />
+    <None Include="Assets\!Readme's\Adding Weapons.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Owen Ryan/Desktop/Projects/Unity Projects/Projects/The-Necromancer-s-Guide-to-the-Apocalypse-Unity/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

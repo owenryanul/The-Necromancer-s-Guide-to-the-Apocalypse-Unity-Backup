@@ -1,0 +1,20 @@
+{
+    "name": "PreAlpha Highway Horde2",
+    "waves": [
+		{
+            "spawnCooldown": 3.0,
+            "numberOfEnemiesInWave": 10,
+            "rollRemainderIntoNextWave": false,
+            "enemyPools": [
+                {
+                    "quantity": 10,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        }
+    ],
+    "tags": [
+        "PreAlpha", "Highway"
+    ]
+}

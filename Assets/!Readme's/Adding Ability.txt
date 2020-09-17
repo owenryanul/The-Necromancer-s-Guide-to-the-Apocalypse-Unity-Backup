@@ -1,0 +1,6 @@
+/*To Add New Ability:
+        1. Add public Ability entry in AbilityDatabase script
+        2. Add Ability to findAbility() method in AbilityDatabase script
+        3. Add CastNewAbility() method for new ability in AbilityDatabase script
+        4. Add that Cast method to the cast() method in AbilityDatabase script.
+    */

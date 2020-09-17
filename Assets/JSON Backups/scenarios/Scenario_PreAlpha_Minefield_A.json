@@ -1,4 +1,4 @@
 {
     "name": "Scenario_PreAlpha_Minefield_A",
-    "journelText": " My plan worked perfectly.  I lured my brainless foes into the minefield and was rewarded as they preceded to blunder into every single mine. Though there were no mines left by the end I could still cackle with glee at the results of my tactical masterstroke. Afterward I took a moment to siphon what dark energy I could from the gentle shower of limps raining down around us before we turned away and headed onwards. [EFFECT](ADD_ENERGY){50} [EXIT_BUTTON]"
+    "journelText": " My plan worked perfectly.  I lured my brainless foes into the minefield and was rewarded as they preceded to blunder into every single mine. Though there were no mines left by the end I could still cackle with glee at the results of my tactical masterstroke. Afterward I took a moment to siphon what dark energy I could from the gentle shower of limps raining down around us before we turned away and headed onwards. \n .[BUTTON](EXIT){Move On Boyo} [EFFECT](ADD_ENERGY){50}"
 }

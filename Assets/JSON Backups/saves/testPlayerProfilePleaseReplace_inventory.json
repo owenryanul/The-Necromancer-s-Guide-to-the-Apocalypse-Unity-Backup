@@ -214,6 +214,11 @@
             "weaponID": 1,
             "owned": 1,
             "equiped": 0
-        }
+        },
+		{
+			"weaponID": 9,
+			"owned": 1,
+			"equiped": 0
+		}
     ]
 }
