@@ -383,6 +383,7 @@ public class Inventory_UI_Script : MonoBehaviour
             button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
             assembleMinionPortrait(ref button, aEntry);
             button.GetComponent<Tooltip_Button_Script>().tooltip = aEntry.minionName;
+            button.GetComponentInChildren<Text>().text = aEntry.minionSummonCost + "";
             button.GetComponent<Button>().onClick.AddListener(() => viewMinionInLoadout(aEntry));
             button.GetComponent<Button>().enabled = true;
             button.transform.GetChild(1).GetComponent<Image>().enabled = false;

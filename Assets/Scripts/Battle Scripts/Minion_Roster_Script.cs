@@ -68,6 +68,7 @@ public class Minion_Roster_Script : MonoBehaviour
             button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
             assembleMinionPortrait(ref button, aEntry);
             button.GetComponent<Tooltip_Button_Script>().tooltip = "Summon " + aEntry.minionName + " (" + aEntry.minionSummonCost + "E)";
+            button.GetComponentInChildren<Text>().text = aEntry.minionSummonCost + "";
             button.GetComponent<Button>().onClick.AddListener(() => proxyAimSummon(aEntry));
             button.GetComponent<Button>().enabled = !aEntry.isSummoned;
             button.transform.GetChild(1).GetComponent<Image>().enabled = aEntry.isSummoned;

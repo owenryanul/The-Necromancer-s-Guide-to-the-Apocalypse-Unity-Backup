@@ -36,6 +36,7 @@ public class Ability_Database_Script : MonoBehaviour
         fasterAttackPassive,
         fleetOfFoot,
         firstAid,
+        determination,
         none
     }
 
@@ -116,6 +117,7 @@ public class Ability_Database_Script : MonoBehaviour
             case AbilityID.fasterBullets: instance.castFasterBullets(caster, abilityIndex); break;
             case AbilityID.fleetOfFoot: instance.castFleetOfFoot(caster, abilityIndex); break;
             case AbilityID.firstAid: instance.castFirstAid(caster, abilityIndex, targetGameObject); break;
+            case AbilityID.determination: instance.castDetermination(caster, abilityIndex); break;
         }
     }
 
@@ -154,6 +156,7 @@ public class Ability_Database_Script : MonoBehaviour
             case AbilityID.fasterBullets: return ABILITY_FasterBullets;
             case AbilityID.fleetOfFoot: return ABILITY_Fleet_Of_Foot;
             case AbilityID.firstAid: return ABILITY_First_Aid;
+            case AbilityID.determination: return ABILITY_Determination;
             default: return ABILITY_NONE;
         }
 
@@ -167,6 +170,7 @@ public class Ability_Database_Script : MonoBehaviour
         addAbilityWithTag(ref abilitiesWithTag, instance.ABILITY_FasterBullets, tag);
         addAbilityWithTag(ref abilitiesWithTag, instance.ABILITY_Fleet_Of_Foot, tag);
         addAbilityWithTag(ref abilitiesWithTag, instance.ABILITY_First_Aid, tag);
+        addAbilityWithTag(ref abilitiesWithTag, instance.ABILITY_Determination, tag);
 
         return abilitiesWithTag[(int)(Random.value * abilitiesWithTag.Count)];
     }
@@ -182,8 +186,10 @@ public class Ability_Database_Script : MonoBehaviour
     /*To Add New Ability:
         1. Add Ability below
         2. Add Ability to findAbility() method
-        3. Add CastNewAbility() method for new ability
-        4. Add Cast method to cast() method above 
+        3. Add Ability to findRandomAbilityWithTag
+        4. Add CastNewAbility() method for new ability
+        5. Add Cast method to cast() method above 
+        6. Add sprite and other data in Inspector of Ability_Database_Script
     */
 
     private Ability ABILITY_NONE = new Ability(AbilityID.none, AbilityType.none, 0.0f);
@@ -197,6 +203,7 @@ public class Ability_Database_Script : MonoBehaviour
     public Ability ABILITY_FasterBullets = new Ability(AbilityID.fasterBullets, AbilityType.instantCast, 5.0f);
     public Ability ABILITY_Fleet_Of_Foot = new Ability(AbilityID.fleetOfFoot, AbilityType.passive, 5.0f);
     public Ability ABILITY_First_Aid = new Ability(AbilityID.firstAid, AbilityType.targetAllyCast, 5.0f, new string[] { "FirstAidEffectPrefab" });
+    public Ability ABILITY_Determination = new Ability(AbilityID.determination, AbilityType.passive, 5.0f);
 
     private void castNecromancerConversionRitual(GameObject caster, GameObject targetEnemy)
     {
@@ -241,5 +248,11 @@ public class Ability_Database_Script : MonoBehaviour
         targetAlly.GetComponent<Minion_AI_Script>().currentHp = targetAlly.GetComponent<Minion_AI_Script>().MaxHp;
         GameObject FirstAidEffect = Instantiate((GameObject)ABILITY_First_Aid.getExtra("FirstAidEffectPrefab"), targetAlly.transform.position, targetAlly.transform.rotation);
         caster.GetComponent<Minion_AI_Script>().setAbilityCooldown(abilityIndex, ABILITY_First_Aid.cooldown);
+    }
+
+    private void castDetermination(GameObject caster, int abilityIndex)
+    {
+        //Empty Cast method.
+        //Determination marks a minion as being free to summon but this is done by making the minion's cost = 0. Which is not done here.
     }
 }

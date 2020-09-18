@@ -23,7 +23,8 @@ public class Player_Inventory_Script : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            playerName = "testPlayerProfilePleaseReplace";
+            //playerName = "testPlayerProfilePleaseReplace";
+            playerName = "PreAlphaPlayer";
             players_DarkEnergy = startingDarkEnergy;
             players_Ammo = 30;
         }
