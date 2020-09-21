@@ -28,7 +28,8 @@ public class Projectile_Logic_Script : MonoBehaviour
         none = 0,
         thrown_bullet = 1,
         pistol1_bullet = 2,
-        shotgun1_bullet = 3
+        shotgun1_bullet = 3,
+        necromancer1_projectile = 4
     }
 
     [Header("Scatter Projectile")]
@@ -48,7 +49,7 @@ public class Projectile_Logic_Script : MonoBehaviour
     void Start()
     {
         //currentLifeTime = 0;
-        this.gameObject.GetComponent<Animator>().SetInteger("AnimationClip", (int)projectileAnimation);
+        this.gameObject.GetComponentInChildren<Animator>().SetInteger("AnimationClip", (int)projectileAnimation);
         scatterLogic();
     }
 
@@ -64,11 +65,11 @@ public class Projectile_Logic_Script : MonoBehaviour
         //Flip sprite X if traveling left
         if(myPos.x > mySpacePos.x)
         {
-            this.gameObject.GetComponent<SpriteRenderer>().flipX = true;
+            this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = true;
         }
         else
         {
-            this.gameObject.GetComponent<SpriteRenderer>().flipX = false;
+            this.gameObject.GetComponentInChildren<SpriteRenderer>().flipX = false;
         }
 
 

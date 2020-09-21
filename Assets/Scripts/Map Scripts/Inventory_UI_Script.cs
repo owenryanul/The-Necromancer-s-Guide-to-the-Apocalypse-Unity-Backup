@@ -330,8 +330,10 @@ public class Inventory_UI_Script : MonoBehaviour
 
             //switch to mechanical
             mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon1ID).icon;
+            mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().SetNativeSize();
             mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon1ID).name;
             mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon2ID).icon;
+            mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().SetNativeSize();
             mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon2ID).name;
 
             bool isPassive;
@@ -405,7 +407,7 @@ public class Inventory_UI_Script : MonoBehaviour
             GameObject button = Instantiate(inventoryWeaponButtonPrefab, content.transform);
             button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
             //assembleMinionPortrait(ref button, aEntry);
-            button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Weapon_Database.findWeapon(aEntry.weaponID).weaponSprite;
+            button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Weapon_Database.findWeapon(aEntry.weaponID).icon;
             button.transform.GetChild(0).GetChild(0).GetComponent<Image>().SetNativeSize();
             if (aEntry.owned == -1)
             {
@@ -435,13 +437,11 @@ public class Inventory_UI_Script : MonoBehaviour
     private void generateCosmeticInventoryButtons()
     {
         int i = 0;
-        Debug.Log("badgers");
         foreach (Cosmetic_Database_Script.Cosmetic aEntry in Cosmetic_Database_Script.findAllCosmetics())
         {
             //If cosmetic is equipable to the clicked loadout slot, or is equipable to all slots, add it to the Inventory.
             if ((int)aEntry.slot == this.loadSlotClicked || aEntry.slot == Cosmetic_Database_Script.EquipSlot.all)
             {
-                Debug.Log("a badger :" + aEntry.name);
                 GameObject content = GameObject.FindGameObjectWithTag("Minion Inventory Content");
                 float xPos = 34 + ((i % 7) * 100);
                 float yPos = -18 + (Mathf.FloorToInt(i / 7) * -100);
@@ -506,7 +506,7 @@ public class Inventory_UI_Script : MonoBehaviour
 
     private void addWeaponToPortrait(WeaponID aWep, Image cosImage)
     {
-        if (Weapon_Database.findWeapon(aWep).weaponSprite != null)
+        if (Weapon_Database.findWeapon(aWep).weaponSprite != null && aWep != WeaponID.Thrown_bone && aWep != WeaponID.Unarmed_Melee)
         {
             cosImage.enabled = true;
             Weapon wep = Weapon_Database.findWeapon(aWep);

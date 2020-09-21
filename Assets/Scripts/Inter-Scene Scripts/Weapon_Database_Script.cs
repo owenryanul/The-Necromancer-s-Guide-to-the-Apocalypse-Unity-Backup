@@ -69,6 +69,7 @@ public class Weapon_Database_Script : MonoBehaviour
             case WeaponID.Scrap_Hammer_Melee: return WEAPON_scrap_hammer_melee;
             case WeaponID.Revolver_Ranged: return WEAPON_revolver_ranged;
             case WeaponID.Ranged_Shotgun: return WEAPON_Ranged_Shotgun;
+            case WeaponID.Necromancer1_Projectile: return WEAPON_Necromancer1_Projectile;
             default: return null;
         }
     }
@@ -91,7 +92,8 @@ public class Weapon_Database_Script : MonoBehaviour
         Wide_Unarmed_Melee,
         Scrap_Hammer_Melee,
         Revolver_Ranged,
-        Ranged_Shotgun
+        Ranged_Shotgun,
+        Necromancer1_Projectile
     }
 
     /*  To Add New Weapon:
@@ -113,4 +115,5 @@ public class Weapon_Database_Script : MonoBehaviour
     public Weapon WEAPON_scrap_hammer_melee = new Weapon(WeaponID.Scrap_Hammer_Melee, "Scrap Hammer", true, 4, 0.1f, new int[1] { 0 }, "A lump of scrap metal on the end of a stick. A crude but effective melee weapon.");
     public Weapon WEAPON_revolver_ranged = new Weapon(WeaponID.Revolver_Ranged, "Revolver", false, 1, 1.0f, new int[3] { 0, 0, 0 }, "A short range fire arm. Exceedingly effective when applied to a necromancer's knee, as Andy insists on demostrating.");
     public Weapon WEAPON_Ranged_Shotgun = new Weapon(WeaponID.Ranged_Shotgun, "Shotgun", false, 0, 1.0f, new int[2] { 1, 1 }, "A staple of the modern undead slayer, I am told, this thundering boom stick can strike targets in adjacent rows as well as its own.");
+    public Weapon WEAPON_Necromancer1_Projectile = new Weapon(WeaponID.Necromancer1_Projectile, "Dark Energy Blast", false, 1, 5, new int[3] { 0, 0, 0 }, " A powerful awe inspiring blast of dark energy hurls with treblous force at on coming foes. Andy's Note: You'd be better fighting with harsh language than this piddly little thing.");
 }

@@ -553,7 +553,10 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
         if (currentWeapon != WeaponID.custom)
         {
             switchAttackStatsToWeapon(Weapon_Database.findWeapon(currentWeapon));
-            switchWeaponVisualsToWeapon(Weapon_Database.findWeapon(currentWeapon));
+            if (!isNecromancer)
+            {
+                switchWeaponVisualsToWeapon(Weapon_Database.findWeapon(currentWeapon));
+            }
         }
     }
 

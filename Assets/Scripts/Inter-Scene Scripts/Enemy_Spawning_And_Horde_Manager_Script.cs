@@ -200,7 +200,7 @@ public class Enemy_Spawning_And_Horde_Manager_Script : MonoBehaviour
         GameObject spawnPoint;
         if (!spawnOnLeft)
         {
-            spawnPoint = Space_Script.findGridEndSpace(4, Random.Range(0, 5));
+            spawnPoint = Space_Script.findGridEndSpace(5, Random.Range(0, 5));
         }
         else
         {

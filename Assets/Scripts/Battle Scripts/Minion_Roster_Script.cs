@@ -115,7 +115,7 @@ public class Minion_Roster_Script : MonoBehaviour
 
     private void addWeaponToPortrait(WeaponID aWep, Image cosImage)
     {
-        if(Weapon_Database.findWeapon(aWep).weaponSprite != null)
+        if(Weapon_Database.findWeapon(aWep).weaponSprite != null && aWep != WeaponID.Thrown_bone && aWep != WeaponID.Unarmed_Melee)
         {
             cosImage.enabled = true;
             Weapon wep = Weapon_Database.findWeapon(aWep);
