@@ -37,9 +37,12 @@ public class Journal_Text_Script : MonoBehaviour
 
     private string buttonMarkupReplacementText = "\n"; //TODO: Design a more elegant solution to this.
 
+    private bool journalIsVisible;
+
     // Start is called before the first frame update
     void Start()
     {
+        journalIsVisible = false;
         journalPages = new string[] { };
         setUIReferencesOnStart();
         this.setJournalText(journalText);
@@ -66,7 +69,16 @@ public class Journal_Text_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        debugCloseJournal();
+    }
 
+    //Hide the journal if you press the END key.
+    private void debugCloseJournal()
+    {
+        if(Input.GetKeyDown(KeyCode.End))
+        {
+            hideJournel();
+        }
     }
 
     public void setJournalText(string textin)
@@ -119,20 +131,20 @@ public class Journal_Text_Script : MonoBehaviour
 
         if (pageNumber + 2 >= this.journalPages.Length)
         {
-            nextButton.enabled = false;
+            nextButton.interactable = false;
         }
         else
         {
-            nextButton.enabled = true;
+            nextButton.interactable = true;
         }
 
         if (pageNumber - 2 < 0)
         {
-            previousButton.enabled = false;
+            previousButton.interactable = false;
         }
         else
         {
-            previousButton.enabled = true;
+            previousButton.interactable = true;
         }
 
         //if (leftText.text != "Badger\n")
@@ -475,24 +487,26 @@ public class Journal_Text_Script : MonoBehaviour
 
     public void showJournel()
     {
+        journalIsVisible = true;
         this.gameObject.GetComponent<Image>().enabled = true;
         leftText.enabled = true;
         rightText.enabled = true;
         previousButton.gameObject.SetActive(true);
         nextButton.gameObject.SetActive(true);
-        closeJournalButton.gameObject.SetActive(true);
+        //closeJournalButton.gameObject.SetActive(true);
 
         updateText();
     }
 
     public void hideJournel()
     {
+        journalIsVisible = false;
         this.gameObject.GetComponent<Image>().enabled = false;
         leftText.enabled = false;
         rightText.enabled = false;
         previousButton.gameObject.SetActive(false);
         nextButton.gameObject.SetActive(false);
-        closeJournalButton.gameObject.SetActive(false);
+        //closeJournalButton.gameObject.SetActive(false);
         toBattleButton.gameObject.SetActive(false);
         leaveBattleSummaryButton.gameObject.SetActive(false);
         leaveBattleSummaryButton.onClick.RemoveAllListeners();
@@ -520,5 +534,10 @@ public class Journal_Text_Script : MonoBehaviour
         Map_State_Storage_Script.instance.saveMapState();
         Enemy_Spawning_And_Horde_Manager_Script.setHorde(currentBattleName);
         SceneManager.LoadSceneAsync("Battle Test Rework Scene", LoadSceneMode.Single);
+    }
+
+    public bool isJournalVisible()
+    {
+        return this.journalIsVisible;
     }
 }

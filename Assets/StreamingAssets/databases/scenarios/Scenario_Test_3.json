@@ -1,0 +1,4 @@
+{
+    "name": "Scenario_Test_3",
+    "journelText": "For a moment I ruminated on how I should proceed.\n\nFinally, I decided to:\n[BUTTON](Scenario_Test_3_a){I constructed additional pylons.}\n[BUTTON](Scenario_Test_3_b){I built additional supply depots.}\n[PAGE BREAK] ->Continued on next page [PAGE BREAK][PAGE BREAK]\nAlteneratively I could: \n[BUTTON](BATTLE_Test Horde 2){Spawn more \n\noverlords.}"
+}

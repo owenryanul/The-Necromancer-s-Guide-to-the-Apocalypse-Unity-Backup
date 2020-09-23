@@ -1,0 +1,21 @@
+{
+    "name": "No Battle",
+    "waves": [
+        {
+            "spawnCooldown": 1.0,
+            "numberOfEnemiesInWave": 2,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 5,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        }
+    ],
+    "tags": [
+        "Test",
+		"Empty"
+    ]
+}

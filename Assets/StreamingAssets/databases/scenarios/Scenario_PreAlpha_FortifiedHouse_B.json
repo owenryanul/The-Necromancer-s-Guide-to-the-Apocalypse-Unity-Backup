@@ -1,0 +1,4 @@
+{
+    "name": "Scenario_PreAlpha_FortifiedHouse_B",
+    "journelText": " As I strode confidently into the building I felt the discharge of a weapon at around knee height. Evidently the owners had booby trapped the building, however this cowardly trap was naught but a mild inconvience and was in no way an agonisingly painfull mistake that left me in the fetal position for 10 minutes. \n\n [EFFECT](SUB_ENERGY){20}[BUTTON](Scenario_PreAlpha_FortifiedHouse_A){Next}" 
+}

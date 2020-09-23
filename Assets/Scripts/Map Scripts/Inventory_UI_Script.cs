@@ -48,7 +48,8 @@ public class Inventory_UI_Script : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Insert))
+        //Debug Cheat Keys
+        /*if (Input.GetKeyDown(KeyCode.Insert))
         {
             Player_Inventory_Script.loadInventoryFromPlayerSaveFile(Player_Inventory_Script.getPlayerName());
             //DEBUG_dummyPopulateRosterWithPremadeMinions();
@@ -66,7 +67,7 @@ public class Inventory_UI_Script : MonoBehaviour
         {
             Debug.Log(Player_Inventory_Script.getPlayerWeapons()[0].weaponID);
             Player_Inventory_Script.saveInventoryToFile();
-        }
+        }*/
     }
 
     private void DEBUG_dummyPopulateRosterWithPremadeMinions()
@@ -208,15 +209,15 @@ public class Inventory_UI_Script : MonoBehaviour
         switch (loadSlotClicked)
         {
             case 1:
-                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().enabled = true;
-                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon1ID).icon;
-                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().SetNativeSize();
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponentInChildren<Image>().enabled = true;
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponentInChildren<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon1ID).icon;
+                //weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().SetNativeSize();
                 weaponLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon1ID).name;
                 break;
             case 2:
-                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().enabled = true;
-                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon2ID).icon;
-                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().SetNativeSize();
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponentInChildren<Image>().enabled = true;
+                weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponentInChildren<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon2ID).icon;
+                //weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().SetNativeSize();
                 weaponLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon2ID).name;
                 break;
         }
@@ -329,11 +330,11 @@ public class Inventory_UI_Script : MonoBehaviour
             setActiveForChildren(cosmeticLoadout, false);
 
             //switch to mechanical
-            mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon1ID).icon;
-            mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Image>().SetNativeSize();
+            mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponentInChildren<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon1ID).icon;
+            //mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponentInChildren<Image>().SetNativeSize();
             mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 1").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon1ID).name;
-            mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon2ID).icon;
-            mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Image>().SetNativeSize();
+            mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponentInChildren<Image>().sprite = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon2ID).icon;
+            //mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponentInChildren<Image>().SetNativeSize();
             mechanicalLoadout.transform.Find("Weapon Background").Find("Weapon 2").gameObject.GetComponent<Tooltip_Button_Script>().tooltip = Weapon_Database.findWeapon(currentlyViewedMinion.Weapon2ID).name;
 
             bool isPassive;

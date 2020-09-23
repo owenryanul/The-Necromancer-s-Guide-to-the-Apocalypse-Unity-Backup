@@ -269,14 +269,18 @@ public class Enemy_Spawning_And_Horde_Manager_Script : MonoBehaviour
         return instance.hordeHasSpawnedAllEnemies;
     }
 
-    private void loadAllHordesFromFiles()
+    //called on start, or, if hordes directory does not exist then called from MainMenu_UI script after files have been loaded.
+    public static void loadAllHordesFromFiles()
     {
-        this.hordes = new List<Horde>();
+        instance.hordes = new List<Horde>();
         DirectoryInfo di = new DirectoryInfo(Application.persistentDataPath + "/databases/hordes/");
-        foreach(FileInfo file in di.GetFiles("*.json"))
+        if (di.Exists)
         {
-            string json = Horde.loadJsonFromFile(file.Name);
-            this.hordes.Add(Horde.fromJson(json));
+            foreach (FileInfo file in di.GetFiles("*.json"))
+            {
+                string json = Horde.loadJsonFromFile(file.Name);
+                instance.hordes.Add(Horde.fromJson(json));
+            }
         }
     }
 

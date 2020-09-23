@@ -1,0 +1,219 @@
+{
+    "playerName": "testPlayerProfilePleaseReplace",
+    "players_DarkEnergy": 100,
+    "players_Ammo": 30,
+    "minions": [
+        {
+            "minionID": "MIN-1",
+            "isSummoned": false,
+            "minionName": "Better Off Ted",
+            "minionSummonCost": 10,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 8,
+            "Weapon2ID": 7,
+            "minionMaxHp": 5,
+            "ability1ID": 7,
+            "ability2ID": 1,
+            "ability3ID": 7,
+            "hat": 1,
+            "mask": 0,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -28698
+            }
+        },
+        {
+            "minionID": "MIN-2",
+            "isSummoned": false,
+            "minionName": "Pipes",
+            "minionSummonCost": 10,
+            "baseMovementSpeed": 3.0,
+            "Weapon1ID": 7,
+            "Weapon2ID": 8,
+            "minionMaxHp": 2,
+            "ability1ID": 1,
+            "ability2ID": 1,
+            "ability3ID": 1,
+            "hat": 0,
+            "mask": 0,
+            "torso": 3,
+            "summonButton": {
+                "instanceID": -28864
+            }
+        },
+        {
+            "minionID": "MIN-3",
+            "isSummoned": false,
+            "minionName": "BIG JOEY!",
+            "minionSummonCost": 200,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 100,
+            "ability1ID": 1,
+            "ability2ID": 3,
+            "ability3ID": 3,
+            "hat": 2,
+            "mask": 0,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -29030
+            }
+        },
+        {
+            "minionID": "MIN-4",
+            "isSummoned": false,
+            "minionName": "Joey 2",
+            "minionSummonCost": 5,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 1,
+            "ability1ID": 1,
+            "ability2ID": 3,
+            "ability3ID": 3,
+            "hat": 0,
+            "mask": 0,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -29196
+            }
+        },
+        {
+            "minionID": "MIN-5",
+            "isSummoned": false,
+            "minionName": "Joey 3",
+            "minionSummonCost": 5,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 1,
+            "ability1ID": 1,
+            "ability2ID": 3,
+            "ability3ID": 3,
+            "hat": 0,
+            "mask": 0,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -29362
+            }
+        },
+        {
+            "minionID": "MIN-6",
+            "isSummoned": false,
+            "minionName": "Joey 4",
+            "minionSummonCost": 5,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 1,
+            "ability1ID": 1,
+            "ability2ID": 3,
+            "ability3ID": 3,
+            "hat": 0,
+            "mask": 0,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -29528
+            }
+        },
+        {
+            "minionID": "MIN-7",
+            "isSummoned": false,
+            "minionName": "Joey 5",
+            "minionSummonCost": 5,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 1,
+            "ability1ID": 1,
+            "ability2ID": 3,
+            "ability3ID": 3,
+            "hat": 0,
+            "mask": 0,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -29694
+            }
+        },
+        {
+            "minionID": "MIN-8",
+            "isSummoned": false,
+            "minionName": "Joey 6",
+            "minionSummonCost": 5,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 1,
+            "ability1ID": 1,
+            "ability2ID": 3,
+            "ability3ID": 3,
+            "hat": 0,
+            "mask": 4,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -29860
+            }
+        },
+        {
+            "minionID": "MIN-9",
+            "isSummoned": false,
+            "minionName": "Joey 7",
+            "minionSummonCost": 5,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 1,
+            "ability1ID": 1,
+            "ability2ID": 3,
+            "ability3ID": 3,
+            "hat": 0,
+            "mask": 0,
+            "torso": 3,
+            "summonButton": {
+                "instanceID": -30026
+            }
+        },
+        {
+            "minionID": "MIN-10",
+            "isSummoned": false,
+            "minionName": "Joey 8",
+            "minionSummonCost": 5,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 1,
+            "ability1ID": 1,
+            "ability2ID": 3,
+            "ability3ID": 3,
+            "hat": 2,
+            "mask": 0,
+            "torso": 3,
+            "summonButton": {
+                "instanceID": -30192
+            }
+        }
+    ],
+    "weapons": [
+        {
+            "weaponID": 3,
+            "owned": -1,
+            "equiped": 0
+        },
+        {
+            "weaponID": 8,
+            "owned": 2,
+            "equiped": 0
+        },
+        {
+            "weaponID": 7,
+            "owned": 2,
+            "equiped": 0
+        },
+        {
+            "weaponID": 1,
+            "owned": 1,
+            "equiped": 0
+        }
+    ]
+}

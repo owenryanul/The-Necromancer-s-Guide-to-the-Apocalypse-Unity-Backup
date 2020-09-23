@@ -32,11 +32,13 @@ public class Map_Icon_Script : MonoBehaviour
     private bool hasDrawnLinks;
 
     private Inventory_UI_Script inventoryUI;
+    private Journal_Text_Script journal;
 
     // Start is called before the first frame update
     void Start()
     {
         inventoryUI = GameObject.FindGameObjectWithTag("Inventory UI").GetComponent<Inventory_UI_Script>();
+        journal = GameObject.FindGameObjectWithTag("Map Journal").GetComponent<Journal_Text_Script>();
         hasDrawnLinks = false;
         //drawLineToLinkedNodes();
     }
@@ -84,7 +86,7 @@ public class Map_Icon_Script : MonoBehaviour
     private void OnMouseDown()
     {
         this.gameObject.GetComponent<SpriteRenderer>().sprite = icon; //UnHighlights the map icon when the node is clicked on.
-        if (!inventoryUI.isInventoryVisible() && this.currentState != MapNodeState.current) //stop player clicking map markers through the inventory screen
+        if (!inventoryUI.isInventoryVisible() && !journal.isJournalVisible() && this.currentState != MapNodeState.current) //stop player clicking map markers through the inventory screen
         {
             if (isLinkedToPlayersCurrentNode())
             {

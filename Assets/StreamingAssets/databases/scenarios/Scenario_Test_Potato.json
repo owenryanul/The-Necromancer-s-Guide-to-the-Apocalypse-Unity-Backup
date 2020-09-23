@@ -1,0 +1,4 @@
+{
+    "name": "Scenario_Test_Potato",
+    "journelText": "I found a potato.\n\n[PAGE BREAK]Finally, I decided to:\n[BUTTON](Scenario_Test_3_a){I constructed additional pylons.}\n[BUTTON](Scenario_Test_3_b){I built additional supply depots.}"
+}

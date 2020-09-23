@@ -85,6 +85,10 @@ public class Map_State_Storage_Script : MonoBehaviour
             }
         }
 
+        Vector3 camPos = GameObject.FindGameObjectWithTag("Player Map Marker").transform.position;
+        camPos.z = this.gameObject.transform.position.z;
+        Camera.main.transform.position = camPos;
+
         drawAllNodeLinkLines();
 
         //Display the post battle screen
