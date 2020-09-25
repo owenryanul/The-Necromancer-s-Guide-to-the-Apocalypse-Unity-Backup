@@ -85,11 +85,14 @@ public class Map_Icon_Script : MonoBehaviour
     //On clicking on this node.
     private void OnMouseDown()
     {
+        Debug.LogWarning("Map Icon On Mouse Down");
         this.gameObject.GetComponent<SpriteRenderer>().sprite = icon; //UnHighlights the map icon when the node is clicked on.
+        Debug.Log("Boolean: " + journal.isJournalVisible());
         if (!inventoryUI.isInventoryVisible() && !journal.isJournalVisible() && this.currentState != MapNodeState.current) //stop player clicking map markers through the inventory screen
         {
             if (isLinkedToPlayersCurrentNode())
             {
+                Debug.Log("Moving Player");
                 GameObject.FindGameObjectWithTag("Player Map Marker").GetComponent<Player_Map_Marker>().moveToNewMapNode(this.gameObject);
             }
         }

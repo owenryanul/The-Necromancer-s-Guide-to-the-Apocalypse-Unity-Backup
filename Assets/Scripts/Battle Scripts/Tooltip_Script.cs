@@ -66,7 +66,7 @@ public class Tooltip_Script : MonoBehaviour
         tooltipText.text = textIn;
 
         float textPadding = 4.0f;
-        Vector2 preferedSize = new Vector2(tooltipText.preferredWidth + (textPadding * 2), tooltipText.preferredHeight + (textPadding * 2));
+        Vector2 preferedSize = new Vector2(tooltipText.preferredWidth + (textPadding * 4), tooltipText.preferredHeight + (textPadding * 2));
 
         //Limit width to a inspector defined size
         if (preferedSize.x > maxWidth)

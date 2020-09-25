@@ -37,12 +37,9 @@ public class Journal_Text_Script : MonoBehaviour
 
     private string buttonMarkupReplacementText = "\n"; //TODO: Design a more elegant solution to this.
 
-    private bool journalIsVisible;
-
     // Start is called before the first frame update
     void Start()
     {
-        journalIsVisible = false;
         journalPages = new string[] { };
         setUIReferencesOnStart();
         this.setJournalText(journalText);
@@ -60,9 +57,7 @@ public class Journal_Text_Script : MonoBehaviour
             nextButton = this.gameObject.transform.Find("Next Page Button").GetComponent<Button>();
             closeJournalButton = this.gameObject.transform.Find("Close Button").GetComponent<Button>();
             toBattleButton = this.gameObject.transform.Find("To Battle Button").GetComponent<Button>();
-            Debug.Log(" " + toBattleButton.name);
             leaveBattleSummaryButton = this.gameObject.transform.Find("Summary Exit Button").GetComponent<Button>();
-            Debug.Log(" " + leaveBattleSummaryButton.name);
         }
     }
 
@@ -175,7 +170,6 @@ public class Journal_Text_Script : MonoBehaviour
             int endOfAmount = text.IndexOf("}", startOfMarkup);
             string effect = text.Substring(startOfKeyword + 1, endOfKeyword - (startOfKeyword + 1));
             string amountString = text.Substring(startOfAmount + 1, endOfAmount - (startOfAmount + 1));
-            Debug.Log("amountString = " + amountString);
             string record = "";
             switch(effect)
             {
@@ -190,7 +184,6 @@ public class Journal_Text_Script : MonoBehaviour
             text += ("\n" + record); //append effect text to end of entry.
         }
 
-        Debug.Log("Effects Markup successfully converted to text: " + text);
         return text;
     }
 
@@ -242,7 +235,6 @@ public class Journal_Text_Script : MonoBehaviour
             }
 
             //Remove Markup Text, so next iteration gets the next markup
-            Debug.Log("Stuffs = " + leftText.text.Substring(startOfButtonMarkup, (endOfButtonText + 1) - startOfButtonMarkup));
             leftText.text = leftText.text.Remove(startOfButtonMarkup, (endOfButtonText + 1) - startOfButtonMarkup);
             leftText.text = leftText.text.Insert(startOfButtonMarkup, buttonMarkupReplacementText);
         }
@@ -276,7 +268,6 @@ public class Journal_Text_Script : MonoBehaviour
             }
 
             //Remove Markup Text, so next iteration gets the next markup
-            Debug.Log("Stuffs = " + rightText.text.Substring(startOfButtonMarkup, (endOfButtonText + 1) - startOfButtonMarkup));
             rightText.text = rightText.text.Remove(startOfButtonMarkup, (endOfButtonText + 1) - startOfButtonMarkup);
             rightText.text = rightText.text.Insert(startOfButtonMarkup, buttonMarkupReplacementText);
         }
@@ -284,7 +275,7 @@ public class Journal_Text_Script : MonoBehaviour
 
     //Replaces [EXIT_BUTTON] markup with a button.
     //example markup: [EXIT_BUTTON]
-    private void createExitButtons()
+    /*private void createExitButtons()
     {
         //TODO: Add Error checking
 
@@ -329,7 +320,7 @@ public class Journal_Text_Script : MonoBehaviour
             rightText.text = rightText.text.Remove(startOfButtonMarkup, (endOfButtonMarkup + 1) - startOfButtonMarkup);
             rightText.text = rightText.text.Insert(startOfButtonMarkup, buttonMarkupReplacementText);
         }
-    }
+    }*/
 
     private void deleteJournalButtons()
     {
@@ -429,12 +420,18 @@ public class Journal_Text_Script : MonoBehaviour
         battleText = battleText.Replace("[SIZE]", "" + horde.getTotalSize());
 
         string compoText = "";
+        List<string> compoEnemies = new List<string>();
+        Debug.Log("Compo: Horde " + horde.name);
         foreach(Enemy_Spawning_And_Horde_Manager_Script.Wave aWave in horde.waves)
         {
+            Debug.Log("Compo: Wave");
             foreach(Enemy_Spawning_And_Horde_Manager_Script.EnemyPool aPool in aWave.enemyPools)
             {
-                if(!compoText.Contains(aPool.enemyPrefab.name))
+                Debug.Log("Compo: Pool: " + aPool.enemyPrefab.name);
+                if (!compoEnemies.Contains(aPool.enemyPrefab.name))
                 {
+                    Debug.Log("Compo: Found new enemy type " + aPool.enemyPrefab.name);
+                    compoEnemies.Add(aPool.enemyPrefab.name);
                     compoText += (aPool.enemyPrefab.name + "\n");
                 }
             }
@@ -487,7 +484,6 @@ public class Journal_Text_Script : MonoBehaviour
 
     public void showJournel()
     {
-        journalIsVisible = true;
         this.gameObject.GetComponent<Image>().enabled = true;
         leftText.enabled = true;
         rightText.enabled = true;
@@ -500,7 +496,6 @@ public class Journal_Text_Script : MonoBehaviour
 
     public void hideJournel()
     {
-        journalIsVisible = false;
         this.gameObject.GetComponent<Image>().enabled = false;
         leftText.enabled = false;
         rightText.enabled = false;
@@ -538,6 +533,6 @@ public class Journal_Text_Script : MonoBehaviour
 
     public bool isJournalVisible()
     {
-        return this.journalIsVisible;
+        return this.gameObject.GetComponent<Image>().enabled;
     }
 }

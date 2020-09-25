@@ -55,6 +55,11 @@ public class Space_Script : MonoBehaviour, MouseDownOverrider
                     }
                 }
 
+                if (GameObject.FindGameObjectWithTag("Necromancer").GetComponent<Minion_AI_Script>().getTargetSpace() == this.gameObject)
+                {
+                    thisSpaceIsUnoccupied = false;
+                }
+
                 if (thisSpaceIsUnoccupied)
                 {
                     summonMinion(User_Input_Script.currentMinionToSummon);

@@ -1,4 +1,4 @@
 {
     "name": "PostBattle_PreAlpha_BuildingBattle",
-    "journelText": "With the horde defeated, we could carry on our exploration of the tower. Sadly there were few living things in the tower to use as a source of dark energy however we came across a fortified room on the top floor that contained a cache of weapons which we added to our collection. [EFFECT](ADD_WEAPON){Scrap_Hammer_Melee} [EFFECT](ADD_WEAPON){Revolver_Ranged} [EFFECT](ADD_WEAPON){Scatter_thrown_bone} [EFFECT](ADD_AMMO){10} \n[BUTTON](EXIT){Move on}"
+    "journelText": "With the horde defeated, we could carry on our exploration of the tower. Sadly there were few living things in the tower to use as a source of dark energy but we did come across a fortified room on the top floor that contained a cache of weapons which we added to our collection. [EFFECT](ADD_WEAPON){Scrap_Hammer_Melee} [EFFECT](ADD_WEAPON){Revolver_Ranged} [EFFECT](ADD_WEAPON){Ranged_Shotgun} [EFFECT](ADD_AMMO){10} \n[BUTTON](EXIT){Move on}"
 }

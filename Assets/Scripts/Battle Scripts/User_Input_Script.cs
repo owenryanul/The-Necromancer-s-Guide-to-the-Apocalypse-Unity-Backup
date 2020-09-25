@@ -249,8 +249,7 @@ public class User_Input_Script : MonoBehaviour
     //Called by Roster Minion Button's OnClick Listener
     public void aimSummonMinion(Minion_Roster_Script.MinionEntry inData)
     {
-        
-        Debug.Log("Aiming Summon Minion Dummy Response: " + inData.minionName);
+
         if (inData.minionSummonCost < Player_Inventory_Script.getPlayersDarkEnergy())
         {
             currentlySelectedMinion = null;

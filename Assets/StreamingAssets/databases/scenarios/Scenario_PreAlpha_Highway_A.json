@@ -1,4 +1,4 @@
 {
     "name": "Scenario_PreAlpha_Highway_A",
-    "journelText": "With great roll of the thunder the even higher way came crashing down. Bringing with the vanguard of enemy horde, yet still the slowest of the horde remained.\n [EFFECT](SUB_AMMO){10}  [BUTTON](BATTLE_PreAlpha Highway Horde2[_]PostBattle_PreAlpha_Highway){As they clambered over the debris, we made ready for battle.}"
+    "journelText": "With a great roll of thunder the Even Higher Way came crashing down. Bringing with it the vanguard of the enemy horde, crushing them beneath its rubble. Yet still the slowest of the horde remained.\n [EFFECT](SUB_AMMO){10}  [BUTTON](BATTLE_PreAlpha Highway Horde2[_]PostBattle_PreAlpha_Highway){As they clambered over the debris, we made ready for battle.}"
 }
