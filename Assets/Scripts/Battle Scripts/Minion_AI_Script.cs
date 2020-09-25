@@ -800,12 +800,15 @@ public class Minion_AI_Script : MonoBehaviour, MouseDownOverrider
             //Trigger Game Over
             Debug.LogWarning("Game Over");
             Enemy_Spawning_And_Horde_Manager_Script.resetSpawnVariables();
-            SceneManager.LoadScene("Game Over Scene");
+            GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Scene_Transition_Script>().sceneToMoveTo = "Game Over Scene";
+            GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Animator>().SetTrigger("Play Scene Outro Transition");
         }
         else
         {
             Destroy(this.gameObject);
         }
     }
+
+
 
 }

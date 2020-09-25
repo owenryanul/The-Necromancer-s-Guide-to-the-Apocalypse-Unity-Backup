@@ -36,7 +36,8 @@ public class MainMenu_UI_Script : MonoBehaviour
     {
         Player_Inventory_Script.loadInventoryFromPlayerSaveFile(Player_Inventory_Script.getPlayerName());
         Map_State_Storage_Script.flagMapForRegeneration();
-        SceneManager.LoadSceneAsync("Map Scene", LoadSceneMode.Single);
+        GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Scene_Transition_Script>().sceneToMoveTo = "Map Scene";
+        GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Animator>().SetTrigger("Play Scene Outro Transition");
     }
 
     private void beginLoadingGameFiles()

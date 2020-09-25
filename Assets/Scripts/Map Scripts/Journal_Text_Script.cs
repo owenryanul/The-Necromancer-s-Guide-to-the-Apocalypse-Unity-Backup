@@ -528,7 +528,8 @@ public class Journal_Text_Script : MonoBehaviour
         Debug.LogWarning("Loading Battle Scene with horde: " + currentBattleName);
         Map_State_Storage_Script.instance.saveMapState();
         Enemy_Spawning_And_Horde_Manager_Script.setHorde(currentBattleName);
-        SceneManager.LoadSceneAsync("Battle Test Rework Scene", LoadSceneMode.Single);
+        GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Scene_Transition_Script>().sceneToMoveTo = "Battle Test Rework Scene";
+        GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Animator>().SetTrigger("Play Scene Outro Transition");
     }
 
     public bool isJournalVisible()

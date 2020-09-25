@@ -23,6 +23,7 @@ public class GameOverUI_Script : MonoBehaviour
     {
         Stat_Tracking_Script.setBattlesWonStat(0);
         Stat_Tracking_Script.setEncountersClearedStat(0);
-        SceneManager.LoadSceneAsync("Main Menu Scene", LoadSceneMode.Single);
+        GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Scene_Transition_Script>().sceneToMoveTo = "Main Menu Scene";
+        GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Animator>().SetTrigger("Play Scene Outro Transition");
     }
 }

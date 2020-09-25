@@ -261,7 +261,8 @@ public class Enemy_Spawning_And_Horde_Manager_Script : MonoBehaviour
         resetSpawnVariables();
         Minion_Roster_Script.flagAllMinionsAsSummoned(false); //mark all minions as unsummoned
         Stat_Tracking_Script.addBattlesWonStat();
-        SceneManager.LoadSceneAsync("Map Scene", LoadSceneMode.Single);
+        GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Scene_Transition_Script>().sceneToMoveTo = "Map Scene";
+        GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Animator>().SetTrigger("Play Scene Outro Transition");
     }
 
     public static bool hasHordeHasSpawnedAllEnemies()

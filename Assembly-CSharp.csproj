@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Custom Editors\EnemySpawningEditor.cs" />
     <Compile Include="Assets\Custom Editors\HordePropertyDrawer.cs" />
+    <Compile Include="Assets\Scene_Transition_Script.cs" />
     <Compile Include="Assets\Scripts\Battle Scripts\Ability_Button_Script.cs" />
     <Compile Include="Assets\Scripts\Battle Scripts\Ammo_Meter_Script.cs" />
     <Compile Include="Assets\Scripts\Battle Scripts\AnimationRelay_Script.cs" />
