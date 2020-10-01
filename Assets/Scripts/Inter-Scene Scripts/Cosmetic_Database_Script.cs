@@ -30,6 +30,8 @@ public class Cosmetic_Database_Script : MonoBehaviour
         [Header("Portrait Positioning")]
         public Vector3 iconOffset;
         public Vector3 iconRotation;
+        public Vector3 minionViewerOffset;
+        public Vector3 minionViewerRotation;
         [Header("Positioning on enemies")]
         public Vector3 enemyOffset;
         public Vector3 enemyRotation;

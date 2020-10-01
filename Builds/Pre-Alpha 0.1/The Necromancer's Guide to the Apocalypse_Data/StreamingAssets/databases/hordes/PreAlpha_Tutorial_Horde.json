@@ -1,0 +1,32 @@
+{
+    "name": "PreAlpha Tutorial Horde",
+    "waves": [
+        {
+            "spawnCooldown": 5.0,
+            "numberOfEnemiesInWave": 3,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 3,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        },
+        {
+            "spawnCooldown": 3.0,
+            "numberOfEnemiesInWave": 10,
+            "rollRemainderIntoNextWave": false,
+            "enemyPools": [
+                {
+                    "quantity": 10,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        }
+    ],
+    "tags": [
+        "PreAlpha", "Tutorial"
+    ]
+}

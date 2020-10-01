@@ -1,0 +1,4 @@
+{
+    "name": "Scenario_PreAlpha_FortifiedHouse_A_B",
+    "journelText": "Much as I would have loved to render the fility little rodents into energy for myself, Andy convinced me that our need for munitions was greater and thus I set the thralls to dismantaling the traps around the house, filling our bags with a great amount of ammo and even an intact weapon. \n\n[BUTTON](EXIT){Move on} [EFFECT](ADD_AMMO){50} [EFFECT](ADD_WEAPON){Revolver_Ranged} " 
+}

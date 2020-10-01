@@ -482,13 +482,13 @@ public class Inventory_UI_Script : MonoBehaviour
     private void assembleMinionViewerPortrait(ref GameObject viewer, MinionEntry aEntry)
     {
         //Image Path = Button > Mask > MinionIconRig > Cosmetic
-        addCosmeticToPortrait(aEntry.hat, viewer.transform.Find("Minion Viewer Rig").Find("Hat Gear").GetComponent<Image>());
-        addCosmeticToPortrait(aEntry.mask, viewer.transform.Find("Minion Viewer Rig").Find("Mask Gear").GetComponent<Image>());
-        addCosmeticToPortrait(aEntry.torso, viewer.transform.Find("Minion Viewer Rig").Find("Torso Gear").GetComponent<Image>());
-        addWeaponToPortrait(aEntry.Weapon1ID, viewer.transform.Find("Minion Viewer Rig").Find("Weapon Gear").GetComponent<Image>());
+        addCosmeticToPortrait(aEntry.hat, viewer.transform./*Find("Minion Viewer Rig").*/Find("Hat Gear").GetComponent<Image>(), true);
+        addCosmeticToPortrait(aEntry.mask, viewer.transform./*Find("Minion Viewer Rig").*/Find("Mask Gear").GetComponent<Image>(), true);
+        addCosmeticToPortrait(aEntry.torso, viewer.transform./*Find("Minion Viewer Rig").*/Find("Torso Gear").GetComponent<Image>(), true);
+        addWeaponToPortrait(aEntry.Weapon1ID, viewer.transform./*Find("Minion Viewer Rig").*/Find("Weapon Gear").GetComponent<Image>(), true);
     }
 
-    private void addCosmeticToPortrait(CosmeticID aCos, Image cosImage)
+    private void addCosmeticToPortrait(CosmeticID aCos, Image cosImage, bool isMinionViewer = false)
     {
         if (aCos != CosmeticID.None)
         {
@@ -496,8 +496,16 @@ public class Inventory_UI_Script : MonoBehaviour
             Cosmetic cos = Cosmetic_Database_Script.findCosmetic(aCos);
             cosImage.sprite = cos.cosmeticSprite;
             cosImage.SetNativeSize();
-            cosImage.rectTransform.localPosition = cos.iconOffset;
-            cosImage.rectTransform.localEulerAngles = cos.iconRotation;
+            if (isMinionViewer)
+            {
+                cosImage.rectTransform.localPosition = cos.minionViewerOffset;
+                cosImage.rectTransform.localEulerAngles = cos.minionViewerRotation;
+            }
+            else
+            {
+                cosImage.rectTransform.localPosition = cos.iconOffset;
+                cosImage.rectTransform.localEulerAngles = cos.iconRotation;
+            }
         }
         else
         {
@@ -505,7 +513,9 @@ public class Inventory_UI_Script : MonoBehaviour
         }
     }
 
-    private void addWeaponToPortrait(WeaponID aWep, Image cosImage)
+
+
+    private void addWeaponToPortrait(WeaponID aWep, Image cosImage, bool isMinionViewer = false)
     {
         if (Weapon_Database.findWeapon(aWep).weaponSprite != null && aWep != WeaponID.Thrown_bone && aWep != WeaponID.Unarmed_Melee)
         {
@@ -513,8 +523,16 @@ public class Inventory_UI_Script : MonoBehaviour
             Weapon wep = Weapon_Database.findWeapon(aWep);
             cosImage.sprite = wep.weaponSprite;
             cosImage.SetNativeSize();
-            cosImage.rectTransform.localPosition = wep.weaponPortraitOffset;
-            cosImage.rectTransform.localEulerAngles = wep.weaponPortraitRotation;
+            if (isMinionViewer)
+            {
+                cosImage.rectTransform.localPosition = wep.weaponMinionViewerOffset;
+                cosImage.rectTransform.localEulerAngles = wep.weaponMinionViewerRotation;
+            }
+            else
+            {
+                cosImage.rectTransform.localPosition = wep.weaponPortraitOffset;
+                cosImage.rectTransform.localEulerAngles = wep.weaponPortraitRotation;
+            }
         }
         else
         {

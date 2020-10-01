@@ -1,0 +1,54 @@
+{
+    "name": "Basic Horde",
+    "waves": [
+        {
+            "spawnCooldown": 5.0,
+            "numberOfEnemiesInWave": 5,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 10,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        },
+        {
+            "spawnCooldown": 1.0,
+            "numberOfEnemiesInWave": 15,
+            "rollRemainderIntoNextWave": false,
+            "enemyPools": [
+                {
+                    "quantity": 1,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": true
+                },
+                {
+                    "quantity": 9,
+                    "enemyPrefab": "Prefabs/Enemies/Beserk Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        },
+        {
+            "spawnCooldown": 1.0,
+            "numberOfEnemiesInWave": 15,
+            "rollRemainderIntoNextWave": false,
+            "enemyPools": [
+                {
+                    "quantity": 1,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": true
+                },
+                {
+                    "quantity": 9,
+                    "enemyPrefab": "Prefabs/Enemies/Beserk Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        }
+    ],
+    "tags": [
+        "Test"
+    ]
+}

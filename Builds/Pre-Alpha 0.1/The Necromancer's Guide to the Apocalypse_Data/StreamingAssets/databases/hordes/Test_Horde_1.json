@@ -1,0 +1,42 @@
+{
+    "name": "Test Horde 1",
+    "waves": [
+        {
+            "spawnCooldown": 3.0,
+            "numberOfEnemiesInWave": 2,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 2,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                },
+                {
+                    "quantity": 2,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        },
+        {
+            "spawnCooldown": 1.0,
+            "numberOfEnemiesInWave": 6,
+            "rollRemainderIntoNextWave": false,
+            "enemyPools": [
+                {
+                    "quantity": 3,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": true
+                },
+                {
+                    "quantity": 1,
+                    "enemyPrefab": "Prefabs/Enemies/Beserk Enemy",
+                    "spawnOnLeftSide": true
+                }
+            ]
+        }
+    ],
+    "tags": [
+        "Test"
+    ]
+}

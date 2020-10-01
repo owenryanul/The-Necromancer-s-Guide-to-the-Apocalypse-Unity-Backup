@@ -1,0 +1,4 @@
+{
+    "name": "Scenario_PreAlpha_FortifiedHouse_A_A",
+    "journelText": "With great effort and liberal use of fire, Andy was able to panic the rats and drive them from the basement up into the house. In hindsight it was perhaps too liberal a use of fire as the entire house would come down soon after, the rat's triggering every booby-trap as they fled the burning building. None the less, the plan was successful as I was able to draw plentiful dark energy from the ashes.\n[BUTTON](EXIT){Move on} [EFFECT](ADD_ENERGY){200} " 
+}

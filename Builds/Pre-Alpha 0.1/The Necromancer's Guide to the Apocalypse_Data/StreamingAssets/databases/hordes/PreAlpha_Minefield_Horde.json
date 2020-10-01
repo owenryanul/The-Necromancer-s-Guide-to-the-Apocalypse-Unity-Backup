@@ -1,0 +1,32 @@
+{
+    "name": "PreAlpha Minefield Horde",
+    "waves": [
+        {
+            "spawnCooldown": 6.0,
+            "numberOfEnemiesInWave": 2,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 2,
+                    "enemyPrefab": "Prefabs/Enemies/Beserk Enemy",
+                    "spawnOnLeftSide": true
+                }
+            ]
+        },
+        {
+            "spawnCooldown": 2.0,
+            "numberOfEnemiesInWave": 5,
+            "rollRemainderIntoNextWave": false,
+            "enemyPools": [
+                {
+                    "quantity": 5,
+                    "enemyPrefab": "Prefabs/Enemies/Beserk Enemy",
+                    "spawnOnLeftSide": true
+                }
+            ]
+        }
+    ],
+    "tags": [
+        "PreAlpha", "Minefield"
+    ]
+}

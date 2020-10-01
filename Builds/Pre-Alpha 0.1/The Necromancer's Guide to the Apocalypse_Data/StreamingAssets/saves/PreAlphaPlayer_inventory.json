@@ -1,0 +1,129 @@
+{
+    "playerName": "PreAlphaPlayer",
+    "players_DarkEnergy": 100,
+    "players_Ammo": 30,
+    "minions": [
+        {
+            "minionID": "MIN-1",
+            "isSummoned": false,
+            "minionName": "Andy",
+            "minionSummonCost": 0,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 8,
+            "Weapon2ID": 7,
+            "minionMaxHp": 5,
+            "ability1ID": 1,
+            "ability2ID": 2,
+            "ability3ID": 9,
+            "hat": 1,
+            "mask": 0,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -28698
+            }
+        },
+        {
+            "minionID": "MIN-2",
+            "isSummoned": false,
+            "minionName": "Sis",
+            "minionSummonCost": 5,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 7,
+            "Weapon2ID": 3,
+            "minionMaxHp": 10,
+            "ability1ID": 2,
+            "ability2ID": 3,
+            "ability3ID": 7,
+            "hat": 0,
+            "mask": 4,
+            "torso": 3,
+            "summonButton": {
+                "instanceID": -30026
+            }
+        },
+        {
+            "minionID": "MIN-3",
+            "isSummoned": false,
+            "minionName": "Granny",
+            "minionSummonCost": 5,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 9,
+            "Weapon2ID": 8,
+            "minionMaxHp": 5,
+            "ability1ID": 1,
+            "ability2ID": 1,
+            "ability3ID": 8,
+            "hat": 0,
+            "mask": 0,
+            "torso": 3,
+            "summonButton": {
+                "instanceID": -30192
+            }
+        },
+		{
+            "minionID": "MIN-4",
+            "isSummoned": false,
+            "minionName": "Un-named Thrall No. 1",
+            "minionSummonCost": 3,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 3,
+            "ability1ID": 1,
+            "ability2ID": 2,
+            "ability3ID": 3,
+            "hat": 0,
+            "mask": 0,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -29196
+            }
+        },
+		{
+            "minionID": "MIN-5",
+            "isSummoned": false,
+            "minionName": "Pipes",
+            "minionSummonCost": 10,
+            "baseMovementSpeed": 1.0,
+            "Weapon1ID": 1,
+            "Weapon2ID": 3,
+            "minionMaxHp": 1,
+            "ability1ID": 1,
+            "ability2ID": 1,
+            "ability3ID": 1,
+            "hat": 2,
+            "mask": 4,
+            "torso": 0,
+            "summonButton": {
+                "instanceID": -29196
+            }
+        }
+    ],
+    "weapons": [
+        {
+            "weaponID": 3,
+            "owned": -1,
+            "equiped": 0
+        },
+		{
+			"weaponID": 1,
+            "owned": -1,
+            "equiped": 0
+		},
+        {
+            "weaponID": 8,
+            "owned": 8,
+            "equiped": 2
+        },
+        {
+            "weaponID": 7,
+            "owned": 3,
+            "equiped": 1
+        },
+		{
+			"weaponID": 9,
+			"owned": 2,
+			"equiped": 1
+		}
+    ]
+}

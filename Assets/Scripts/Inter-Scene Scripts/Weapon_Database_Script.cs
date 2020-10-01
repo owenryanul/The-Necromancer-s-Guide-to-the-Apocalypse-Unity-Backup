@@ -29,6 +29,8 @@ public class Weapon_Database_Script : MonoBehaviour
         public Vector3 weaponRotation;
         public Vector3 weaponPortraitOffset;
         public Vector3 weaponPortraitRotation;
+        public Vector3 weaponMinionViewerOffset;
+        public Vector3 weaponMinionViewerRotation;
         [Header("Stats")]
         public bool isMeleeWeapon;
         public int meleeWeaponDamage;

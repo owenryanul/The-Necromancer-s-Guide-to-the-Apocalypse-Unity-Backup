@@ -40,6 +40,11 @@ public class MainMenu_UI_Script : MonoBehaviour
         GameObject.FindGameObjectWithTag("Transition Panel").GetComponent<Animator>().SetTrigger("Play Scene Outro Transition");
     }
 
+    public void quitGame()
+    {
+        Application.Quit();
+    }
+
     private void beginLoadingGameFiles()
     {
         isLoading = true;
