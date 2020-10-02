@@ -17,7 +17,6 @@ public class User_Input_Script : MonoBehaviour
     public static int currentAbilityIndex;
 
     public static Minion_Roster_Script.MinionEntry currentMinionToSummon;
-    
 
     [Header("Mouse LayerMasks")]
     public LayerMask selectOrMove_LayersToIgnore;
@@ -27,6 +26,7 @@ public class User_Input_Script : MonoBehaviour
     public LayerMask none_LayersToIgnore;
 
     public static bool rosterVisable;
+    private Vector2 rosterSize;
     public Sprite rosterClosedSprite;
     public Sprite rosterOpenedSprite;
 
@@ -49,6 +49,8 @@ public class User_Input_Script : MonoBehaviour
     private void OnEnable()
     {     
         selectionCircle = GameObject.FindGameObjectWithTag("Selection Circle");
+        rosterSize = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>().anchorMax;
+        GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>().anchorMax = new Vector2(rosterSize.x, 0);
         rosterVisable = false;
     }
 
@@ -231,17 +233,19 @@ public class User_Input_Script : MonoBehaviour
             User_Input_Script.rosterVisable = false;
             buttonClicked.image.sprite = rosterClosedSprite;
             RectTransform rosterRect = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>();
-            Vector3 loweredPos = rosterRect.localPosition - new Vector3(0, rosterRect.sizeDelta.y, 0);
-            GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>().localPosition = loweredPos;
+            //Vector3 loweredPos = rosterRect.localPosition - new Vector3(0, rosterRect.sizeDelta.y, 0);
+            //GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>().localPosition = loweredPos;
+            GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>().anchorMax = new Vector2(rosterSize.x, 0);
             GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<ScrollRect>().verticalScrollbar.value = 1; //reset scrollbar to top.
         }
         else
         {
             User_Input_Script.rosterVisable = true;
             buttonClicked.image.sprite = rosterOpenedSprite;
-            RectTransform rosterRect = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>();
-            Vector3 OpenedPos = rosterRect.localPosition + new Vector3(0, rosterRect.sizeDelta.y, 0);
-            GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>().localPosition = OpenedPos;
+            //RectTransform rosterRect = GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>();
+            //Vector3 OpenedPos = rosterRect.localPosition + new Vector3(0, rosterRect.sizeDelta.y, 0);
+            GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>().anchorMax = rosterSize;
+            //GameObject.FindGameObjectWithTag("Minion Roster").GetComponent<RectTransform>().localPosition = OpenedPos;
         }
         
     }

@@ -379,11 +379,11 @@ public class Inventory_UI_Script : MonoBehaviour
         foreach (MinionEntry aEntry in Player_Inventory_Script.getMinions())
         {
             GameObject content = GameObject.FindGameObjectWithTag("Minion Inventory Content");
-            float xPos = 34 + ((i % 7) * 100);
-            float yPos = -18 + (Mathf.FloorToInt(i / 7) * -100);
+            //float xPos = 34 + ((i % 6) * 100);
+            //float yPos = -18 + (Mathf.FloorToInt(i / 6) * -100);
 
             GameObject button = Instantiate(rosterButtonPrefab, content.transform);
-            button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
+            //Gridlayout will handle local positioning //button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
             assembleMinionPortrait(ref button, aEntry);
             button.GetComponent<Tooltip_Button_Script>().tooltip = aEntry.minionName;
             button.GetComponentInChildren<Text>().text = aEntry.minionSummonCost + "";
@@ -402,11 +402,11 @@ public class Inventory_UI_Script : MonoBehaviour
         foreach (WeaponEntry aEntry in Player_Inventory_Script.getPlayerWeapons())
         {
             GameObject content = GameObject.FindGameObjectWithTag("Minion Inventory Content");
-            float xPos = 34 + ((i % 7) * 100);
-            float yPos = -18 + (Mathf.FloorToInt(i / 7) * -100);
+            //float xPos = 34 + ((i % 7) * 100);
+            //float yPos = -18 + (Mathf.FloorToInt(i / 7) * -100);
 
             GameObject button = Instantiate(inventoryWeaponButtonPrefab, content.transform);
-            button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
+            //Gridlayout will handle local positioning  //button.GetComponent<RectTransform>().localPosition = new Vector3(xPos, yPos, 0);
             //assembleMinionPortrait(ref button, aEntry);
             button.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Weapon_Database.findWeapon(aEntry.weaponID).icon;
             button.transform.GetChild(0).GetChild(0).GetComponent<Image>().SetNativeSize();
