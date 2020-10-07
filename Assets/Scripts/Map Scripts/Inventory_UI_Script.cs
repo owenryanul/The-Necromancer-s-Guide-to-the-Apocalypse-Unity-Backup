@@ -482,10 +482,10 @@ public class Inventory_UI_Script : MonoBehaviour
     private void assembleMinionViewerPortrait(ref GameObject viewer, MinionEntry aEntry)
     {
         //Image Path = Button > Mask > MinionIconRig > Cosmetic
-        addCosmeticToPortrait(aEntry.hat, viewer.transform./*Find("Minion Viewer Rig").*/Find("Hat Gear").GetComponent<Image>(), true);
-        addCosmeticToPortrait(aEntry.mask, viewer.transform./*Find("Minion Viewer Rig").*/Find("Mask Gear").GetComponent<Image>(), true);
-        addCosmeticToPortrait(aEntry.torso, viewer.transform./*Find("Minion Viewer Rig").*/Find("Torso Gear").GetComponent<Image>(), true);
-        addWeaponToPortrait(aEntry.Weapon1ID, viewer.transform./*Find("Minion Viewer Rig").*/Find("Weapon Gear").GetComponent<Image>(), true);
+        addCosmeticToPortrait(aEntry.hat, viewer.transform.Find("Minion Viewer Rig").Find("Hat Gear").GetComponent<Image>(), true);
+        addCosmeticToPortrait(aEntry.mask, viewer.transform.Find("Minion Viewer Rig").Find("Mask Gear").GetComponent<Image>(), true);
+        addCosmeticToPortrait(aEntry.torso, viewer.transform.Find("Minion Viewer Rig").Find("Torso Gear").GetComponent<Image>(), true);
+        addWeaponToPortrait(aEntry.Weapon1ID, viewer.transform.Find("Minion Viewer Rig").Find("Weapon Gear").GetComponent<Image>(), true);
     }
 
     private void addCosmeticToPortrait(CosmeticID aCos, Image cosImage, bool isMinionViewer = false)
@@ -498,6 +498,8 @@ public class Inventory_UI_Script : MonoBehaviour
             cosImage.SetNativeSize();
             if (isMinionViewer)
             {
+                //Minion Viewer is scaled down and uses a different co-ordinate system
+                cosImage.rectTransform.sizeDelta = cosImage.rectTransform.sizeDelta * 0.75f;
                 cosImage.rectTransform.localPosition = cos.minionViewerOffset;
                 cosImage.rectTransform.localEulerAngles = cos.minionViewerRotation;
             }
@@ -525,6 +527,8 @@ public class Inventory_UI_Script : MonoBehaviour
             cosImage.SetNativeSize();
             if (isMinionViewer)
             {
+                //Minion Viewer is scaled down and uses a different co-ordinate system
+                cosImage.rectTransform.sizeDelta = cosImage.rectTransform.sizeDelta * 0.75f;
                 cosImage.rectTransform.localPosition = wep.weaponMinionViewerOffset;
                 cosImage.rectTransform.localEulerAngles = wep.weaponMinionViewerRotation;
             }
