@@ -18,7 +18,7 @@ public class Camera_Sizing_Script : MonoBehaviour
     }*/
 
     // Set this to the in-world distance between the left & right edges of your scene.
-    public float sceneWidth = 10;
+    public float sceneWidth = 13.35f;
 
     Camera _camera;
 

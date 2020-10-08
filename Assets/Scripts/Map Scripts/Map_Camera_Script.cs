@@ -22,6 +22,7 @@ public class Map_Camera_Script : MonoBehaviour
         {
             Vector3 camPos = GameObject.FindGameObjectWithTag("Player Map Marker").transform.position;
             camPos.z = this.gameObject.transform.position.z;
+            camPos = limitToMapBounds(camPos);
             Camera.main.transform.position = camPos;
         }
         else

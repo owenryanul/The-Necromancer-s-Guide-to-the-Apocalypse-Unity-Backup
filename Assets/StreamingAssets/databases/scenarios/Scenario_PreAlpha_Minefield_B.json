@@ -1,4 +1,4 @@
 {
     "name": "Scenario_PreAlpha_Minefield_B",
-    "journelText": "With the horde defeated we could now turn our attention back to the minefield. I instructed Andy to instruct the other thralls to go about unearthing the land mines, so that we could repurpose them for later use. It was time consuming but with no immediate threat in the area we continued in peace before heading onwards with our munition reserves that much fuller.[EFFECT](ADD_AMMO){30} \n[BUTTON](EXIT){Move on}"
+    "journelText": "With the horde defeated we could now turn our attention back to the minefield. I instructed Andy to instruct the other thralls to go about unearthing the land mines, so that we could repurpose them for later use. It was time consuming but with no immediate threat in the area we continued in peace before heading onwards with our munition reserves that much fuller.[EFFECT](ADD_AMMO){30} [PAGE BREAK][BUTTON](EXIT){Move on}"
 }

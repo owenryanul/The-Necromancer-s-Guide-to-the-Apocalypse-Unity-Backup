@@ -75,7 +75,7 @@ public class Minion_Roster_Script : MonoBehaviour
             aEntry.summonButton = button;
             i++;
         }
-        GameObject.FindGameObjectWithTag("Minion Roster Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0 ,120 * (1 + Mathf.FloorToInt(Player_Inventory_Script.getMinions().Count / 7)));
+        GameObject.FindGameObjectWithTag("Minion Roster Content").GetComponent<RectTransform>().sizeDelta = new Vector2(0 ,120 * (1 + Mathf.FloorToInt(Player_Inventory_Script.getMinions().Count / 5)));
     }
 
     private void clearRosterButtons()

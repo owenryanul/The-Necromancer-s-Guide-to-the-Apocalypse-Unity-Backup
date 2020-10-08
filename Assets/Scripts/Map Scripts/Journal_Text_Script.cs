@@ -157,7 +157,7 @@ public class Journal_Text_Script : MonoBehaviour
         string text = journalTextin;
         if(text.Contains("[EFFECT]"))
         {
-            text += "[PAGE BREAK] Effects:\n";
+            text += "\n \n Effects:\n";
         }
 
         while(text.Contains("[EFFECT]"))
@@ -184,19 +184,6 @@ public class Journal_Text_Script : MonoBehaviour
             text += ("\n" + record); //append effect text to end of entry.
         }
 
-        return text;
-    }
-
-    //Moves the exit button markup so that it is always at the end of the text.
-    private string moveExitButtonMarkupToEndOfText(string journalTextin)
-    {
-        string text = journalTextin;
-        if (text.Contains("[EXIT_BUTTON]"))
-        {
-            text = text.Replace("[EXIT_BUTTON]", "");
-            text += "\n\n[EXIT_BUTTON]";
-            Debug.Log("Moved [EXIT_BUTTON] Markup to end of text. " + text);
-        }
         return text;
     }
 
@@ -272,55 +259,6 @@ public class Journal_Text_Script : MonoBehaviour
             rightText.text = rightText.text.Insert(startOfButtonMarkup, buttonMarkupReplacementText);
         }
     }
-
-    //Replaces [EXIT_BUTTON] markup with a button.
-    //example markup: [EXIT_BUTTON]
-    /*private void createExitButtons()
-    {
-        //TODO: Add Error checking
-
-        int numberOfButtonMarkups = leftText.text.Split(new string[] { "[EXIT_BUTTON]" }, System.StringSplitOptions.None).Length - 1;
-        for (int i = 0; i < numberOfButtonMarkups; i++)
-        {
-            //Parse Markup to collect: index of markup, name of the scenario the button leads to, text on the button. 
-            int startOfButtonMarkup = leftText.text.IndexOf("[EXIT_BUTTON]");
-            int endOfButtonMarkup = leftText.text.IndexOf("[EXIT_BUTTON]") + 12;
-
-            string buttonText = "Move On";
-
-            //Build Button
-            GameObject button = Instantiate(pageButtonPrefab, leftText.gameObject.transform);
-            button.transform.localPosition = getCharPositionOnScreen(leftText, startOfButtonMarkup - 1, true); // -1 because: No logical reason but getCharPositionOnScreen errors out without -1, but only for [EXIT_BUTTON] and only under certain conditions. 
-            button.GetComponentInChildren<Text>().text = buttonText;
-            button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
-
-            //Remove Markup Text, so next iteration gets the next markup
-            Debug.Log("Stuffs = " + leftText.text.Substring(startOfButtonMarkup, (endOfButtonMarkup + 1) - startOfButtonMarkup));
-            leftText.text = leftText.text.Remove(startOfButtonMarkup, (endOfButtonMarkup + 1) - startOfButtonMarkup);
-            leftText.text = leftText.text.Insert(startOfButtonMarkup, buttonMarkupReplacementText);
-        }
-
-        numberOfButtonMarkups = rightText.text.Split(new string[] { "[EXIT_BUTTON]" }, System.StringSplitOptions.None).Length - 1;
-        for (int i = 0; i < numberOfButtonMarkups; i++)
-        {
-            //Parse Markup to collect: index of markup, name of the scenario the button leads to, text on the button. 
-            int startOfButtonMarkup = rightText.text.IndexOf("[EXIT_BUTTON]");
-            int endOfButtonMarkup = rightText.text.IndexOf("[EXIT_BUTTON]") + 12;
-
-            string buttonText = "Move On";
-
-            //Build Button
-            GameObject button = Instantiate(pageButtonPrefab, rightText.gameObject.transform);
-            button.transform.localPosition = getCharPositionOnScreen(rightText, startOfButtonMarkup - 1, true); // -1 because: No logical reason but getCharPositionOnScreen errors out without -1, but only for [EXIT_BUTTON] and only under certain conditions. 
-            button.GetComponentInChildren<Text>().text = buttonText;
-            button.GetComponent<Button>().onClick.AddListener(() => hideJournel());
-
-            //Remove Markup Text, so next iteration gets the next markup
-            Debug.Log("Stuffs = " + rightText.text.Substring(startOfButtonMarkup, (endOfButtonMarkup + 1) - startOfButtonMarkup));
-            rightText.text = rightText.text.Remove(startOfButtonMarkup, (endOfButtonMarkup + 1) - startOfButtonMarkup);
-            rightText.text = rightText.text.Insert(startOfButtonMarkup, buttonMarkupReplacementText);
-        }
-    }*/
 
     private void deleteJournalButtons()
     {

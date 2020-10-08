@@ -1,4 +1,4 @@
 {
     "name": "PostBattle_PreAlpha_Tutorial",
-    "journelText": "Congradulations you have beaten your first battle and thus finished the pre-alpha's tutorial. The nodes ahead are encounters similar to what will be found in the final game. Here is a gift of dark energy and ammo to get your started. Good luck out there and thanks for playing. [EFFECT](ADD_ENERGY){100} [EFFECT](ADD_AMMO){20} \n[BUTTON](EXIT){Move on}"
+    "journelText": "Congradulations you have beaten your first battle and thus finished the pre-alpha's tutorial. The nodes ahead are encounters similar to what will be found in the final game. Here is a gift of dark energy and ammo to get your started. Good luck out there and thanks for playing. [EFFECT](ADD_ENERGY){100} [EFFECT](ADD_AMMO){20} [PAGE BREAK] [BUTTON](EXIT){Move on}"
 }
