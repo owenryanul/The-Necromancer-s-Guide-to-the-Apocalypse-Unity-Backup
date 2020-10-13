@@ -399,7 +399,8 @@ public class Enemy_AI_script : MonoBehaviour, MouseDownOverrider
     protected virtual void createNewMinionFromEnemy()
     {
         //MinionRoster.addNewMinion("Absolute Unit");
-        MinionRoster.addNewMinion(1, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, AbilityID.molotov, AbilityID.sprayAndPray, Ability_Database.findRandomAbilityWithTag("general").id);
+        int hp = Mathf.RoundToInt(Random.Range(2, 5));
+        MinionRoster.addNewMinion(hp, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, AbilityID.molotov, AbilityID.sprayAndPray, Ability_Database.findRandomAbilityWithTag("general").id);
     }
 
     //Called by Ability_Database.castNecromancerConversionRitual() when conversion ability is ast on this enemy

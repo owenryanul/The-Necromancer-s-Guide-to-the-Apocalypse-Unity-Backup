@@ -1,0 +1,4 @@
+{
+    "name": "Scenario_PreAlpha_FortifiedHouse",
+    "journelText": "We chanced upon a lone house, heavily fortified and surrounded by barriacades and entrenchments. The struture had the look of a makeshift fortress but of the occupants there was no sign. Despite an apparent absence of tenets, the house looked like it had yet to be pillaged and presented a tempting target. Andy suggested proceeding with caution and so I: [PAGE BREAK] [BUTTON](Scenario_PreAlpha_FortifiedHouse_A){Heeded his advice and advanced cautiously into the building} \n\n [BUTTON](Scenario_PreAlpha_FortifiedHouse_B){Ignored his blubbering and strode confidently into the building} \n\n [BUTTON](EXIT){Dismised the house as a waste of time and moved on}" 
+}

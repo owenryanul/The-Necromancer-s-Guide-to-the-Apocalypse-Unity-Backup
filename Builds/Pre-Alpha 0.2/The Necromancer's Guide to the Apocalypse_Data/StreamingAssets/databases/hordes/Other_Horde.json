@@ -1,0 +1,20 @@
+{
+    "name": "Other Horde",
+    "waves": [
+        {
+            "spawnCooldown": 5.0,
+            "numberOfEnemiesInWave": 5,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 5,
+                    "enemyPrefab": "Prefabs/Enemies/Beserk Enemy",
+                    "spawnOnLeftSide": true
+                }
+            ]
+        }
+    ],
+    "tags": [
+        "Test"
+    ]
+}

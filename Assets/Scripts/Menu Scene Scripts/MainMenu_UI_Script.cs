@@ -87,8 +87,7 @@ public class MainMenu_UI_Script : MonoBehaviour
 
 
             //isLoading = false;
-            callAllDatabaseToReadFiles();
-            isLoading = false;
+            StartCoroutine(callAllDatabaseToReadFiles());
         }
         else
         {
@@ -97,8 +96,17 @@ public class MainMenu_UI_Script : MonoBehaviour
         
     }
 
-    private void callAllDatabaseToReadFiles()
+    private IEnumerator callAllDatabaseToReadFiles()
     {
+        //Debug.Log("Start callAllDatabasesToReadFiles Co-Routine");
+        yield return new WaitUntil(() => EnemySpawningAndHordeMangerInstiated());
         Enemy_Spawning_And_Horde_Manager_Script.loadAllHordesFromFiles();
+        isLoading = false;
+        //Debug.Log("End callAllDatabasesToReadFiles Co-Routine");
+    }
+
+    private bool EnemySpawningAndHordeMangerInstiated()
+    {
+        return (Enemy_Spawning_And_Horde_Manager_Script.instance != null);
     }
 }

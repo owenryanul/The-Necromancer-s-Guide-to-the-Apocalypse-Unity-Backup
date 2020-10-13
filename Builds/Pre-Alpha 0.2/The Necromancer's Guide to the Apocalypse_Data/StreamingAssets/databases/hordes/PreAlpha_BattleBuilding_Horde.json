@@ -1,0 +1,54 @@
+{
+    "name": "PreAlpha Battle Building Horde",
+    "waves": [
+        {
+            "spawnCooldown": 6.0,
+            "numberOfEnemiesInWave": 4,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 2,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                },
+				{
+                    "quantity": 2,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": true
+                }
+            ]
+        },
+        {
+            "spawnCooldown": 2.0,
+            "numberOfEnemiesInWave": 10,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 10,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                },
+				{
+                    "quantity": 5,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": true
+                }
+            ]
+        },
+		{
+            "spawnCooldown": 3.0,
+            "numberOfEnemiesInWave": 6,
+            "rollRemainderIntoNextWave": false,
+            "enemyPools": [
+                {
+                    "quantity": 4,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        }
+    ],
+    "tags": [
+        "PreAlpha", "Highway"
+    ]
+}

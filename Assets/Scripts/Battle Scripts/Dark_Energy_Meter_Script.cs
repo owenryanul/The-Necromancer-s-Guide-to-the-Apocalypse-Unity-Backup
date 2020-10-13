@@ -35,21 +35,6 @@ public class Dark_Energy_Meter_Script : MonoBehaviour
         
     }
 
-    /*public static int getDarkEnergy()
-    {
-        return instance.darkEnergy;
-    }
-
-    public static void setDarkEnergy(int darkEnergyIn)
-    {
-        instance.darkEnergy = darkEnergyIn;
-    }
-
-    public static void addDarkEnergy(int darkEnergyIn)
-    {
-        instance.darkEnergy += darkEnergyIn;
-    }*/
-
     public static void addDarkEnergyOnEnemySlain(int darkEnergyIn, GameObject enemy)
     {
         bool noEnemyBeingConverted = true;

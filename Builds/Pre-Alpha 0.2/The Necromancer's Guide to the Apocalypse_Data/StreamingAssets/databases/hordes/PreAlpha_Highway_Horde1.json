@@ -1,0 +1,44 @@
+{
+    "name": "PreAlpha Highway Horde1",
+    "waves": [
+        {
+            "spawnCooldown": 6.0,
+            "numberOfEnemiesInWave": 2,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 2,
+                    "enemyPrefab": "Prefabs/Enemies/Beserk Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        },
+        {
+            "spawnCooldown": 2.0,
+            "numberOfEnemiesInWave": 5,
+            "rollRemainderIntoNextWave": true,
+            "enemyPools": [
+                {
+                    "quantity": 8,
+                    "enemyPrefab": "Prefabs/Enemies/Beserk Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        },
+		{
+            "spawnCooldown": 3.0,
+            "numberOfEnemiesInWave": 12,
+            "rollRemainderIntoNextWave": false,
+            "enemyPools": [
+                {
+                    "quantity": 10,
+                    "enemyPrefab": "Prefabs/Enemies/Enemy",
+                    "spawnOnLeftSide": false
+                }
+            ]
+        }
+    ],
+    "tags": [
+        "PreAlpha", "Highway"
+    ]
+}

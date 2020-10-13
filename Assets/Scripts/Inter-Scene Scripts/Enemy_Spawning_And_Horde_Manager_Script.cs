@@ -41,8 +41,10 @@ public class Enemy_Spawning_And_Horde_Manager_Script : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Enemy_Spawning_And_Horde_Manager_Script Start");
         if (instance == null)
         {
+            Debug.Log("Enemy_Spawning_And_Horde_Manager_Script Start with instance = null");
             instance = this;
             resetSpawnVariables();
             resetBattleStatVariables();
@@ -273,6 +275,7 @@ public class Enemy_Spawning_And_Horde_Manager_Script : MonoBehaviour
     //called on start, or, if hordes directory does not exist then called from MainMenu_UI script after files have been loaded.
     public static void loadAllHordesFromFiles()
     {
+        Debug.Log("loadAllHordesFromFiles where Enemy_Spawning_And_Horde_Manager_Script.instance = " + instance.name);
         instance.hordes = new List<Horde>();
         DirectoryInfo di = new DirectoryInfo(Application.persistentDataPath + "/databases/hordes/");
         if (di.Exists)

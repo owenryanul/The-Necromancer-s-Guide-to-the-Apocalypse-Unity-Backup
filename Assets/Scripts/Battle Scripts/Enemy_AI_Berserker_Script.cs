@@ -67,6 +67,7 @@ public class Enemy_AI_Berserker_Script : Enemy_AI_script
 
     protected override void createNewMinionFromEnemy()
     {
-        MinionRoster.addNewMinion(1, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, Ability_Database.findRandomAbilityWithTag("beserker").id, Ability_Database.findRandomAbilityWithTag("beserker").id, Ability_Database.AbilityID.fleetOfFoot, CosmeticID.None, CosmeticID.None, CosmeticID.Crazy_Paint);
+        int hp = Mathf.RoundToInt(Random.Range(5, 5));
+        MinionRoster.addNewMinion(hp, WeaponID.Thrown_bone, WeaponID.Unarmed_Melee, Ability_Database.findRandomAbilityWithTag("beserker").id, Ability_Database.findRandomAbilityWithTag("beserker").id, Ability_Database.AbilityID.fleetOfFoot, CosmeticID.None, CosmeticID.None, CosmeticID.Crazy_Paint);
     }
 }
